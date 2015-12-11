@@ -1,0 +1,282 @@
+﻿<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="sweva-canvas-controls.html">
+
+
+<dom-module id="shared-styles">
+    <template>
+        <style>
+            .jsplumb-endpoint {
+                cursor: pointer;
+            }
+
+            .jsplumb-connector {
+                z-index: 4;
+            }
+
+            .jsplumb-endpoint, .endpointTargetLabel, .endpointSourceLabel {
+                z-index: 21;
+                cursor: pointer;
+            }
+
+            .node-label {
+                z-index: 20;
+                padding: 0 5px;
+                max-width: 200px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                background-color: rgba(255,255,255,0.5);
+            }
+
+            .node-data-out-endpoint-label {
+                transform: translateX(0) !important;
+                margin-left: 15px;
+                border: 2px solid #ff9d00;
+            }
+
+            .node-data-in-endpoint-label {
+                transform: translateX(-100%) !important;
+                margin-right: 15px;
+                border: 2px solid #0094ff;
+            }
+        </style>
+    </template>
+</dom-module>
+
+<dom-module id="sweva-canvas">
+    <template>
+        <style include="shared-styles"></style>
+        <style>
+            :host {
+                position: relative;
+                border: 1px solid #9F9FA2;
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+
+            #canvas {
+                display: block;
+                /*height: 100%;
+                width: 100%;*/
+                position: relative;
+                background-color: #fff;
+                border: 1px solid #ddd;
+                width: 10000px;
+                height: 10000px;
+                left:-1800px;
+                top:-2000px;
+                cursor:move;
+               
+            }
+
+            .grid {
+                background-image: linear-gradient(#eee 2px, transparent 2px), linear-gradient(90deg, #eee 2px, transparent 2px), linear-gradient(rgba(200, 200, 200, 0.298039) 1px, transparent 1px), linear-gradient(90deg, rgba(200, 200, 200, 0.298039) 1px, transparent 1px);
+                background-color: rgb(255, 255, 255);
+                background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+                background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+            }
+
+            
+           
+        </style>
+        <sweva-canvas-controls id="canvas-controls" on-centerclick="handleCenterCanvas" on-zoomclick="handleZoomClickCanvas" on-zoomslide="handleZoomSlideCanvas">
+
+        </sweva-canvas-controls>
+        <div id="canvas" class="grid">
+            
+            <content>
+            </content>
+        </div>
+    </template>
+
+    <script>
+
+        (function () {
+            'use strict';
+            var MAX_ZOOM_IN = 5;
+            var MAX_ZOOM_OUT = 1;
+            var MOUSE_WHEEL_SLOWDOWN = 400;
+
+            Polymer({
+                is: 'sweva-canvas',
+                properties: {
+                    mousePos: {
+                        type: Object,
+                        value: {
+                            x: 0,
+                            y: 0
+                        }
+                    },
+                    mousePan: {
+                        type: Object,
+                        value: {
+                            panning: false,
+                            lastPanUpdate: 0,
+                            x: 0,
+                            y: 0,
+                            offsetX: 0,
+                            offsetY: 0
+                        }
+                    },
+                    jsPlumbInstance: {
+                        type: Object,
+                        value: null
+                    },
+                    transformation: {
+                        type: Object,
+                        value: {
+                            translateX: 0,
+                            translateY: 0,
+                            originX: 2000,
+                            originY: 2000,
+                            scale: 1
+                        }
+                    },
+                    offset: {
+                        type: Object,
+                        value: {
+                            left: -1800,
+                            top: -2000,
+                            realLeft: -1800,
+                            realTop: -2000
+                        }
+                    },
+                    
+                   
+                },
+                ready: function () {
+                    this.date = new Date();
+                    this.$.canvas.addEventListener("mousemove", this.handleCanvasMouseMove.bind(this), false);
+                    this.$.canvas.addEventListener("mousewheel", this.handleCanvasMouseWheel.bind(this), false);
+                    this.$.canvas.addEventListener("mousedown", this.handleCanvasMouseDown.bind(this), false);
+                    this.$.canvas.addEventListener("mouseup", this.handleCanvasMouseUp.bind(this), false);
+                },
+                handleCenterCanvas: function (event) {
+                    this.transformation.scale = 1;
+                    this.panTo(-1800, -2000);
+                },
+                handleZoomClickCanvas: function (event) {
+                   
+                    var zoom = this.transformation.scale = this.transformation.scale + event.detail.delta * 0.3;
+                    this.zoomToCenter(zoom);
+                },
+                handleZoomSlideCanvas: function (event) {
+                   
+                    this.zoomToCenter(event.detail.value);
+                },
+                handleCanvasMouseDown: function(event) {
+                   
+                    if (event.target.id == 'canvas') {
+                        this.mousePan = { panning: true, lastPanUpdate: 0, x: event.clientX, y: event.clientY, offsetX: this.offset.left, offsetY: this.offset.top };
+                    }
+                   
+                   
+                   
+                },
+                handleCanvasMouseUp: function (event) {
+                    if (event.target.id == 'canvas') {
+                        this.mousePan.panning = false;
+                    }
+                },
+                handleCanvasMouseMove: function (event) {
+
+                    var x = event.offsetX;
+                    var y = event.offsetY;
+                    var current = event.target;
+                    //get correct position if over children
+                    while (current.parentNode && current.id != 'canvas') {
+
+                        x += current.offsetLeft;
+                        y += current.offsetTop;
+                        current = current.parentNode;
+                    }
+                    this.mousePos = { x: x, y: y };
+
+                    //pan
+                   
+                    if (this.mousePan.panning) {
+                       
+                        var now = new Date().getTime();
+                        //for performance reasons (reduce CPU load)
+                        if (now - this.mousePan.lastPanUpdate > 25) {
+                            this.panTo(this.mousePan.offsetX - (this.mousePan.x - event.clientX), this.mousePan.offsetY - (this.mousePan.y - event.clientY));
+                            this.mousePan.lastPanUpdate = now;
+                        }
+                    }
+                },
+                handleCanvasMouseWheel: function (event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    var zoomDelta = event.wheelDelta / MOUSE_WHEEL_SLOWDOWN;
+                    var zoom = this.transformation.scale = this.transformation.scale + zoomDelta;
+
+                    this.zoomTo(this.mousePos.x, this.mousePos.y, zoom);
+                },
+                zoomToCenter: function(zoom){
+                   
+                    var width = this.offsetWidth;
+                    var height = this.offsetHeight;
+                    var x = width / 2 - this.offset.realLeft;
+                    var y = height / 2 - this.offset.realTop;
+                    this.zoomTo(x, y, zoom);
+                },
+                zoomTo: function (x, y, zoom) {
+                    var prevScale = this.transformation.scale;
+                    this.transformation.originX = x;
+                    this.transformation.originY = y;
+                    this.transformation.scale = zoom;
+                    if (this.transformation.scale < MAX_ZOOM_OUT) {
+                        this.transformation.scale = MAX_ZOOM_OUT;
+                    }
+                    else if (this.transformation.scale > MAX_ZOOM_IN) {
+                        this.transformation.scale = MAX_ZOOM_IN;
+                    }
+                    this.offset.left = this.offset.realLeft;
+                    this.offset.top = this.offset.realTop;
+
+                    this.applyTransform();
+                },
+                pan: function (deltaX, deltaY) {
+                    this.offset.left += deltaX;
+                    this.offset.top += deltaY;
+                    this.offset.realLeft += deltaX / this.transformation.scale;
+                    this.offset.realTop += deltaY / this.transformation.scale;
+                    this.applyTransform();
+                },
+                panTo: function (x, y) {
+                    this.offset.left = x;
+                    this.offset.top = y;
+                    this.offset.realLeft = x / this.transformation.scale;
+                    this.offset.realTop = y / this.transformation.scale;
+                    this.applyTransform();
+                },
+                applyTransform: function () {
+                    var node = this.querySelector('#canvas');
+                    node.style.transformOrigin = this.transformation.originX + 'px' + ' ' + this.transformation.originY + 'px';
+                    var transform2d = "matrix(";
+                    transform2d += this.transformation.scale + ",0,0," + this.transformation.scale + "," + this.transformation.translateX + "," + this.transformation.translateY + ")";
+
+                    node.style.transform = transform2d;
+                    node.style.left = this.offset.left + 'px';
+                    node.style.top = this.offset.top + 'px';
+
+                    this.querySelector('#canvas-controls').adjustZoomSlider(this.transformation.scale);
+                    this.jsPlumbInstance.setZoom(this.transformation.scale);
+                }
+
+            });
+        })();
+    </script>
+</dom-module>

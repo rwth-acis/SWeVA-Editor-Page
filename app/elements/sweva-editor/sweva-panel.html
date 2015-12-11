@@ -1,0 +1,81 @@
+﻿<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<dom-module id="sweva-panel">
+    <template>
+        <style>
+            :host {
+                display: block;
+                width: 300px;
+                background-color: white;
+                box-shadow: 0 2px 8px #555;
+                position: relative;
+            }
+
+            paper-tabs, paper-toolbar {
+                background-color: #0094ff;
+                color: #fff;
+                box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+            }
+
+                paper-toolbar paper-tabs {
+                    box-shadow: none;
+                }
+
+                paper-tabs[noink][no-bar] paper-tab.iron-selected {
+                    color: #ff6a00;
+                }
+
+            .tab-page {
+                padding: 20px;
+            }
+
+            paper-button {
+                background-color: #0094ff;
+                color:#fff;
+            }
+        </style>
+
+        <paper-tabs selected="{{selectedTab}}" noink>
+            <paper-tab>Properties</paper-tab>
+            <paper-tab>Save &amp; Load</paper-tab>
+            <paper-tab>Settings</paper-tab>
+
+        </paper-tabs>
+
+        <iron-pages selected="{{selectedTab}}">
+            <div class="tab-page">
+                <paper-input id="create-node-name" label="Name"></paper-input>
+                <paper-button raised>Create</paper-button>
+            </div>
+            <div class="tab-page">
+                Page 2
+            </div>
+            <div class="tab-page">
+                Page 3
+            </div>
+
+        </iron-pages>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'sweva-panel',
+                properties: {
+                    selectedTab: {
+                        type: Number,
+                        value: 0
+                    }
+                },
+                ready: function () {
+
+                },
+
+            });
+        })();
+    </script>
+</dom-module>
