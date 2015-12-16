@@ -12,6 +12,7 @@
                 top: 50px;
                 border-radius: 10px;
                 cursor: pointer;
+              
             }
 
             .inner {
@@ -40,6 +41,9 @@
         (function () {
             'use strict';
 
+            var MIN_HEIGHT = 100;
+            var BASE_HEIGHT = 30;
+            var ENDPOINT_HEIGHT = 50;
             Polymer({
                 is: 'sweva-node',
                 properties: {
@@ -57,18 +61,197 @@
                     posY: {
                         type: Number,
                         value: 50
-                        
+                    },
+                    jsPlumbStyles: {
+                        type: Object,
+                        value: {
+
+                        }
                     }
                 },
                 observers: [
                     '_updatePos(posX, posY)'
                 ],
-                ready: function () {
-                    this._updatePos(this.posX, this.posY);
-                },
 
+                ready: function () {
+                    this._prepareStyles();
+                    this._updatePos(this.posX, this.posY);
+
+                    this.addEventListener("click", this._handleClick.bind(this), false);
+                },
+                _handleClick: function(event){
+                    
+
+                    var current = event.target;
+                    //get correct position if over children
+                    while (current.parentNode && current.tagName != 'SWEVA-NODE') {                     
+                        current = current.parentNode;
+                    }
+                    this.fire('nodeselected', this);
+                    
+                },
+                _prepareStyles: function () {
+                    var nodeEndpointHoverStyle = {
+                        fillStyle: "#00cc00",
+                        strokeStyle: "#00cc00"
+                    };
+
+                    var nodeDataInEndpoint = {
+                        endpoint: "Dot",
+                        paintStyle: {
+                            strokeStyle: "#0094ff",
+                            fillStyle: "#ffffff",
+                            radius: 10,
+                            lineWidth: 4
+                        },
+                        hoverPaintStyle: nodeEndpointHoverStyle,
+                        maxConnections: 1,
+                        dropOptions: { hoverClass: "hover", activeClass: "active" },
+                        isTarget: true
+                    }
+                    var nodeConnectorPaintStyle = {
+                        lineWidth: 4,
+                        strokeStyle: "#0094ff",
+                        joinstyle: "round",
+                        outlineColor: "white",
+                        outlineWidth: 2,
+                        gradient: {
+                            stops: [[0, "#ff9d00"], [1, "#0094ff"]]
+                        }
+                    }
+                    var nodeConnectorHoverStyle = {
+                        lineWidth: 4,
+                        strokeStyle: "#00cc00",
+                        outlineWidth: 2,
+                        outlineColor: "#00cc00",
+                        gradient: {
+                            stops: [[0, "#00cc00"], [1, "#00cc00"]]
+                        }
+                    }
+                    var nodeDataOutEndpoint = {
+                        endpoint: "Dot",
+                        paintStyle: {
+                            strokeStyle: "#ff9d00",
+                            fillStyle: "#ff9d00",
+                            radius: 10,
+                            lineWidth: 4
+                        },
+
+                        isSource: true,
+                        connector: ["Bezier"],
+                        connectorStyle: nodeConnectorPaintStyle,
+                        hoverPaintStyle: nodeEndpointHoverStyle,
+                        connectorHoverStyle: nodeConnectorHoverStyle,
+                        dragOptions: {},
+
+                    }
+                    this.jsPlumbStyles.nodeDataInEndpoint = nodeDataInEndpoint;
+                    this.jsPlumbStyles.nodeDataOutEndpoint = nodeDataOutEndpoint;
+                },
+                _adjustHeight: function (endpoints) {
+                    var height = BASE_HEIGHT + endpoints * ENDPOINT_HEIGHT;
+                    if (height < MIN_HEIGHT) {
+                        height = MIN_HEIGHT;
+                    }
+                    this.style.height = height + 'px';
+                },
+                init: function (jsPlumbInstance, yjs, composableJSON, position) {
+
+                    var position = position || { x: 0, y: 0 };
+                    this.name = composableJSON.name;
+                    this.id = this._generateGUID();
+                    this.posX = position.x;
+                    this.posY = position.y;
+                    //jsPlumbInstance.draggable(this, { grid: [20, 20] });
+                    Polymer.dom.flush();
+                    this._addEndpoints(jsPlumbInstance, ['IN1', 'IN2', 'IN3', 'IN4'], ['OUT1', 'OUT2']);
+
+                    var self = this;
+                   // yjs.share.node.set('position', { x: self.posX, y: self.posY });
+
+                   
+                    
+                   /* yjs.share.nodes.set(self.id, Y.Map).then(function (map) {
+                        
+                      
+                        map.set('position', { x: self.posX, y: self.posY });
+
+                        
+                    });*/
+
+                    
+
+
+                    jsPlumbInstance.draggable(this/*, {
+                        stop: function (event) {
+                            
+                            yjs.share.nodes.get(event.el.id).then(function (map) {
+                                
+                                map.set('position', { x: event.el.offsetLeft, y: event.el.offsetTop });
+                                console.log(map);
+                            });
+
+
+                        }
+                    }*/);
+
+                    
+                },
+                _generateGUID: function () {
+                    function s4() {
+                        return Math.floor((1 + Math.random()) * 0x10000)
+                          .toString(16)
+                          .substring(1);
+                    }
+                    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                      s4() + '-' + s4() + s4() + s4();
+                },
+                _addEndpoints: function (jsPlumbInstance, dataIn, dataOut) {
+
+                    this._adjustHeight(Math.max(dataIn.length, dataOut.length));
+
+                    var nodeId = this.id;
+
+                    var self = this;
+                    jsPlumbInstance.batch(function () {
+                        var stepSizeIn = (1) / (dataIn.length + 1);
+                       
+
+                        for (var i = 0; i < dataIn.length; i++) {
+
+                            jsPlumbInstance.addEndpoint(nodeId, self.jsPlumbStyles.nodeDataInEndpoint, {
+                                anchor: [0, stepSizeIn * (i + 1), -1, 0],
+                                uuid: nodeId + dataIn[i],
+                                overlays: [
+                                    ["Label", {
+                                        location: [0.4, -0.5],
+                                        label: dataIn[i],
+                                        cssClass: "node-data-in-endpoint-label node-label"
+                                    }]
+                                ]
+                            });
+                        }
+
+                        var stepSizeOut = (1) / (dataOut.length + 1);
+                        for (var i = 0; i < dataOut.length; i++) {
+                            var endpoint = jsPlumbInstance.addEndpoint(nodeId, self.jsPlumbStyles.nodeDataOutEndpoint, {
+                                anchor: [1, stepSizeOut * (i + 1), 1, 0],
+                                uuid: nodeId + dataOut[i],
+                                overlays: [
+                                    ["Label", {
+                                        location: [0.6, -0.5],
+                                        label: dataOut[i],
+                                        cssClass: "node-data-out-endpoint-label node-label"
+                                    }]
+                                ]
+                            });
+
+                        }
+                    });
+
+                },
                 _updatePos: function (x, y) {
-                    console.log(x);
+
                     this.style.left = x + 'px';
                     this.style.top = y + 'px';
                 }

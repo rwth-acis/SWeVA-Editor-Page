@@ -11,7 +11,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="sweva-canvas-controls.html">
 
-
 <dom-module id="shared-styles">
     <template>
         <style>
@@ -40,14 +39,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             .node-data-out-endpoint-label {
                 transform: translateX(0) !important;
-                margin-left: 15px;
                 border: 2px solid #ff9d00;
+              
             }
 
             .node-data-in-endpoint-label {
                 transform: translateX(-100%) !important;
-                margin-right: 15px;
                 border: 2px solid #0094ff;
+
             }
         </style>
     </template>
@@ -75,10 +74,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 border: 1px solid #ddd;
                 width: 10000px;
                 height: 10000px;
-                left:-1800px;
-                top:-2000px;
-                cursor:move;
-               
+                left: 0;
+                top: 0;
+                cursor: move;
+                transform-origin: 50% 50% 0px;
+                 -webkit-backface-visibility: hidden;
+                -moz-backface-visibility: hidden;
+                backface-visibility: hidden;
+            }
+
+            #canvas-view {
+                height: 100%;
             }
 
             .grid {
@@ -87,27 +93,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
                 background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
             }
-
-            
-           
         </style>
-        <sweva-canvas-controls id="canvas-controls" on-centerclick="handleCenterCanvas" on-zoomclick="handleZoomClickCanvas" on-zoomslide="handleZoomSlideCanvas">
-
+        <sweva-canvas-controls id="canvas-controls" max-zoom="{{maxZoom}}" min-zoom="{{minZoom}}" on-centerclick="handleCenterCanvas" on-zoomclick="handleZoomClickCanvas" on-zoomslide="handleZoomSlideCanvas">
         </sweva-canvas-controls>
-        <div id="canvas" class="grid">
-            
-            <content>
-            </content>
+        <div id="canvas-view">
+            <div id="canvas" class="grid">
+
+                <content>
+                </content>
+            </div>
         </div>
     </template>
-
+    <script src="Matrix.js"></script>
     <script>
 
         (function () {
             'use strict';
             var MAX_ZOOM_IN = 5;
             var MAX_ZOOM_OUT = 1;
-            var MOUSE_WHEEL_SLOWDOWN = 400;
+            var MOUSE_WHEEL_SLOWDOWN = 1000;
 
             Polymer({
                 is: 'sweva-canvas',
@@ -134,84 +138,127 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         type: Object,
                         value: null
                     },
-                    transformation: {
+                    canvasOffsetX: {
+                        type: Number,
+                        value: -2000
+                    },
+                    canvasOffsetY: {
+                        type: Number,
+                        value: -2000
+                    },
+                    canvasDims: {
                         type: Object,
                         value: {
-                            translateX: 0,
-                            translateY: 0,
-                            originX: 2000,
-                            originY: 2000,
-                            scale: 1
+                            width: 0,
+                            height: 0
                         }
                     },
-                    offset: {
+                    regexMatrix: {
                         type: Object,
-                        value: {
-                            left: -1800,
-                            top: -2000,
-                            realLeft: -1800,
-                            realTop: -2000
-                        }
+                        value: null
                     },
-                    
-                   
+                    maxZoom: {
+                        type: Number,
+                        value: 3
+                    },
+                    minZoom: {
+                        type: Number,
+                        value: 0.2
+                    }
+
                 },
                 ready: function () {
+                    var floating = '(\\-?[\\d\\.e]+)';
+                    var commaSpace = '\\,?\\s*';
+                    this.regexMatrix = new RegExp(
+		                '^matrix\\(' +
+		                floating + commaSpace +
+		                floating + commaSpace +
+		                floating + commaSpace +
+		                floating + commaSpace +
+		                floating + commaSpace +
+		                floating + '\\)$'
+	                );
+                },
+                attached: function () {
                     this.date = new Date();
-                    this.$.canvas.addEventListener("mousemove", this.handleCanvasMouseMove.bind(this), false);
-                    this.$.canvas.addEventListener("mousewheel", this.handleCanvasMouseWheel.bind(this), false);
-                    this.$.canvas.addEventListener("mousedown", this.handleCanvasMouseDown.bind(this), false);
-                    this.$.canvas.addEventListener("mouseup", this.handleCanvasMouseUp.bind(this), false);
+                    var canvas = this.querySelector('#canvas');
+                    var canvasView = this.querySelector('#canvas-view');
+                    //init canvas matrix
+                    canvas.style.transform = 'matrix(1, 0, 0, 1, ' + this.canvasOffsetX + ', ' + this.canvasOffsetY + ')';
+                    canvas.style.transition = 'transform ' + 300 + 'ms linear 0s';
+                    canvasView.addEventListener("mousemove", this.handleCanvasMouseMove.bind(this), false);
+                    canvasView.addEventListener("mousewheel", this.handleCanvasMouseWheel.bind(this), false);
+                    canvas.addEventListener("mousedown", this.handleCanvasMouseDown.bind(this), false);
+                    canvas.addEventListener("mouseup", this.handleCanvasMouseUp.bind(this), false);
+
+                    this.canvasDims.width = canvas.offsetWidth;
+                    this.canvasDims.height = canvas.offsetHeight;
+
+                    
+
                 },
                 handleCenterCanvas: function (event) {
-                    this.transformation.scale = 1;
-                    this.panTo(-1800, -2000);
+                    canvas.style.transform = 'matrix(1, 0, 0, 1, ' + this.canvasOffsetX + ', ' + this.canvasOffsetY + ')';
                 },
                 handleZoomClickCanvas: function (event) {
-                   
-                    var zoom = this.transformation.scale = this.transformation.scale + event.detail.delta * 0.3;
-                    this.zoomToCenter(zoom);
+                    this.zoomCenter(event.detail.delta*0.4);
                 },
                 handleZoomSlideCanvas: function (event) {
-                   
                     this.zoomToCenter(event.detail.value);
                 },
-                handleCanvasMouseDown: function(event) {
-                   
+                handleCanvasMouseDown: function (event) {
+
                     if (event.target.id == 'canvas') {
-                        this.mousePan = { panning: true, lastPanUpdate: 0, x: event.clientX, y: event.clientY, offsetX: this.offset.left, offsetY: this.offset.top };
+                        this.mousePan = { panning: true, lastPanUpdate: 0, x: this.mousePos.x, y: this.mousePos.y };
                     }
-                   
-                   
-                   
+
                 },
                 handleCanvasMouseUp: function (event) {
-                    if (event.target.id == 'canvas') {
-                        this.mousePan.panning = false;
-                    }
+
+                    this.mousePan.panning = false;
+
                 },
                 handleCanvasMouseMove: function (event) {
 
                     var x = event.offsetX;
                     var y = event.offsetY;
+
+                   
                     var current = event.target;
-                    //get correct position if over children
-                    while (current.parentNode && current.id != 'canvas') {
+                    //get correct position if over children, stupid event bubbling
+                    while (current.parentNode && current.id != 'canvas-view') {
 
                         x += current.offsetLeft;
                         y += current.offsetTop;
+
+                        if (current.style.transform) {
+                            var matrix = this.getMatrix(current.style.transform);
+
+                            var left = -(this.canvasDims.width - this.canvasDims.width * matrix[0]) / 2
+                            var top = -(this.canvasDims.height - this.canvasDims.height * matrix[0]) / 2
+
+                            x = matrix[4] - left + x * matrix[0];
+                            y = matrix[5] - top + y * matrix[0];
+                        }
                         current = current.parentNode;
                     }
                     this.mousePos = { x: x, y: y };
 
                     //pan
-                   
+                    if (event.buttons == 0) {
+                        this.mousePan.panning = false;
+                    }
                     if (this.mousePan.panning) {
-                       
+
                         var now = new Date().getTime();
                         //for performance reasons (reduce CPU load)
                         if (now - this.mousePan.lastPanUpdate > 25) {
-                            this.panTo(this.mousePan.offsetX - (this.mousePan.x - event.clientX), this.mousePan.offsetY - (this.mousePan.y - event.clientY));
+                          
+                            this.pan((this.mousePos.x - this.mousePan.x), (this.mousePos.y - this.mousePan.y));
+                           
+                            this.mousePan.x = this.mousePos.x;
+                            this.mousePan.y = this.mousePos.y;
                             this.mousePan.lastPanUpdate = now;
                         }
                     }
@@ -220,60 +267,180 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     event.stopPropagation();
                     event.preventDefault();
                     var zoomDelta = event.wheelDelta / MOUSE_WHEEL_SLOWDOWN;
-                    var zoom = this.transformation.scale = this.transformation.scale + zoomDelta;
 
-                    this.zoomTo(this.mousePos.x, this.mousePos.y, zoom);
+                    // this.zoomTo(this.mousePos.x, this.mousePos.y, zoom);
+
+                    this.zoom(event.wheelDelta / MOUSE_WHEEL_SLOWDOWN, this.mousePos);
                 },
-                zoomToCenter: function(zoom){
+                getViewCenter: function(){
+                    var result = { x: 0, y: 0 };
+                    var matrix = this.getMatrix();
+                    var canvasView = this.querySelector('#canvas-view');
+                    var container = {
+                        width: canvasView.offsetWidth,
+                        height: canvasView.offsetHeight
+                    };
+
                    
-                    var width = this.offsetWidth;
-                    var height = this.offsetHeight;
-                    var x = width / 2 - this.offset.realLeft;
-                    var y = height / 2 - this.offset.realTop;
-                    this.zoomTo(x, y, zoom);
+                    
+                    result.x = -matrix[4] + container.width / 2;
+                    result.y = -matrix[5] + container.height / 2;
+                    return result;
                 },
-                zoomTo: function (x, y, zoom) {
-                    var prevScale = this.transformation.scale;
-                    this.transformation.originX = x;
-                    this.transformation.originY = y;
-                    this.transformation.scale = zoom;
-                    if (this.transformation.scale < MAX_ZOOM_OUT) {
-                        this.transformation.scale = MAX_ZOOM_OUT;
+                pan: function (x, y) {
+                    var matrix = this.getMatrix();
+                    x += +matrix[4];
+                    y += +matrix[5];
+                    matrix[4] = x;
+                    matrix[5] = y;
+                    if (this.$.canvas.style.transition) {
+                        this.$.canvas.style.transition = '';
                     }
-                    else if (this.transformation.scale > MAX_ZOOM_IN) {
-                        this.transformation.scale = MAX_ZOOM_IN;
+                    this.setMatrix(matrix);
+                },
+
+                zoomTo: function (scale, focal) {
+                    var matrix = this.getMatrix();
+
+                    var oldScale = matrix[0];
+                    if (scale == matrix[0]) {
+                        return;
                     }
-                    this.offset.left = this.offset.realLeft;
-                    this.offset.top = this.offset.realTop;
+                    // Constrain scale
+                    if (scale > this.maxZoom) {
+                        scale = this.maxZoom;
+                    } else if (scale < this.minZoom) {
+                        scale = this.minZoom;
+                    }
 
-                    this.applyTransform();
-                },
-                pan: function (deltaX, deltaY) {
-                    this.offset.left += deltaX;
-                    this.offset.top += deltaY;
-                    this.offset.realLeft += deltaX / this.transformation.scale;
-                    this.offset.realTop += deltaY / this.transformation.scale;
-                    this.applyTransform();
-                },
-                panTo: function (x, y) {
-                    this.offset.left = x;
-                    this.offset.top = y;
-                    this.offset.realLeft = x / this.transformation.scale;
-                    this.offset.realTop = y / this.transformation.scale;
-                    this.applyTransform();
-                },
-                applyTransform: function () {
-                    var node = this.querySelector('#canvas');
-                    node.style.transformOrigin = this.transformation.originX + 'px' + ' ' + this.transformation.originY + 'px';
-                    var transform2d = "matrix(";
-                    transform2d += this.transformation.scale + ",0,0," + this.transformation.scale + "," + this.transformation.translateX + "," + this.transformation.translateY + ")";
+                    // Calculate focal point based on scale
 
-                    node.style.transform = transform2d;
-                    node.style.left = this.offset.left + 'px';
-                    node.style.top = this.offset.top + 'px';
+                    if (focal) {
+                        // Adapted from code by Florian Günther
+                        // https://github.com/florianguenther/zui53
 
-                    this.querySelector('#canvas-controls').adjustZoomSlider(this.transformation.scale);
-                    this.jsPlumbInstance.setZoom(this.transformation.scale);
+                        var clientX = focal.x;
+                        var clientY = focal.y;
+
+                        // Adjust the focal point for default transform-origin => 50% 50%
+
+                        clientX -= (this.canvasDims.width) / 2;
+                        clientY -= (this.canvasDims.height) / 2;
+
+                        var clientV = new Vector(clientX, clientY, 1);
+
+                        var surfaceM = new Matrix(matrix);
+                        // Supply an offset manually if necessary
+                        var o = { left: 0, top: 0 };
+                        var offsetM = new Matrix(1, 0, o.left - 0, 0, 1, o.top - 0);
+                        var surfaceV = surfaceM.inverse().x(offsetM.inverse().x(clientV));
+
+                        var scaleBy = scale / matrix[0];
+                        surfaceM = surfaceM.x(new Matrix([scaleBy, 0, 0, scaleBy, 0, 0]));
+                        clientV = offsetM.x(surfaceM.x(surfaceV));
+
+                        matrix[4] = +matrix[4] + (clientX - clientV.e(0));
+                        matrix[5] = +matrix[5] + (clientY - clientV.e(1));
+                    }
+
+                    // Set the scale
+                    matrix[0] = scale;
+                    matrix[3] = scale;
+
+
+                    //this.animateMatrix(oldMatrix, matrix.slice(0), 3000, 15);
+                   
+                    
+                    
+
+                    if (matrix[0] < 0.8) {
+                        this.$.canvas.style.transition = 'transform ' + 0 + 'ms linear 0s';
+                    } else {
+                        this.$.canvas.style.transition = 'transform ' + 100 * matrix[0] + 'ms linear 0s';
+                    }
+                   
+                    
+                    this.setMatrix(matrix);
+                   
+                    this.querySelector('#canvas-controls').adjustZoomSlider(matrix[0]);
+                },
+
+                zoomToCenter: function (scale) {
+
+                    var canvasView = this.querySelector('#canvas-view');
+                    var container = {
+                        width: canvasView.offsetWidth,
+                        height: canvasView.offsetHeight
+                    };
+                    this.zoomTo(scale, { x: container.width / 2, y: container.height / 2 });
+                },
+                zoomCenter: function (delta) {
+                    var matrix = this.getMatrix();
+                    var scale = matrix[0] + delta;
+
+                    this.zoomToCenter(scale);
+                },
+                zoom: function (delta, focal) {
+                    var matrix = this.getMatrix();
+                    var scale = matrix[0] + delta;
+                    this.zoomTo(scale, focal);
+                },
+                
+                getMatrix: function (transform) {
+
+                    var matrix = this.regexMatrix.exec(transform || this.$.canvas.style.transform);
+
+                    var result = [1, 0, 0, 1, 0, 0];
+                    if (matrix) {
+                        result = [];
+                        for (var i = 1; i <= 6; i++) {
+                            result.push(+matrix[i]);
+                        }
+                    }
+                    return result;
+                },
+                setMatrix: function (matrix) {
+
+                    // Convert to array
+                    if (typeof matrix === 'string') {
+                        matrix = this.getMatrix(matrix);
+                    }
+                    
+                    var scale = +matrix[0];
+                    
+                    var canvasView = this.querySelector('#canvas-view');
+                    var dims = this.canvasDims;
+                    var container = {
+                        width: canvasView.offsetWidth,
+                        height: canvasView.offsetHeight
+
+                    };
+
+                    //keep canvas in view
+                    var maxLeft = ((-1 + scale) * dims.width + container.width) / 2;
+                    var maxRight = ((-1 - scale) * dims.width + container.width) / 2;
+                    var maxTop = ((-1 + scale) * dims.height + container.height) / 2;
+                    var maxBottom = ((-1 - scale) * dims.height + container.height) / 2;
+
+                    if (matrix[4] > maxLeft) {
+                        matrix[4] = maxLeft;
+                    }
+
+                    if (matrix[4] < maxRight) {
+                        matrix[4] = maxRight;
+                    }
+
+                    if (matrix[5] > maxTop) {
+                        matrix[5] = maxTop;
+                    }
+                    if (matrix[5] < maxBottom) {
+                        matrix[5] = maxBottom;
+                    }
+                    
+                    this.$.canvas.style.transform = ('matrix(' + matrix.join(',') + ')');
+                    this.jsPlumbInstance.setZoom(matrix[0]);
+                   
+                    return matrix;
                 }
 
             });

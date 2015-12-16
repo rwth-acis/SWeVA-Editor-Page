@@ -50,14 +50,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <template is="dom-bind" id="app">
 
-        <paper-drawer-panel id="paperDrawerPanel">
+        <paper-drawer-panel id="paperDrawerPanel" force-narrow="true">
             <!-- Drawer Scroll Header Panel -->
-            <paper-scroll-header-panel drawer fixed>
+           <paper-scroll-header-panel drawer fixed>
                 <!-- Drawer Toolbar -->
                 <paper-toolbar id="drawerToolbar">
                     <span class="paper-font-title">Menu</span>
                 </paper-toolbar>
-                <!-- Drawer Content -->
+                <!-- Drawer Content-->
                 <paper-menu class="list" attr-for-selected="data-route" selected="[[route]]">
                     <a data-route="home" href="{{baseUrl}}">
                         <iron-icon icon="home"></iron-icon>
@@ -74,7 +74,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </paper-menu>
             </paper-scroll-header-panel>
             <!-- Main Area -->
-            <paper-scroll-header-panel main id="headerPanelMain" condenses keep-condensed-header>
+            <paper-scroll-header-panel main style="left:0" id="headerPanelMain" condenses keep-condensed-header>
                 <!-- Main Toolbar -->
                 <paper-toolbar id="mainToolbar" class="tall">
                     <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>

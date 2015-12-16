@@ -68,7 +68,7 @@
             </svg>
         </button>
         <button class="center-button" on-click="handleZoomInClick"><strong>+</strong></button>
-        <input id="zoom-slider" type="range" min="1" max="5" step="0.2" value="{{zoomValue}}" orient="vertical" on-input="handleZoomSlider" on-change="handleZoomSlider" />
+        <input id="zoom-slider" type="range" min="{{minZoom}}" max="{{maxZoom}}" step="0.2" value="{{zoomValue}}" orient="vertical" on-input="handleZoomSlider" on-change="handleZoomSlider" />
         <button class="center-button" on-click="handleZoomOutClick"><strong>-</strong></button>
     </template>
     <script>
@@ -81,6 +81,14 @@
                     zoomValue: {
                         type: Number,
                         value: 1
+                    },
+                    maxZoom: {
+                        type: Number,
+                        value: 1
+                    },
+                    minZoom: {
+                        type: Number,
+                        value: 0.2
                     }
                 },
                 ready: function () {

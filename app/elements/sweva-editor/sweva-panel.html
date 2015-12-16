@@ -47,8 +47,9 @@
 
         <iron-pages selected="{{selectedTab}}">
             <div class="tab-page">
-                <paper-input id="create-node-name" label="Name"></paper-input>
-                <paper-button raised>Create</paper-button>
+                <span>{{selectedNode.name}}</span>
+                <paper-input id="create-node-name" label="Name">MyNode</paper-input>
+                <paper-button raised on-click="handleCreateNodeClick">Create</paper-button>
             </div>
             <div class="tab-page">
                 Page 2
@@ -69,12 +70,33 @@
                     selectedTab: {
                         type: Number,
                         value: 0
+                    },
+                    selectedNode: {
+                        type: Object,
+                        value: {
+                            name: "hi"
+                        }
                     }
                 },
                 ready: function () {
 
                 },
+                handleNodeSelected: function(event){
 
+                    if (event.detail.node) {
+                        this.selectedNode = event.detail.node;
+                    }
+                    else {
+
+                    }
+                },
+                handleCreateNodeClick: function () {
+                    var name = this.querySelector('#create-node-name').value;
+                    if (name.trim().length == 0) {
+                        name = "Node";
+                    }
+                    this.fire('createnode', {name:name});
+                }
             });
         })();
     </script>

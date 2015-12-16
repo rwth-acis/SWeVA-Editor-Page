@@ -28,26 +28,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 user-select: none;
                 padding: 10px;
             }
+
             sweva-canvas {
-               
                 flex: 1 1 auto;
             }
+
             sweva-panel {
-               
                 flex: 0 0 auto;
             }
         </style>
 
-        <sweva-canvas id="canvas-container">
-            <sweva-node name="Node1" id="node1" pos-x="2050" pos-y="2050"></sweva-node>
-            <sweva-node name="Node2" id="node2" pos-x="2250" pos-y="2150"></sweva-node>
+        <sweva-canvas id="canvas-container" canvas-offset-x="{{canvasOffset.x}}" canvas-offset-x="{{canvasOffset.x}}">
+            <!--<sweva-node name="Node1" id="node1" pos-x="2050" pos-y="2050"></sweva-node>
+            <sweva-node name="Node2" id="node2" pos-x="2250" pos-y="2150"></sweva-node>-->
         </sweva-canvas>
-        <sweva-panel>
-
+        <sweva-panel on-createnode="handleCreateNode">
         </sweva-panel>
     </template>
 
-    <!-- <link href="https://jsplumbtoolkit.com/community/demo/flowchart/app.css" rel="stylesheet" />-->
+    
     <script src="../../../bower_components/yjs/yjs.js"></script>
     <script src="../../../bower_components/jsplumb/dist/js/jsPlumb-2.1.0.js"></script>
     <script>
@@ -61,7 +60,115 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     jsPlumbInstance: {
                         type: Object,
                         value: null
+                    },
+                    canvasOffset: {
+                        type: Object,
+                        value: {
+                            x: -2000,
+                            y: -2000
+                        }
                     }
+                },
+                
+                handleCreateNode: function (event) {
+                    this.createNode({ name: event.detail.name });
+                    
+                },
+                createNode: function (options) {                   
+                    
+                    var canvas = this.querySelector('#canvas-container');
+                    var canvasView = this.querySelector('#canvas-view');
+                    var node = document.createElement("sweva-node");
+                    Polymer.dom(canvas).appendChild(node)
+
+                    var center = canvas.getViewCenter();
+                  
+                    
+                    var composableJSON = {
+                        name: options.name
+                    }
+
+                    var x = options.x || center.x;
+                    var y = options.y || center.y;
+                    console.log(this.yjs);
+                    node.init(this.jsPlumbInstance, this.yjs, composableJSON, { x: x, y: y });
+                    
+                   
+                },
+                ready: function () {
+                    var self = this;
+                    return;
+                    Y({
+                        db: {
+                            name: 'memory'
+                        },
+                        connector: {
+                            name: 'websockets-client',
+                            room: 'swevatest'
+                            // debug: true,
+                            // url: 'http://127.0.0.1:2345'
+                        },
+                        sourceDir: 'http://127.0.0.1:8021/SWeVA-Editor-Page/bower_components',
+                        share: {
+                            //nodes: 'Map',
+                            nodes: 'Map'
+                        }
+                    }).then(function (y) {
+                        self.yjs = y;
+                        var yjs = y;
+                        window.yjs = y;
+                        yjs.share.nodes.observe(function (events) {
+                            for (var i = 0; i < events.length; i++) {
+                                var event = events[i];
+                                (function (event) {
+                                    if (event.type !== 'delete') {
+                                        yjs.share.nodes.get(event.name).then(function (map) {
+                                            map.observe(function () {
+
+                                                var position = map.get('position') || { x: 100, y: 50 };
+                                                var node = self.querySelector('#' + event.name);
+                                                node.posX = position.x;
+                                                node.posY = position.y;
+                                                console.log(position);
+                                                self.jsPlumbInstance.repaintEverything();
+                                            });
+
+                                        });
+
+                                    }
+                                })(event);
+                            }
+                        });
+                        /*
+                        y.share.piece1.observe(function () {
+
+                            var position = self.yjs.share.piece1.get('position') || { x: 100, y: 50 };
+                            var node = self.querySelector('#asdas');
+                            node.posX = position.x;
+                            node.posY = position.y;
+                            console.log(position)
+                            self.jsPlumbInstance.repaintEverything();
+                        });
+                      /*  y.share.piece1.observe(function () {
+                            var position = y.share.piece1.get('position') || { x: 100, y: 50 };
+                            var node = self.querySelector('#node123');
+                            node.style.left = position.x + 'px';
+                            node.style.top = position.y + 'px';
+                            self.jsPlumbInstance.repaintEverything();
+
+
+
+                            //.then(function (value) {
+                            //var node = self.querySelector('#jsPlumb_2_3');
+                            /*
+                            node.style.left = value.x + 'px';
+                            node.style.top = value.y + 'px';
+                            self.instance.repaintEverything();*/
+
+                            // });
+                       // });
+                        console.log('yjs loaded')
+                    })
                 },
                 attached: function () {
                     var self = this;
@@ -79,112 +186,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         });
                         self.jsPlumbInstance = instance;
                         self.querySelector('#canvas-container').jsPlumbInstance = instance;
-                        var nodeConnectorPaintStyle = {
-                            lineWidth: 4,
-                            strokeStyle: "#0094ff",
-                            joinstyle: "round",
-                            outlineColor: "white",
-                            outlineWidth: 2,
-                            gradient: {
-                                stops: [[0, "#ff9d00"], [1, "#0094ff"]]
-                            }
-                        }
-                        // .. and this is the hover style.
-                        var nodeConnectorHoverStyle = {
-                            lineWidth: 4,
-                            strokeStyle: "#00cc00",
-                            outlineWidth: 2,
-                            outlineColor: "#00cc00",
-                            gradient: {
-                                stops: [[0, "#00cc00"], [1, "#00cc00"]]
-                            }
-                        }
-                        var nodeEndpointHoverStyle = {
-                            fillStyle: "#00cc00",
-                            strokeStyle: "#00cc00"
-                        }
-
-                        var nodeDataOutEndpoint = {
-                            endpoint: "Dot",
-                            paintStyle: {
-                                strokeStyle: "#ff9d00",
-                                fillStyle: "#ff9d00",
-                                radius: 10,
-                                lineWidth: 4
-                            },
-
-                            isSource: true,
-                            connector: ["Bezier"],
-                            connectorStyle: nodeConnectorPaintStyle,
-                            hoverPaintStyle: nodeEndpointHoverStyle,
-                            connectorHoverStyle: nodeConnectorHoverStyle,
-                            dragOptions: {},
-                            overlays: [
-                                ["Label", {
-                                    location: [0, -0.5],
-                                    label: "Dragavdfbdfhg fghfgh fg ",
-                                    cssClass: "node-data-out-endpoint-label node-label sweva-editor"
-                                }]
-                            ]
-                        }
-
-                        var nodeDataInEndpoint = {
-                            endpoint: "Dot",
-                            paintStyle: {
-                                strokeStyle: "#0094ff",
-                                fillStyle: "#ffffff",
-                                radius: 10,
-                                lineWidth: 4
-                            },
-                            hoverPaintStyle: nodeEndpointHoverStyle,
-                            maxConnections: 1,
-                            dropOptions: { hoverClass: "hover", activeClass: "active" },
-                            isTarget: true,
-                            overlays: [
-                                ["Label", {
-                                    location: [0.5, -0.5],
-                                    label: "Drop",
-                                    cssClass: "node-data-in-endpoint-label node-label sweva-editor"
-                                }]
-                            ]
-                        }
-
+                        
+                        
                         var init = function (connection) {
                             //  connection.getOverlay("label").setLabel(connection.sourceId.substring(15) + "-" + connection.targetId.substring(15));
                         };
 
-                        var _addEndpoints = function (toId, sourceAnchors, targetAnchors) {
-                            for (var i = 0; i < sourceAnchors.length; i++) {
-                                var sourceUUID = toId + sourceAnchors[i];
-                                instance.addEndpoint("flowchart" + toId, sourceEndpoint, {
-                                    anchor: sourceAnchors[i], uuid: sourceUUID
-                                });
-                            }
-                            for (var j = 0; j < targetAnchors.length; j++) {
-                                var targetUUID = toId + targetAnchors[j];
-                                instance.addEndpoint("flowchart" + toId, targetEndpoint, { anchor: targetAnchors[j], uuid: targetUUID });
-                            }
-                        };
+                     
 
                         // suspend drawing and initialise.
                         instance.batch(function () {
-                            instance.addEndpoint('node1', nodeDataInEndpoint, {
-                                anchor: [0, 0.5, -1, 0],
-                                uuid: 'node1_12'
-                            });
-                            instance.addEndpoint('node1', nodeDataOutEndpoint, {
-                                anchor: [1, 0.5, 1, 0],
-                                uuid: 'node1_13'
-                            });
-
-                            instance.addEndpoint('node2', nodeDataInEndpoint, {
-                                anchor: [0, 0.5, -1, 0],
-                                uuid: 'node2_12'
-                            });
-                            instance.addEndpoint('node2', nodeDataOutEndpoint, {
-                                anchor: [1, 0.5, 1, 0],
-                                uuid: 'node2_13'
-                            });
+                            
 
                             // listen for new connections; initialise them the same way we initialise the connections at startup.
                             instance.bind("connection", function (connInfo, originalEvent) {
@@ -201,7 +213,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             //jsPlumb.draggable(document.querySelectorAll(".window"), { grid: [20, 20] });
 
                             // connect a few up
-                            instance.connect({ uuids: ["node1_13", "node2_12"], editable: true });
+                           // instance.connect({ uuids: ["node1_13", "node2_12"], editable: true });
 
                             //
                             // listen for clicks on connections, and offer to delete connections on click.
@@ -218,6 +230,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                             instance.bind("connectionDragStop", function (connection) {
                                 console.log("connection " + connection.id + " was dragged");
+                                console.log(connection);
                             });
 
                             instance.bind("connectionMoved", function (params) {
@@ -226,8 +239,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         });
 
                         jsPlumb.fire("jsPlumbDemoLoaded", instance);
+                        // self.createNode({ name: 'node1', x: 2050, y: 2050});
 
+                        setTimeout(function () {
+
+                            for (var i = 0; i < 10; i++) {
+                                self.createNode({ name: 'node'+i, x: 2000+Math.random()*1000, y: 2000+Math.random()*1000});
+                            }
+                           
+                        }, 10);
+                        
+
+                        
                     });
+
+
                 }
 
             });
