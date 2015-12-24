@@ -11,6 +11,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="sweva-node.html">
 <link rel="import" href="sweva-canvas.html">
 <link rel="import" href="sweva-panel.html">
+<link rel="import" href="sweva-code.html">
+<link rel="import" href="sweva-cursor-awareness.html">
+<link rel="import" href="sweva-user-manager.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+
+<link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
 
 <dom-module id="sweva-editor">
     <template>
@@ -36,19 +43,53 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             sweva-panel {
                 flex: 0 0 auto;
             }
+
+            #editor-dialog {
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                margin: 50px;
+                padding-top: 50px;
+                position: fixed;
+                width: 100%;
+            }
+
+            paper-dialog {
+                background: #fff;
+            }
         </style>
 
-        <sweva-canvas id="canvas-container" canvas-offset-x="{{canvasOffset.x}}" canvas-offset-x="{{canvasOffset.x}}">
-            <!--<sweva-node name="Node1" id="node1" pos-x="2050" pos-y="2050"></sweva-node>
-            <sweva-node name="Node2" id="node2" pos-x="2250" pos-y="2150"></sweva-node>-->
+        <sweva-canvas id="canvas-container" 
+                      canvas-offset-x="{{canvasOffset.x}}" 
+                      canvas-offset-y="{{canvasOffset.x}}" 
+                      on-canvasmousemove="handleCanvasMouseMove"
+                      on-viewportchanged="handleViewPortChanced">
+
+            <sweva-cursor-awareness id="cursor-awareness"></sweva-cursor-awareness>
         </sweva-canvas>
-        <sweva-panel on-createnode="handleCreateNode">
+        
+        <sweva-panel
+                     on-createnode="handleCreateNode" 
+                     on-autolayout="handleAutoLayout"
+                     on-userdatachanged="handleUserDataChanged">
         </sweva-panel>
+        <sweva-user-manager on-useradded="handleUserAdded" on-userupdated="handleUserUpdated">
+        </sweva-user-manager>
+        <paper-dialog id="editor-dialog">
+            <h2>Dialog Title</h2>
+            <sweva-code>
+            </sweva-code>
+        </paper-dialog>
     </template>
 
-    
     <script src="../../../bower_components/yjs/yjs.js"></script>
     <script src="../../../bower_components/jsplumb/dist/js/jsPlumb-2.1.0.js"></script>
+
+    <script src="https://cdn.rawgit.com/cpettitt/dagre/master/dist/dagre.js"></script>
+
+    <!--<script src="../../../bower_components/dagre/dist/dagre.core.min.js"></script>
+    <!--<script src="../../../bower_components/graphlib/dist/graphlib.core.min.js"></script>-->
     <script>
 
         (function () {
@@ -61,6 +102,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         type: Object,
                         value: null
                     },
+                    yjs: {
+                        type: Object,
+                        value: null
+                    },
                     canvasOffset: {
                         type: Object,
                         value: {
@@ -69,109 +114,215 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         }
                     }
                 },
-                
-                handleCreateNode: function (event) {
-                    this.createNode({ name: event.detail.name });
+                getGraphData: function () {
+                    var nodes = this.querySelectorAll('sweva-node');
+                    var edges = [];
+
+                    this.jsPlumbInstance.select().each(function (connection) {
+                        var edge = {};
+                        edge.from = connection.sourceId;
+                        edge.to = connection.targetId;
+
+                        if (connection.endpoints.length != 2) {
+                            return;
+                        }
+
+                        var labels = connection.endpoints[0].getOverlays();
+                        for (var key in labels) {
+                            if (labels.hasOwnProperty(key)) {
+                                edge.fromEndpoint = labels[key].label;
+                            }
+                        }
+
+                        labels = connection.endpoints[1].getOverlays();
+                        for (var key in labels) {
+                            if (labels.hasOwnProperty(key)) {
+                                edge.toEndpoint = labels[key].label;
+                            }
+                        }
+                        edges.push(edge);
+                    });
+
+                    return { nodes: nodes, edges: edges };
+                },
+                autoLayout: function () {
+                    var graph = this.getGraphData();
+                    var g = new dagre.graphlib.Graph();
+                    g.setGraph({});
+                    g.setDefaultEdgeLabel(function () { return {}; });
+                    var nodeDictionary = {};
+                    for (var i = 0; i < graph.nodes.length; i++) {
+                        nodeDictionary[graph.nodes[i].id] = i;
+                        g.setNode(i, { width: graph.nodes[i].offsetWidth, height: graph.nodes[i].offsetHeight });
+                    }
+
+                    for (var i = 0; i < graph.edges.length; i++) {
+                        g.setEdge(nodeDictionary[graph.edges[i].from], nodeDictionary[graph.edges[i].to]);
+                    }
+
+                    g.setGraph({ rankdir: 'LR', nodesep: 140, ranksep: 300 })
+                    dagre.layout(g);
+
+                    var canvasOffset = this.canvasOffset;
+
+                    g.nodes().forEach(function (v) {
+                        if (typeof v !== 'undefined' && v !== 'undefined') {
+
+                            var node = g.node(v);
+                            var realNode = graph.nodes[v];
+
+                            realNode.posX = -canvasOffset.x + node.x;
+                            realNode.posY = -canvasOffset.y + node.y;
+                            realNode.updatePos();
+
+                        }
+                    });
+
+                    this.jsPlumbInstance.repaintEverything();
+                },
+                handleCanvasMouseMove: function (event) {
+                    var position = event.detail;
+                    var userManager = this.querySelector('sweva-user-manager');
+                    
+                    userManager.updateCursor(position.x, position.y);
+                },
+                handleViewPortChanced: function (event) {
+                    var cursors = this.querySelector('#cursor-awareness');
+                    cursors.updateViewport(event.detail);
+                },              
+                    
+                handleUserAdded: function (event) {
+                    if (!event.detail.isSelf) {
+                        var cursors = this.querySelector('#cursor-awareness');
+                        cursors.add(event.detail);
+                    }
                     
                 },
-                createNode: function (options) {                   
-                    
+                handleUserUpdated: function (event) {                    
+                    var cursors = this.querySelector('#cursor-awareness');
+                    cursors.update(event.detail.id, event.detail);
+
+                    if (event.detail.isSelf && (event.detail.name || event.detail.color)) {
+                        var panel = this.querySelector('sweva-panel');
+                        panel.updateUser(event.detail);
+                    }
+                },
+                handleUserDataChanged: function (event) {
+                    var userManager = this.querySelector('sweva-user-manager');
+                    userManager.update(userManager.ownId, event.detail);
+                },
+                handleAutoLayout: function (event) {
+
+                    /*this.autoLayout();
+
+                    var dialog = this.querySelector('#editor-dialog');
+                    if (dialog) {
+                        //dialog.open();
+                    }*/
+
+                },
+                handleCreateNode: function (event) {
+                    this.createNode({ name: event.detail.name });
+
+                },
+                createNode: function (options) {
+
                     var canvas = this.querySelector('#canvas-container');
-                    var canvasView = this.querySelector('#canvas-view');
+
                     var node = document.createElement("sweva-node");
                     Polymer.dom(canvas).appendChild(node)
 
                     var center = canvas.getViewCenter();
-                  
-                    
+
                     var composableJSON = {
                         name: options.name
                     }
 
                     var x = options.x || center.x;
                     var y = options.y || center.y;
-                    console.log(this.yjs);
+
                     node.init(this.jsPlumbInstance, this.yjs, composableJSON, { x: x, y: y });
-                    
-                   
+                    return node;
+
+                },
+                yjsCreateNode: function (nodeData) {
+
+                    var canvas = this.querySelector('#canvas-container');
+
+                    var node = document.createElement("sweva-node");
+                    Polymer.dom(canvas).appendChild(node)
+
+                    node.init(this.jsPlumbInstance, this.yjs, {}, { x: nodeData.x, y: nodeData.y }, nodeData.id, true);
+
+                    return node;
+
                 },
                 ready: function () {
                     var self = this;
-                    return;
+                   
+
                     Y({
                         db: {
                             name: 'memory'
                         },
                         connector: {
                             name: 'websockets-client',
-                            room: 'swevatest'
+                            room: 'swevatest8'
                             // debug: true,
                             // url: 'http://127.0.0.1:2345'
                         },
                         sourceDir: 'http://127.0.0.1:8021/SWeVA-Editor-Page/bower_components',
                         share: {
                             //nodes: 'Map',
-                            nodes: 'Map'
+                            nodes: 'Map',
+                            users: 'Map'
                         }
                     }).then(function (y) {
                         self.yjs = y;
                         var yjs = y;
-                        window.yjs = y;
+
                         yjs.share.nodes.observe(function (events) {
+
                             for (var i = 0; i < events.length; i++) {
                                 var event = events[i];
                                 (function (event) {
-                                    if (event.type !== 'delete') {
+                                    console.log('event', event.name, event.type);
+
+                                    if (event.type === 'add') {
                                         yjs.share.nodes.get(event.name).then(function (map) {
+                                            var position = map.get('position') || { x: 0, y: 0 };
+                                            self.yjsCreateNode({ id: event.name, x: position.x, y: position.y });
+                                            self.jsPlumbInstance.repaintEverything();
+
                                             map.observe(function () {
 
-                                                var position = map.get('position') || { x: 100, y: 50 };
-                                                var node = self.querySelector('#' + event.name);
+                                                var position = map.get('position') || { x: 0, y: 0 };
+                                                var node = document.getElementById(event.name);
+
+                                                if (!node) {
+                                                    return;
+                                                }
                                                 node.posX = position.x;
                                                 node.posY = position.y;
-                                                console.log(position);
                                                 self.jsPlumbInstance.repaintEverything();
                                             });
-
                                         });
-
                                     }
+
                                 })(event);
                             }
                         });
-                        /*
-                        y.share.piece1.observe(function () {
+                       
+                        var userManager = self.querySelector('sweva-user-manager');
+                        userManager.init(yjs);
 
-                            var position = self.yjs.share.piece1.get('position') || { x: 100, y: 50 };
-                            var node = self.querySelector('#asdas');
-                            node.posX = position.x;
-                            node.posY = position.y;
-                            console.log(position)
-                            self.jsPlumbInstance.repaintEverything();
-                        });
-                      /*  y.share.piece1.observe(function () {
-                            var position = y.share.piece1.get('position') || { x: 100, y: 50 };
-                            var node = self.querySelector('#node123');
-                            node.style.left = position.x + 'px';
-                            node.style.top = position.y + 'px';
-                            self.jsPlumbInstance.repaintEverything();
+                        console.log('loaded');
+                    });
 
-
-
-                            //.then(function (value) {
-                            //var node = self.querySelector('#jsPlumb_2_3');
-                            /*
-                            node.style.left = value.x + 'px';
-                            node.style.top = value.y + 'px';
-                            self.instance.repaintEverything();*/
-
-                            // });
-                       // });
-                        console.log('yjs loaded')
-                    })
                 },
                 attached: function () {
                     var self = this;
+
                     jsPlumb.ready(function () {
 
                         var instance = window.jsp = jsPlumb.getInstance({
@@ -186,17 +337,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         });
                         self.jsPlumbInstance = instance;
                         self.querySelector('#canvas-container').jsPlumbInstance = instance;
-                        
-                        
+
                         var init = function (connection) {
                             //  connection.getOverlay("label").setLabel(connection.sourceId.substring(15) + "-" + connection.targetId.substring(15));
                         };
 
-                     
-
                         // suspend drawing and initialise.
                         instance.batch(function () {
-                            
 
                             // listen for new connections; initialise them the same way we initialise the connections at startup.
                             instance.bind("connection", function (connInfo, originalEvent) {
@@ -213,7 +360,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             //jsPlumb.draggable(document.querySelectorAll(".window"), { grid: [20, 20] });
 
                             // connect a few up
-                           // instance.connect({ uuids: ["node1_13", "node2_12"], editable: true });
+                            // instance.connect({ uuids: ["node1_13", "node2_12"], editable: true });
 
                             //
                             // listen for clicks on connections, and offer to delete connections on click.
@@ -241,18 +388,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         jsPlumb.fire("jsPlumbDemoLoaded", instance);
                         // self.createNode({ name: 'node1', x: 2050, y: 2050});
 
-                        setTimeout(function () {
+                        /*setTimeout(function () {
 
+                            var nodes = [];
                             for (var i = 0; i < 10; i++) {
-                                self.createNode({ name: 'node'+i, x: 2000+Math.random()*1000, y: 2000+Math.random()*1000});
+
+                                nodes.push(self.createNode({ name: 'node' + i, x: 2000 + Math.random() * 1000, y: 2000 + Math.random() * 1000 }));
+
                             }
-                           
-                        }, 10);
-                        
 
-                        
+                            instance.connect({ uuids: [nodes[1].id + 'OUT1', nodes[2].id + 'IN1'], editable: true });
+                            instance.connect({ uuids: [nodes[2].id + 'OUT1', nodes[3].id + 'IN1'], editable: true });
+                            instance.connect({ uuids: [nodes[4].id + 'OUT1', nodes[5].id + 'IN1'], editable: true });
+                            instance.connect({ uuids: [nodes[4].id + 'OUT2', nodes[3].id + 'IN2'], editable: true });
+
+                        }, 2000);*/
+
                     });
-
 
                 }
 

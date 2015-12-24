@@ -9,9 +9,12 @@
     "platinum-elements": "PolymerElements/platinum-elements#^1.1.0",
     "polymer": "Polymer/polymer#^1.2.0",
     "paper-menu": "PolymerElements/paper-menu#4fecb43601",
-   
-    "jsplumb": "2.1.0"
-   
+    "jsplumb": "2.1.0",
+    "cola": "tgdwyer/WebCola#master",
+    "dagre": "0.7.4",
+    "graphlib": "2.0.0",
+    "ace-builds": "1.2.0",
+    "paper-color-picker": "https://github.com/AlexRuppert/paper-color-picker.git#float-offset-fix"
   },
   "devDependencies": {
     "web-component-tester": "*"

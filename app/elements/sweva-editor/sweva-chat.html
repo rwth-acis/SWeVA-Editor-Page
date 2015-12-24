@@ -1,0 +1,30 @@
+﻿
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<dom-module id="sweva-chat">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        
+    </template>
+    <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'sweva-chat',
+        properties: {
+          items: {
+            type: Array,
+            notify: true,
+          }
+        },
+        ready: function() {
+          
+        }
+      });
+    })();
+    </script>
+</dom-module>

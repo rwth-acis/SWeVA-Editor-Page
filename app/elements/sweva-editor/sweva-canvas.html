@@ -109,8 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         (function () {
             'use strict';
-            var MAX_ZOOM_IN = 5;
-            var MAX_ZOOM_OUT = 1;
+            
             var MOUSE_WHEEL_SLOWDOWN = 1000;
 
             Polymer({
@@ -187,14 +186,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     //init canvas matrix
                     canvas.style.transform = 'matrix(1, 0, 0, 1, ' + this.canvasOffsetX + ', ' + this.canvasOffsetY + ')';
                     canvas.style.transition = 'transform ' + 300 + 'ms linear 0s';
-                    canvasView.addEventListener("mousemove", this.handleCanvasMouseMove.bind(this), false);
+                    canvas.addEventListener("mousemove", this.handleCanvasMouseMove.bind(this), false);
+
+                    canvasView.addEventListener("mousemove", this.handleCanvasViewMouseMove.bind(this), false);
                     canvasView.addEventListener("mousewheel", this.handleCanvasMouseWheel.bind(this), false);
                     canvas.addEventListener("mousedown", this.handleCanvasMouseDown.bind(this), false);
                     canvas.addEventListener("mouseup", this.handleCanvasMouseUp.bind(this), false);
 
                     this.canvasDims.width = canvas.offsetWidth;
                     this.canvasDims.height = canvas.offsetHeight;
-
+                    this.setMatrix(this.getMatrix());
                     
 
                 },
@@ -220,11 +221,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 },
                 handleCanvasMouseMove: function (event) {
-
+                    
                     var x = event.offsetX;
                     var y = event.offsetY;
+                    var current = event.target;
+                    while (current.parentNode && current.id != 'canvas') {
+                        x += current.offsetLeft;
+                        y += current.offsetTop;
 
-                   
+                        if (current.style.transform) {
+                            var matrix = this.getMatrix(current.style.transform);
+
+                            var left = -(this.canvasDims.width - this.canvasDims.width * matrix[0]) / 2
+                            var top = -(this.canvasDims.height - this.canvasDims.height * matrix[0]) / 2
+
+                            x += +matrix[4]
+                            y += +matrix[5]
+                            
+                        }
+
+
+                        current = current.parentNode;
+                    }
+                    
+                    this.fire('canvasmousemove', { x: x, y: y });
+                },
+                handleCanvasViewMouseMove: function (event) {
+                    
+                    var x = event.offsetX;
+                    var y = event.offsetY;
+                    
                     var current = event.target;
                     //get correct position if over children, stupid event bubbling
                     while (current.parentNode && current.id != 'canvas-view') {
@@ -251,7 +277,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     }
                     if (this.mousePan.panning) {
 
-                        var now = new Date().getTime();
+                        var now = Date.now();
                         //for performance reasons (reduce CPU load)
                         if (now - this.mousePan.lastPanUpdate > 25) {
                           
@@ -262,6 +288,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             this.mousePan.lastPanUpdate = now;
                         }
                     }
+
+                    
                 },
                 handleCanvasMouseWheel: function (event) {
                     event.stopPropagation();
@@ -358,10 +386,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     } else {
                         this.$.canvas.style.transition = 'transform ' + 100 * matrix[0] + 'ms linear 0s';
                     }
-                   
+
+                    if (matrix[0] == this.maxZoom) {
+
+                        //redraw for proper scaling (otherwise looks picelated, check backface-visibility)
+                        this.$.canvas.style.display = 'none';
+                        this.setMatrix(matrix);
+                        this.$.canvas.style.display = 'block';
+                        
+                    }
+                    else {
+                        this.setMatrix(matrix);
+                    }
+
                     
-                    this.setMatrix(matrix);
-                   
+                    
+                    //this.querySelector('#canvas').style.backfaceVisibility = 'hidden!important;'
                     this.querySelector('#canvas-controls').adjustZoomSlider(matrix[0]);
                 },
 
@@ -438,8 +478,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     }
                     
                     this.$.canvas.style.transform = ('matrix(' + matrix.join(',') + ')');
-                    this.jsPlumbInstance.setZoom(matrix[0]);
-                   
+                    if (this.jsPlumbInstance) {
+                        this.jsPlumbInstance.setZoom(matrix[0]);
+                    }
+                    
+                    //viewport
+                    var left = (-matrix[4] + (-1 + scale) * dims.width / 2)/scale;
+                    var top = (-matrix[5] + (-1 + scale) * dims.height / 2) / scale;
+                    var right = left + container.width / scale;
+                    var bottom = top + container.height / scale;
+
+                    this.fire('viewportchanged', { left: left, top: top, right: right, bottom: bottom });
                     return matrix;
                 }
 

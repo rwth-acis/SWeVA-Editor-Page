@@ -242,7 +242,8 @@ gulp.task('clean', function() {
 gulp.task('serve', [/*'lint',*/ 'styles', 'elements', 'images'], function() {
   browserSync({
     port: 5003,
-    notify: false,
+    notify: false,    
+    ghostMode: false,
     logPrefix: 'PSK',
     snippetOptions: {
       rule: {
@@ -278,6 +279,7 @@ gulp.task('serve:dist', ['default'], function() {
     port: 5001,
     notify: false,
     logPrefix: 'PSK',
+    ghostMode: false,
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',

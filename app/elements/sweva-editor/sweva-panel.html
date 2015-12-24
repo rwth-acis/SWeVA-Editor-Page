@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-color-picker/paper-color-input.html">
 <dom-module id="sweva-panel">
     <template>
         <style>
@@ -34,7 +35,7 @@
 
             paper-button {
                 background-color: #0094ff;
-                color:#fff;
+                color: #fff;
             }
         </style>
 
@@ -42,7 +43,6 @@
             <paper-tab>Properties</paper-tab>
             <paper-tab>Save &amp; Load</paper-tab>
             <paper-tab>Settings</paper-tab>
-
         </paper-tabs>
 
         <iron-pages selected="{{selectedTab}}">
@@ -50,14 +50,17 @@
                 <span>{{selectedNode.name}}</span>
                 <paper-input id="create-node-name" label="Name">MyNode</paper-input>
                 <paper-button raised on-click="handleCreateNodeClick">Create</paper-button>
+
+                <paper-button raised on-click="handleAutoLayoutClick">Layout</paper-button>
             </div>
             <div class="tab-page">
                 Page 2
             </div>
             <div class="tab-page">
-                Page 3
+                <paper-input id="user-name" label="Username" value="{{username}}"></paper-input>
+                <paper-color-input label="User Color" value="{{usercolor}}"></paper-color-input>
+                <paper-button raised on-click="handleUserUpdateClick">Update</paper-button>
             </div>
-
         </iron-pages>
     </template>
     <script>
@@ -76,12 +79,26 @@
                         value: {
                             name: "hi"
                         }
+                    },
+                    username: {
+                        type: String,
+                        value: "User",
+
+                    },
+                    usercolor: {
+                        type: Object,
+                        value: {
+                            red: 0,
+                            green: 150,
+                            blue: 136
+                        }
                     }
+
                 },
                 ready: function () {
 
                 },
-                handleNodeSelected: function(event){
+                handleNodeSelected: function (event) {
 
                     if (event.detail.node) {
                         this.selectedNode = event.detail.node;
@@ -90,13 +107,63 @@
 
                     }
                 },
+                handleAutoLayoutClick: function () {
+                    this.fire('autolayout', {});
+                },
                 handleCreateNodeClick: function () {
                     var name = this.querySelector('#create-node-name').value;
                     if (name.trim().length == 0) {
                         name = "Node";
                     }
-                    this.fire('createnode', {name:name});
+                    this.fire('createnode', { name: name });
+                },
+                handleUserUpdateClick: function () {
+
+                    console.log('userdataupdated')
+
+                    function componentToHex(c) {
+                        var hex = c.toString(16);
+                        return hex.length == 1 ? "0" + hex : hex;
+                    }
+
+                    this.fire('userdatachanged', {
+                        name: this.username,
+                        color: "#" + ((1 << 24) + (this.usercolor.red << 16) + (this.usercolor.green << 8) + this.usercolor.blue).toString(16).slice(1)
+                    })
+
+                },
+                updateUser: function (data) {
+                    
+                    if (data.name) {
+                        this.username = data.name;
+                    }
+                    if (data.color) {
+                        
+                        function hexToRgb(hex) {
+                            // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+                            var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+                            hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+                                return r + r + g + g + b + b;
+                            });
+
+                            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                            return result ? {
+                                r: parseInt(result[1], 16),
+                                g: parseInt(result[2], 16),
+                                b: parseInt(result[3], 16)
+                            } : null;
+                        }
+                        var color = hexToRgb(data.color);
+                        var usercolor = {}
+                        usercolor.red = color.r;
+                        usercolor.green = color.g;
+                        usercolor.blue = color.b;
+                       
+                        this.querySelector('paper-color-input').value = usercolor;
+                        this.querySelector('paper-color-input').ready();
+                    }
                 }
+
             });
         })();
     </script>
