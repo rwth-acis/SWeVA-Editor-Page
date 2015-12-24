@@ -14,6 +14,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="sweva-code.html">
 <link rel="import" href="sweva-cursor-awareness.html">
 <link rel="import" href="sweva-user-manager.html">
+<link rel="import" href="sweva-chat.html">
+
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 
 <link rel="import" href="../../bower_components/neon-animation/animations/scale-up-animation.html">
@@ -67,8 +69,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                       on-viewportchanged="handleViewPortChanced">
 
             <sweva-cursor-awareness id="cursor-awareness"></sweva-cursor-awareness>
+           
         </sweva-canvas>
-        
+        <sweva-chat></sweva-chat>
         <sweva-panel
                      on-createnode="handleCreateNode" 
                      on-autolayout="handleAutoLayout"
@@ -205,6 +208,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     if (event.detail.isSelf && (event.detail.name || event.detail.color)) {
                         var panel = this.querySelector('sweva-panel');
                         panel.updateUser(event.detail);
+
+                        var chat = this.querySelector('sweva-chat');
+                        chat.updateUser(event.detail);
                     }
                 },
                 handleUserDataChanged: function (event) {
@@ -267,7 +273,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         },
                         connector: {
                             name: 'websockets-client',
-                            room: 'swevatest8'
+                            room: 'swevatest9'
                             // debug: true,
                             // url: 'http://127.0.0.1:2345'
                         },
@@ -275,7 +281,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         share: {
                             //nodes: 'Map',
                             nodes: 'Map',
-                            users: 'Map'
+                            users: 'Map',
+                            chat: 'Array'
                         }
                     }).then(function (y) {
                         self.yjs = y;
@@ -315,6 +322,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                        
                         var userManager = self.querySelector('sweva-user-manager');
                         userManager.init(yjs);
+                        var userChat = self.querySelector('sweva-chat');
+                        userChat.init(yjs);
 
                         console.log('loaded');
                     });

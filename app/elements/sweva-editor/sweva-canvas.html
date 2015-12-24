@@ -200,6 +200,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 },
                 handleCenterCanvas: function (event) {
+                    var canvas = this.querySelector('#canvas');
                     canvas.style.transform = 'matrix(1, 0, 0, 1, ' + this.canvasOffsetX + ', ' + this.canvasOffsetY + ')';
                 },
                 handleZoomClickCanvas: function (event) {

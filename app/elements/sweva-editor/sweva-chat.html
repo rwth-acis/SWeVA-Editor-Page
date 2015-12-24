@@ -1,30 +1,261 @@
-﻿
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+﻿<link rel="import" href="../../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <dom-module id="sweva-chat">
     <template>
         <style>
             :host {
                 display: block;
+                position: absolute;
+                width: 300px;
+                max-height: 300px;
+                pointer-events: none;
+                z-index: 30;
+                right: 300px;
+                bottom: 0;
+                margin: 10px;
+                border: 1px dashed #aaa;
+                overflow: hidden;
+            }
+
+            .message-list {
+                display: flex;
+                pointer-events: none;
+                overflow: hidden;
+                text-shadow: 1px 1px 6px #fff;
+                height: 240px;
+            }
+
+            .type-area {
+                display: flex;
+                background: #ffffff;
+                align-items: center;
+                padding:0 10px;
+                 pointer-events: all;
+            }
+
+                .type-area paper-input {
+                    flex: 1 0 0;
+                }
+
+            .container {
+                flex: 1 0 0;
+                padding: 5px;
+                overflow: hidden;
+                 pointer-events: none;
+            }
+
+            .name {
+                font-weight: 600;
+            }
+
+            .time {
+                float: right;
+            }
+            .text {
+                white-space: pre-wrap;
+            }
+            .scroll {
+                background: #ffffff;
+                height: 100%;
+                width: 40px;
+                pointer-events: all;
+                overflow: auto;
+                background: repeating-linear-gradient( 135deg, #FFFFFF, #FFFFFF 10px, #AAA 10px, #aaa 11px );
+            }
+
+            paper-textarea {
+                display: block;
+                width: 100%;
+                max-height: 100px;
+                overflow-y: auto;
+                overflow-x: hidden;
             }
         </style>
-        
+        <div class="message-list">
+            <div class="container">
+                <template is="dom-repeat" items="{{messages}}">
+                    <div class="message">
+                        <div class="headline">
+                            <span class="name  paper-font-subhead" style$="{{_colorToStyle(item.color)}}">{{item.name}}</span>
+                            <span class="time paper-font-caption">{{_timestampToTime(item.timestamp)}}</span>
+                        </div>
+                        <div class="content">
+                            <span class="text paper-font-body1">{{item.message}}</span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <div class="scroll" on-scroll="handleScroll">
+                <div id="scroll-dummy" style$="{{_heightToStyle(scrollHeight)}}"></div>
+            </div>
+        </div>
+        <div class="type-area">
+            <paper-textarea label="Message"  on-keydown="handleEnter" value="{{currentMessage}}"></paper-textarea>
+            <paper-icon-button icon="icons:send" on-click="handleSendMessage"></paper-icon-button>
+        </div>
     </template>
     <script>
-    (function() {
-      'use strict';
+        (function () {
+            'use strict';
 
-      Polymer({
-        is: 'sweva-chat',
-        properties: {
-          items: {
-            type: Array,
-            notify: true,
-          }
-        },
-        ready: function() {
-          
-        }
-      });
-    })();
+            Polymer({
+                is: 'sweva-chat',
+                properties: {
+                    messages: {
+                        type: Array,
+                        value: [
+                        ]
+
+                    },
+                    currentMessage:{
+                        type: String,
+                        value:''
+                    },
+                    scrollHeight: {
+                        type: Number,
+                        value: 0
+                    },
+                    maxMessages: {
+                        type: Number,
+                        value: 5
+                    },
+                    user: {
+                        type: Object,
+                        value: {
+                            name: 'Anonymous',
+                            color: '#000'
+                        }
+                    },
+                    yjs: {
+                        type: Object,
+                        value: null
+                    }
+                },
+                observers: [
+                    '_messagesChanged(messages.splices)'
+                ],
+                ready: function () {
+
+                },
+                attached: function () {
+                    this._messagesChanged();
+
+                   
+                },
+                init: function (yjs) {
+                    var self = this;
+                    this.yjs = yjs;
+                    yjs.share.chat.observe(function (events) {
+                        for (var i = 0; i < events.length; i++) {   
+                            
+                            if (events[i].type === 'insert') {
+                                self.appendMessage(events[i].object.valArray[events[i].index], events[i].index);
+                            } else if (events[i].type === 'delete') {
+                                self.removeMessage(events[i].index);
+
+                            }
+                        }
+                        // concurrent insertions may result in a history > 7, so cleanup here
+                        self.cleanupChat()
+                    });
+                },
+                appendMessage: function(message, position){
+                    var messages = this.messages.slice(0);
+
+                    messages.splice(position, 0, message);
+                    this.messages = messages;
+                    
+                },
+                removeMessage: function (position) {
+                    var messages = this.messages.slice(0);
+                    messages.splice(position, 1);
+                    this.messages = messages;
+                },
+                cleanupChat: function(){
+                    var len;
+                    while ((len = this.yjs.share.chat.length) > 50) {
+                        this.yjs.share.chat.delete(0)
+                    }
+                },
+                _heightToStyle: function (height) {
+                    return 'height: ' + height + 'px';
+                },
+                _colorToStyle: function (color) {
+
+                    return 'color:' + color + ';';
+                },
+                _timestampToTime: function (timestamp) {
+                    var d = new Date(+timestamp);
+                    return d.toLocaleTimeString();
+                },
+                _messagesChanged: function () {
+
+                    Polymer.dom.flush()
+                    this.scrollHeight = this.$$('.container').scrollHeight;
+
+                    var container = this.$$('.container');
+                    var scroll = this.$$('.scroll');
+                    container.scrollTop = this.scrollHeight
+                    scroll.scrollTop = container.scrollTop;
+                },
+                handleEnter: function (e) {
+                    // check if 'enter' was pressed
+                    
+                    if (e.keyCode === 13 && !e.ctrlKey && !e.shiftKey) {
+                        e.preventDefault();
+                        this.handleSendMessage();
+                    }
+                },
+                handleScroll: function (event) {
+                    var scroll = this.$$('.scroll');
+                    var container = this.$$('.container');
+                    container.scrollTop = scroll.scrollTop;
+
+                },
+                addMessage: function (data) {
+
+
+                    var message = {};
+
+                    message.name = data.name || this.user.name || 'Anonymous';
+                    message.color = data.color || this.user.color || '#000';
+                    message.timestamp = data.timestamp || Date.now();
+                    message.message = data.message || 'no message';
+
+
+
+                    if (this.yjs.share.chat.length >= 50) {
+                        // If we are goint to insert the 8th element, make sure to delete first.
+                        this.yjs.share.chat.delete(0);
+                    }
+                   
+                    this.yjs.share.chat.insert(this.yjs.share.chat.length, [message]);
+
+
+                    
+                    
+                    
+                },
+                handleSendMessage: function () {
+                    
+                    var message = this.currentMessage;
+                    if (message.trim().length > 0) {
+                        this.currentMessage = "";
+                        this.addMessage({ message: message });
+                    }
+                },
+                updateUser: function (user) {
+                    if (user.name) {
+                        this.user.name = user.name;
+                    }
+                    if (user.color) {
+                        this.user.color = user.color;
+                    }
+                }
+            });
+        })();
     </script>
 </dom-module>

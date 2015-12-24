@@ -168,7 +168,9 @@
                     this.name = options.name || this.name;
 
                     this.updateColor(options.color || this.color);
-                    this.updatePos(options.cursor.x, options.cursor.y);
+                    if (options.cursor) {
+                        this.updatePos(options.cursor.x, options.cursor.y);
+                    }
                 },
                 updateViewport: function (viewport) {
                     this.viewport = viewport;
