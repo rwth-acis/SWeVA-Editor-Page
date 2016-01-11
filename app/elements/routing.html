@@ -37,8 +37,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       next();
     });
 
-    page('/', function() {
-      app.route = 'home';
+    page('/:room', function (data) {
+        app.route = 'home';
+        app.params = data.params;
+       
     });
 
     page(app.baseUrl, function() {

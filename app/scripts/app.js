@@ -73,7 +73,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   app.scrollPageToTop = function() {
     //app.$.headerPanelMain.scrollToTop(true);
   };
-
+  /*setTimeout(function () {
+      var content = document.querySelector('#mainContainer');
+     
+      content.scrollTop = content.scrollHeight;
+     
+  }, 1000);*/
+  
   app.closeDrawer = function () {
       //app.querySelector('#paperDrawerPanel').closeDrawer();
    app.$.paperDrawerPanel.closeDrawer();

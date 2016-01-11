@@ -12,7 +12,7 @@
                 width: 300px;
                 max-height: 300px;
                 pointer-events: none;
-                z-index: 30;
+                z-index: 9;
                 right: 300px;
                 bottom: 0;
                 margin: 10px;
@@ -106,8 +106,7 @@
                 properties: {
                     messages: {
                         type: Array,
-                        value: [
-                        ]
+                        value: []
 
                     },
                     currentMessage:{
@@ -254,6 +253,11 @@
                     if (user.color) {
                         this.user.color = user.color;
                     }
+                },
+                cleanUp: function () {
+                    this.messages = [];
+                    this.yjs = null;                    
+                    this.users = [];
                 }
             });
         })();

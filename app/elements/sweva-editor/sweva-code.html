@@ -1,53 +1,154 @@
-﻿
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+﻿<link rel="import" href="../../bower_components/polymer/polymer.html">
 <dom-module id="sweva-code">
     <template>
         <style>
             :host {
                 display: block;
             }
-            #editor {
-                position: absolute;
+
+            .dialog-container {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                width: 100%;
+                box-sizing: border-box;
+                padding-bottom: 25px;
+            }
+
+            paper-dialog {
                 top: 0;
+                left: 0;
                 right: 0;
                 bottom: 0;
+                margin: 80px;
+                position: fixed;
+                width: 100%;
+            }
+
+            .textarea-container {
+                flex: 1 1 0;
+                position: relative;
+                margin-top: 15px;
+            }
+
+            textarea {
+                height: 100%;
+                width: 100%;
+                overflow: auto;
+                position: absolute;
+                top: 0;
                 left: 0;
             }
-            #editor-container{
-                position: relative;
-            }
         </style>
-        <div>Hello!</div>
-        <div id="editor-container">
-
-
-            <div id="editor">
-                function foo(items) {
-                var x = "All this is syntax highlighted";
-                return x;
-                }
+        <paper-dialog>
+            <div class="dialog-container">
+                <h2>{{title}}</h2>
+                <div class="textarea-container">
+                    <textarea spellcheck="false" id="editor" value="test"></textarea>
+                </div>
+                <div class="buttons">
+                    <paper-button dialog-dismiss>Cancel</paper-button>
+                    <paper-button dialog-confirm on-click="handleAccept">Accept</paper-button>
+                </div>
             </div>
-        </dive>
+        </paper-dialog>
     </template>
-    <script src="../../../bower_components/ace-builds/src-min/ace.js"></script>
+    <script src="../../../bower_components/quill/dist/quill.min.js"></script>
     <script>
-    (function() {
-      'use strict';
+        (function () {
+            'use strict';
 
-      Polymer({
-          is: 'sweva-code',
-        properties: {
-          
-        },
-        ready: function() {
-          
-        },
-        attached: function () {
-            var editor = ace.edit("editor");
-            editor.setTheme("ace/theme/chrome");
-            editor.getSession().setMode("ace/mode/javascript");
-        }
-      });
-    })();
+            Polymer({
+                is: 'sweva-code',
+                properties: {
+                    code: {
+                        type: String,
+                        value: ''
+                    },
+                    editor: {
+                        type: Object,
+                        value: null
+                    },
+                    yjs: {
+                        type: Object,
+                        value: null
+                    },
+                    oldNode: {
+                        type: Object,
+                        value: null
+                    },
+                    title: {
+                        type: String,
+                        value: 'Edit'
+                    },
+                    currentId: {
+                        type: String,
+                        value: ''
+                    }
+
+                },
+                ready: function () {
+
+                },
+                open: function (title, id, code) {
+                    this.title = title;
+                    this.currentId = id;
+                    this.$.editor.value = code;
+                    this.querySelector('paper-dialog').open();
+                },
+                handleAccept: function () {
+                    var code = this.$.editor.value;
+                    this.fire('edited', { id: this.currentId, code: code });
+                },
+                update: function (yjs, code) {
+
+                    //var self = this;
+                    //self.yjs = yjs;
+
+                    /*
+                    if (self.oldNode) {
+                        var oldId = self.oldNode.id;
+                        self.yjs.share.nodes.get(oldId).then(function (map) {
+                            map.get('sharedCode').then(function (text) {
+                                text.textfields = [];
+                                self.yjs.share.nodes.get(node.id).then(function (map) {
+                                    map.get('sharedCode').then(function (text) {
+                                        text.bind(document.querySelector("#editor-dialog #editor"));
+                                        //text.insert(0, node.code);
+                                    });
+                                });
+                            });
+                        });
+                    }
+                    else {
+                        self.yjs.share.nodes.get(node.id).then(function (map) {
+                            map.get('sharedCode').then(function (text) {
+                                text.bind(document.querySelector("#editor-dialog #editor"));
+                                //text.insert(0, node.code);
+                            });
+                        });
+                    }*/
+                    //self.oldNode = node;
+                },
+                attached: function () {
+                    /*var configs = {
+                        formats: ['bold', 'italic', 'color'],
+                        styles: {
+                            '.ql-editor': {
+                                'font-family': "monospace"
+                            }
+                        },
+                        theme: 'snow'
+                    };
+                    this.editor = new Quill('#editor', configs);
+
+                    var field = this.querySelector('#editor .ql-editor');
+                    field.spellcheck = false;
+                    field.focus();
+                    field.blur();*/
+                    //editor.addModule('toolbar', { container: '#toolbar' });
+                }
+            });
+        })();
     </script>
 </dom-module>

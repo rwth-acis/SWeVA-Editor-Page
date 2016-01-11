@@ -26,6 +26,10 @@
                         type: Number,
                         value: 0
                     },
+                    maxUserAge: {
+                        type: Number,
+                        value: 600000 //10 min, before getting 'kicked'
+                    },
                     colorTable: {
                         type: Array,
                         value:
@@ -260,6 +264,18 @@
                         self.update(self.ownId, { cursor: { x: posX, y: posY } });
                     }, 200);
 
+                    setInterval(function () {
+                        var now = Date.now();
+                        for (var key in self.users) {
+                            if (self.users.hasOwnProperty(key) && key != self.ownId) {
+                                if (self.users[key].lastUpdate + self.maxUserAge < now) {
+                                    self.deleteUser(key);
+                                }
+                            }
+                        }
+
+                    }, 1000);
+
                 },
                 init: function (yjs) {
                     this.yjs = yjs;
@@ -301,7 +317,7 @@
                                         yjs.share.users.get(event.name).then(function (map) {
                                             var cursor = map.get('cursor');
                                             var color = map.get('color');
-                                            var name = map.get('name');
+                                            var name = map.get('name');                                            
                                             self.add(event.name, { name: name, color: color, cursor: cursor }, true);
 
                                             map.observe(function () {
@@ -309,8 +325,8 @@
                                                 var cursor = map.get('cursor');
                                                 var color = map.get('color');
                                                 var name = map.get('name');
-
-                                                self.update(event.name, { name: name, color: color, cursor: cursor }, true);
+                                                var selectedNode = map.get('selectedNode');
+                                                self.update(event.name, { name: name, color: color, cursor: cursor, selectedNode: selectedNode }, true);
                                             });
                                         });
                                     } catch (e) {
@@ -318,17 +334,32 @@
                                     }
 
                                 }
+                                else if (event.type === 'delete') {
+                                    self.deleteUser(event.name, true);
+                                }
                             })(event)
                         }
                     });
 
-                    this.add(this.ownId, {});
+                    this.add(this.ownId, { name: userName , color: userColor});
                     //this.update(this.ownId, { color: this._getRandomColor()})
+                },
+                getUserName: function(id){
+                    if (this.users.hasOwnProperty(id)) {
+                        return this.users[id].name;
+                    }
+                    return '';
+                },
+                getUserColor: function(id){
+                    if (this.users.hasOwnProperty(id)) {
+                        return this.users[id].color;
+                    }
+                    return '#fff';
                 },
                 add: function (id, options, fromYjs) {
                     var cursor = options.cursor || { x: 0, y: 0 };
                     var color = options.color || this._getElementByHash(this.colorTable, id);
-                    var name = options.name || 'User';
+                    var name = options.name || this._getElementByHash(this.nameTable1, id) + ' ' + this._getElementByHash(this.nameTable2, id);
                     this.users[id] = { id: id, name: name, color: color, cursor: cursor, isSelf: (id == this.ownId) };
 
                     if (typeof fromYjs === 'undefined' || fromYjs == false) {
@@ -340,9 +371,20 @@
 
                         });
                     }
+                    this.users[id].lastUpdate = Date.now();
                     this.fire('useradded', this.users[id]);
                     this.fire('userupdated', this.users[id]);
 
+                },
+                deleteUser: function (id, fromYjs) {
+                    if (this.users[id] && id != this.ownId) {
+                        this.fire('userdeleted', this.users[id]);
+                        delete this.users[id]
+                        
+                    }
+                    if (typeof fromYjs === 'undefined' || fromYjs == false) {
+                        this.yjs.share.users.delete(id);
+                    }
                 },
                 throttle: function (func, wait, options) {
                     var context, args, result;
@@ -375,42 +417,56 @@
                         return result;
                     };
                 },
-                updateCursor: function (posX, posY) {
-
-                    var now = Date.now();
-                    if (this.lastUpdate + 100 < now) {
-                        this.update(this.ownId, { cursor: { x: posX, y: posY } });
-                        this.lastUpdate = now;
+                updateSelectedNode: function (node) {
+                    if (node) {
+                        this.update(this.ownId, { selectedNode: node.id });
                     }
-
+                    
                 },
                 update: function (id, options, fromYjs) {
+                   
+
                     if (!options || !this.users.hasOwnProperty(id)) {
                         return;
                     }
-                    
+                   
                     var name = options.name || this.users[id].name;
                     var color = options.color || this.users[id].color;
                     var cursor = options.cursor || this.users[id].cursor;
+                    var selectedNode = options.selectedNode || this.users[id].selectedNode;
 
                     var nameUpdated = name !== this.users[id].name;
                     var colorUpdated = color !== this.users[id].color;
                     var cursorUpdated = (cursor.x !== this.users[id].cursor.x) || (cursor.y !== this.users[id].cursor.y);
-
+                    var selectedNodeUpdated = selectedNode !== this.users[id].selectedNode;
                     if (typeof fromYjs === 'undefined' || fromYjs == false) {
-                        this.yjs.share.users.get(id).then(function (map) {
+                        try {
 
-                            if (nameUpdated) {
+                            this.yjs.share.users.get(id).then(function (map) {
+
+                                if (nameUpdated) {
+                                    map.set('name', name);
+                                }
+                                if (colorUpdated) {
+                                    map.set('color', color);
+                                }
+                                if (cursorUpdated) {
+                                    map.set('cursor', { x: cursor.x, y: cursor.y });
+                                }
+                                if (selectedNodeUpdated) {
+                                    map.set('selectedNode', selectedNode);
+                                }
+                            });
+                        }
+                        catch (e) {
+                            
+                            this.yjs.share.users.set(id, Y.Map).then(function (map) {
                                 map.set('name', name);
-                            }
-                            if (colorUpdated) {
                                 map.set('color', color);
-                            }
-                            if (cursorUpdated) {
                                 map.set('cursor', { x: cursor.x, y: cursor.y });
-                            }
-
-                        });
+                                map.set('selectedNode', '');
+                            });
+                        }
                     }
                     var updatedObject = {};
                     updatedObject.id = id;
@@ -429,7 +485,11 @@
                         this.users[id].cursor = cursor;
                         updatedObject.cursor = cursor;
                     }
-
+                    if (selectedNodeUpdated) {
+                        this.users[id].selectedNode = selectedNode;
+                        updatedObject.selectedNode = selectedNode;
+                    }
+                    this.users[id].lastUpdate = Date.now();
                     this.fire('userupdated', updatedObject);
                 },
                 _getElementByHash: function (array, text) {
@@ -445,7 +505,7 @@
                     var index = Math.floor(Math.random() * this.colorTable.length);
                     return this.colorTable[index];
                 },
-               
+
                 _getRandomName: function () {
                     var index1 = Math.floor(Math.random() * this.nameTable1.length);
                     var index2 = Math.floor(Math.random() * this.nameTable2.length);
@@ -459,6 +519,11 @@
                     }
                     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
                       s4() + '-' + s4() + s4() + s4();
+                },
+                cleanUp: function () {
+                    this.lastUpdate = 0;
+                    this.yjs = null;                    
+                    this.users = [];
                 }
 
             });

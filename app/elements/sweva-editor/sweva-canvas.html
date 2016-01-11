@@ -34,19 +34,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;
+                user-select: none;
                 background-color: rgba(255,255,255,0.5);
             }
 
             .node-data-out-endpoint-label {
                 transform: translateX(0) !important;
                 border: 2px solid #ff9d00;
-              
             }
 
             .node-data-in-endpoint-label {
                 transform: translateX(-100%) !important;
                 border: 2px solid #0094ff;
-
             }
         </style>
     </template>
@@ -78,7 +77,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 top: 0;
                 cursor: move;
                 transform-origin: 50% 50% 0px;
-                 -webkit-backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
                 -moz-backface-visibility: hidden;
                 backface-visibility: hidden;
             }
@@ -109,7 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         (function () {
             'use strict';
-            
+
             var MOUSE_WHEEL_SLOWDOWN = 1000;
 
             Polymer({
@@ -196,15 +195,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     this.canvasDims.width = canvas.offsetWidth;
                     this.canvasDims.height = canvas.offsetHeight;
                     this.setMatrix(this.getMatrix());
-                    
 
                 },
                 handleCenterCanvas: function (event) {
                     var canvas = this.querySelector('#canvas');
                     canvas.style.transform = 'matrix(1, 0, 0, 1, ' + this.canvasOffsetX + ', ' + this.canvasOffsetY + ')';
+                    this.setMatrix(this.getMatrix());
                 },
                 handleZoomClickCanvas: function (event) {
-                    this.zoomCenter(event.detail.delta*0.4);
+                    this.zoomCenter(event.detail.delta * 0.4);
                 },
                 handleZoomSlideCanvas: function (event) {
                     this.zoomToCenter(event.detail.value);
@@ -222,7 +221,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 },
                 handleCanvasMouseMove: function (event) {
-                    
+
                     var x = event.offsetX;
                     var y = event.offsetY;
                     var current = event.target;
@@ -238,20 +237,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                             x += +matrix[4]
                             y += +matrix[5]
-                            
-                        }
 
+                        }
 
                         current = current.parentNode;
                     }
-                    
+
                     this.fire('canvasmousemove', { x: x, y: y });
                 },
                 handleCanvasViewMouseMove: function (event) {
-                    
+
                     var x = event.offsetX;
                     var y = event.offsetY;
-                    
+
                     var current = event.target;
                     //get correct position if over children, stupid event bubbling
                     while (current.parentNode && current.id != 'canvas-view') {
@@ -280,17 +278,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                         var now = Date.now();
                         //for performance reasons (reduce CPU load)
-                        if (now - this.mousePan.lastPanUpdate > 25) {
-                          
+                        if (now - this.mousePan.lastPanUpdate > 20) {
+
                             this.pan((this.mousePos.x - this.mousePan.x), (this.mousePos.y - this.mousePan.y));
-                           
+
                             this.mousePan.x = this.mousePos.x;
                             this.mousePan.y = this.mousePos.y;
                             this.mousePan.lastPanUpdate = now;
                         }
                     }
 
-                    
                 },
                 handleCanvasMouseWheel: function (event) {
                     event.stopPropagation();
@@ -301,7 +298,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                     this.zoom(event.wheelDelta / MOUSE_WHEEL_SLOWDOWN, this.mousePos);
                 },
-                getViewCenter: function(){
+                getViewCenter: function () {
                     var result = { x: 0, y: 0 };
                     var matrix = this.getMatrix();
                     var canvasView = this.querySelector('#canvas-view');
@@ -310,8 +307,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         height: canvasView.offsetHeight
                     };
 
-                   
-                    
                     result.x = -matrix[4] + container.width / 2;
                     result.y = -matrix[5] + container.height / 2;
                     return result;
@@ -376,11 +371,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     matrix[0] = scale;
                     matrix[3] = scale;
 
-
                     //this.animateMatrix(oldMatrix, matrix.slice(0), 3000, 15);
-                   
-                    
-                    
 
                     if (matrix[0] < 0.8) {
                         this.$.canvas.style.transition = 'transform ' + 0 + 'ms linear 0s';
@@ -394,14 +385,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         this.$.canvas.style.display = 'none';
                         this.setMatrix(matrix);
                         this.$.canvas.style.display = 'block';
-                        
+
                     }
                     else {
                         this.setMatrix(matrix);
                     }
 
-                    
-                    
                     //this.querySelector('#canvas').style.backfaceVisibility = 'hidden!important;'
                     this.querySelector('#canvas-controls').adjustZoomSlider(matrix[0]);
                 },
@@ -426,7 +415,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     var scale = matrix[0] + delta;
                     this.zoomTo(scale, focal);
                 },
-                
+
                 getMatrix: function (transform) {
 
                     var matrix = this.regexMatrix.exec(transform || this.$.canvas.style.transform);
@@ -446,9 +435,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     if (typeof matrix === 'string') {
                         matrix = this.getMatrix(matrix);
                     }
-                    
+
                     var scale = +matrix[0];
-                    
+
                     var canvasView = this.querySelector('#canvas-view');
                     var dims = this.canvasDims;
                     var container = {
@@ -477,14 +466,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     if (matrix[5] < maxBottom) {
                         matrix[5] = maxBottom;
                     }
-                    
+
                     this.$.canvas.style.transform = ('matrix(' + matrix.join(',') + ')');
                     if (this.jsPlumbInstance) {
                         this.jsPlumbInstance.setZoom(matrix[0]);
                     }
-                    
+
                     //viewport
-                    var left = (-matrix[4] + (-1 + scale) * dims.width / 2)/scale;
+                    var left = (-matrix[4] + (-1 + scale) * dims.width / 2) / scale;
                     var top = (-matrix[5] + (-1 + scale) * dims.height / 2) / scale;
                     var right = left + container.width / scale;
                     var bottom = top + container.height / scale;

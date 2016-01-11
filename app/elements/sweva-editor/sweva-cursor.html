@@ -10,6 +10,7 @@
                 z-index: 9001;
                 transition: left 0.1s, top 0.1s;
                 backface-visibility: hidden;
+                pointer-events: none;
             }
 
             .name-label {
@@ -38,7 +39,7 @@
     <script>
         (function () {
             'use strict';
-
+            var VIEWPORT_TOLERANCE = 5;
             Polymer({
                 is: 'sweva-cursor',
                 properties: {
@@ -111,31 +112,35 @@
                 },
                 checkViewportBounds: function () {
                     var outside = false;
-                    if (this.posX < this.viewport.left) {
-                        this.posX = this.viewport.left;
+
+                    var posX = this.posX;
+                    var posY = this.posY;
+                    if (this.posX < this.viewport.left + VIEWPORT_TOLERANCE) {
+                        posX = this.viewport.left;
                         outside = true;
                     }
-                    else if (this.posX > this.viewport.right) {
-                        this.posX = this.viewport.right-this.offsetWidth-10;
+                    else if (this.posX > this.viewport.right - VIEWPORT_TOLERANCE) {
+                        posX = this.viewport.right-this.offsetWidth-10;
                         outside = true;
                     }
-                    if (this.posY < this.viewport.top) {
-                        this.posY = this.viewport.top;
+                    if (this.posY < this.viewport.top + VIEWPORT_TOLERANCE) {
+                        posY = this.viewport.top;
                         outside = true;
                     }
-                    else if (this.posY > this.viewport.bottom) {
-                        this.posY = this.viewport.bottom - this.offsetHeight;
+                    else if (this.posY > this.viewport.bottom - VIEWPORT_TOLERANCE) {
+                        posY = this.viewport.bottom - this.offsetHeight;
                         outside = true;
                     }
                     var container = this.querySelector('#cursor-container');
                    
                     if (outside) {
-                        this.moveTo(this.posX, this.posY);
+                        this.moveTo(posX, posY);
 
                         this.toggleClass('outside', true, container);
                        
                     }
                     else {
+                        this.moveTo(this.posX, this.posY);
                         this.toggleClass('outside', false, container);
                     }
                 },

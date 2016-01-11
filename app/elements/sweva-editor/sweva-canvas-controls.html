@@ -1,4 +1,6 @@
 ﻿<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <dom-module id="sweva-canvas-controls">
     <template>
         <style>
@@ -9,15 +11,15 @@
                 box-shadow: 0 2px 8px #555;
                 position: absolute;
                 left: 0;
-                z-index: 500;
+                z-index: 9;
                 top: 50%;
                 transform: translate(0, -50%);
             }
 
-            .center-button {
-                width: 30px;
-                height: 30px;
-                background-color: #eaeaea;
+            paper-icon-button {
+               
+
+                
                 border: none;
                 margin-left: auto;
                 margin-right: auto;
@@ -28,9 +30,7 @@
                 cursor: pointer;
             }
 
-                .center-button:active {
-                    box-shadow: 1px 1px 10px #333;
-                }
+               
 
             input[type=range][orient=vertical] {
                 writing-mode: bt-lr; /* IE */
@@ -47,7 +47,11 @@
                 cursor: pointer;
             }
         </style>
-        <button class="center-button" on-click="handleCenterClick">
+        <paper-icon-button title="Center" icon="image:filter-center-focus" on-click="handleCenterClick"></paper-icon-button>
+        <paper-icon-button title="Zoom In" icon="icons:zoom-in" on-click="handleZoomInClick"></paper-icon-button>
+        <input id="zoom-slider" type="range" min="{{minZoom}}" max="{{maxZoom}}" step="0.2" value="{{zoomValue}}" orient="vertical" on-input="handleZoomSlider" on-change="handleZoomSlider" />
+        <paper-icon-button title="Zoom Out" icon="icons:zoom-out" on-click="handleZoomOutClick"></paper-icon-button>
+        <!--<button class="center-button" on-click="handleCenterClick">
             <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 62.714 62.714" style="display: block;margin: -1px;">
 
                 <g transform="translate(-199.1483,-284.38251)">
@@ -70,6 +74,7 @@
         <button class="center-button" on-click="handleZoomInClick"><strong>+</strong></button>
         <input id="zoom-slider" type="range" min="{{minZoom}}" max="{{maxZoom}}" step="0.2" value="{{zoomValue}}" orient="vertical" on-input="handleZoomSlider" on-change="handleZoomSlider" />
         <button class="center-button" on-click="handleZoomOutClick"><strong>-</strong></button>
+            -->
     </template>
     <script>
         (function () {

@@ -42,6 +42,13 @@
                     this.cursors[cursor.id] = cursor;
                     return cursor;
                 },
+                remove: function(user){
+                    var cursor = document.getElementById(user.id);
+                    if (cursor) {
+                        Polymer.dom(this.querySelector('div')).removeChild(cursor);
+                        delete this.cursors[cursor.id];
+                    }
+                },
                 update: function (id, options) {
                     if (this.cursors.hasOwnProperty(id)) {
                         this.cursors[id].update(options);
@@ -55,6 +62,16 @@
                             this.cursors[key].updateViewport(viewport);
                         }
                     }
+                },
+                cleanUp: function () {
+                    var div = this.querySelector('div');
+                    for (var key in this.cursors) {
+                        if (this.cursors.hasOwnProperty(key)) {
+                            Polymer.dom(div).removeChild(this.cursors[key]);
+                        }
+                    }
+                    Polymer.dom(div).flush();
+                    this.cursors = [];
                 }
             });
         })();

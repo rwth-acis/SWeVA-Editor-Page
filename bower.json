@@ -10,11 +10,18 @@
     "polymer": "Polymer/polymer#^1.2.0",
     "paper-menu": "PolymerElements/paper-menu#4fecb43601",
     "jsplumb": "2.1.0",
-    "cola": "tgdwyer/WebCola#master",
+    "y-memory": "^0.6.2",
+    "yjs": "^0.7.3",
+    "y-map": "^0.7.1",
+    "y-text": "^0.7",
+    "y-array": "^0.7",    
     "dagre": "0.7.4",
     "graphlib": "2.0.0",
-    "ace-builds": "1.2.0",
-    "paper-color-picker": "https://github.com/AlexRuppert/paper-color-picker.git#float-offset-fix"
+    "paper-color-picker": "https://github.com/AlexRuppert/paper-color-picker.git#float-offset-fix",
+    "axios": "0.8.1",
+    "download-as-file": "https://github.com/bahmutov/download-as-file.git",   
+    "basicContext": "*"
+    
   },
   "devDependencies": {
     "web-component-tester": "*"

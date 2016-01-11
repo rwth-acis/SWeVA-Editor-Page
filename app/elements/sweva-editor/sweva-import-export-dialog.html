@@ -1,0 +1,119 @@
+﻿<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+
+<dom-module id="sweva-import-export-dialog">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+
+            paper-dialog {
+                background: #fff;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                margin: 80px;
+                position: fixed;
+                max-height: 9000px !important;
+                max-width: 9000px !important;
+            }
+
+            .dialog-container {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                width: 100%;
+                box-sizing: border-box;
+                padding-bottom: 25px;
+            }
+
+            .textarea-container {
+                flex: 1 1 0;
+                position: relative;
+                margin-top: 15px;
+            }
+
+            textarea {
+                height: 100%;
+                width: 100%;
+                overflow: auto;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+        </style>
+        <paper-dialog>
+            <div class="dialog-container">
+                <h2>{{title}}</h2>
+                <div class="textarea-container">
+                    <textarea spellcheck="false" readonly$="{{isExport}}" value="{{content::input}}"></textarea>
+                </div>
+                <div class="buttons">
+                    <paper-button dialog-dismiss>Cancel</paper-button>
+                    <paper-button dialog-confirm on-click="handleAccept">Accept</paper-button>
+                </div>
+            </div>
+        </paper-dialog>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'sweva-import-export-dialog',
+                properties: {
+                    mode: {
+                        type: String,
+                        value: 'export'
+                    },
+                    title: {
+                        type: String,
+                        value: ''
+                    },
+                    content: {
+                        type: String,
+                        value: ''
+                    },
+                    isExport: {
+                        type: Boolean,
+                        value: false
+                    }
+                },
+                ready: function () {
+
+                },
+                open: function(){
+                    var dialog = this.querySelector('paper-dialog');
+                    if (dialog) {
+                        dialog.open();
+                        setTimeout(function () {
+                            dialog.querySelector('textarea').focus();
+                        }, 0);
+                       
+                    }
+                },
+                openImport: function (mode, title) {
+                    this.mode = mode;
+                    this.title = title;
+                    this.content = '';
+                    this.isExport = false;
+                    this.open();
+                },
+                openExport: function (title, content) {
+                    this.title = title;
+                    this.content = content;
+                    this.mode = 'export';
+                    this.isExport = true;
+                    this.open();
+                },
+                handleAccept: function () {
+                    if (this.mode != 'export') {
+                        this.fire('accepted', { mode: this.mode, content: this.content });
+                    }
+                }
+            });
+        })();
+    </script>
+</dom-module>
