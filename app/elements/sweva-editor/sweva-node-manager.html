@@ -646,9 +646,13 @@
                                 return true;
                             });
                             instance.bind("connectionMoved", function (info) {
-
+                                if (info.originalSourceEndpoint.getUuid() == info.newSourceEndpoint.getUuid()
+                                       && info.originalTargetEndpoint.getUuid() == info.newTargetEndpoint.getUuid()) {
+                                    return;
+                                }
                                 var node = document.getElementById(info.originalSourceId);
                                 if (node) {
+                                   
                                     //console.log('moved', info.originalSourceEndpoint.getUuid(), info.originalTargetEndpoint.getUuid());
                                    
                                     self.yjs.share.edges.delete(info.originalSourceEndpoint.getUuid() + info.originalTargetEndpoint.getUuid());
