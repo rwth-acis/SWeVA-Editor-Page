@@ -111,7 +111,7 @@
     <script src="../../../bower_components/y-array/y-array.js"></script>
     <script src="../../../bower_components/y-text/y-text.js"></script>
 
-    <script src="https://rawgit.com/y-js/y-websockets-client/dist/y-websockets-client.js"></script>
+    <script src="y-websockets-client.js"></script>
 
     <script src="../../../bower_components/jsplumb/dist/js/jsPlumb-2.1.0.js"></script>
     <script src="../../../bower_components/axios/dist/axios.min.js"></script>
@@ -172,7 +172,7 @@
                     }
                 },
                 _roomChanged: function(){
-                    this.start(this.room)
+                    //this.start(this.room)
                 },
                 handleNodeSelection: function (event) {
 
@@ -443,18 +443,18 @@
                         panel.updateProgress(progress);
                     });
                     var panel = this.querySelector('sweva-panel');
-                    panel.updateRoom(this.room);
+                    panel.updateRoom(room);
                     Y({
                         db: {
                             name: 'memory'
                         },
                         connector: {
                             name: 'websockets-client',
-                            room: self.room
+                            room: room
                             // debug: true,
                             // url: 'http://127.0.0.1:2345'
                         },
-                        sourceDir: /*'../../bower_components/',//*/'http://127.0.0.1:8021/SWeVA-Editor-Page/bower_components',
+                        sourceDir: /*'../../bower_components/',//*/'http://127.0.0.1:8021/yjs/bower_components',
                         share: {
                             //nodes: 'Map',
                             nodes: 'Map',
@@ -489,12 +489,12 @@
                 },
                 ready: function () {
                     
-                    
+                    this.start('swevatest32');//this.room);
                     
 
                 },
                 attached: function () {                    
-                    this.start(this.room);
+                    //this.start(this.room);
                 }
 
             });
