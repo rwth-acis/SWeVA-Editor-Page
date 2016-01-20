@@ -1,0 +1,229 @@
+﻿<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+
+<dom-module id="sweva-input-container">
+    <template>
+        <style>
+            :host {
+                background: #fff;
+                position: relative;
+                
+                border-bottom-left-radius: 10px;
+                border-top-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+                box-shadow: 1px 1px 10px #555;
+                margin-right: 35px;
+            }
+
+            .order-switcher {
+                background: #464646;
+                height: 20px;
+                width: 50%;
+                position: absolute;
+                top: -20px;
+                right: 0;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                display: flex;
+            }
+
+                .order-switcher paper-icon-button {
+                    color: #fff;
+                    flex: 1 1 0;
+                    height: 100%;
+                    padding: 2px;
+                }
+
+            .add-area {
+                position: absolute;
+                right: -38px;
+                top: calc(50% - 30px);
+            }
+
+            .content {
+                overflow: auto;
+                padding: 8px;
+                position: absolute;
+                top: 8px;
+                bottom: 10px;
+            }
+
+            select {
+                font-family: inherit;
+                background-color: transparent;
+                width: 100%;
+                padding: 4px 0;
+                font-size: 16px;
+                color: #727272;
+                border: none;
+                border-bottom: 1px solid #727272;
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                appearance: none;
+            }
+
+                select:focus {
+                    outline: none;
+                }
+
+            .material-select {
+                position: relative;
+            }
+
+                .material-select:after {
+                    position: absolute;
+                    top: 0.75em;
+                    right: 0.45em;
+                    width: 0;
+                    height: 0;
+                    padding: 0;
+                    content: '';
+                    border-left: 0.315em solid transparent;
+                    border-right: 0.315em solid transparent;
+                    border-top: 0.35em solid #BDBDBD;
+                    pointer-events: none;
+                }
+        </style>
+
+        <div class="order-switcher">
+            <paper-icon-button title="Move Left"
+                               icon="icons:arrow-back"
+                               on-click="handleMoveLeft">
+            </paper-icon-button>
+            <paper-icon-button title="Move Right"
+                               icon="icons:arrow-forward"
+                               on-click="handleMoveRight">
+            </paper-icon-button>
+            <paper-icon-button title="Close"
+                               icon="icons:close"
+                               on-click="handleClose">
+            </paper-icon-button>
+        </div>
+        <div class="add-area">
+            <paper-icon-button title="Add"
+                               icon="icons:add-circle-outline"
+                               on-click="handleAdd">
+            </paper-icon-button>
+        </div>
+        <div class="content">
+
+            <div class="material-select">
+                <select>
+                    <option value="" disabled selected>Select Type</option>
+                    <option value="header">Section Header</option>
+                    <option value="multiline">Multi-Line Text</option>
+                    <option value="number">Number</option>
+                    <option value="slider">Slider</option>
+                    <option value="toggle">Toggle</option>
+                    <option value="dropdown">Dropdown</option>
+                </select>
+            </div>
+            <paper-input noLabelFloat  label="Label" value="dsa"></paper-input>
+            <paper-textarea noLabelFloat label="Description" value="dsa"></paper-textarea>
+            <paper-input noLabelFloat label="Min" value="dsa"></paper-input>
+            <paper-input noLabelFloat label="Max" value="dsa"></paper-input>
+            <paper-input noLabelFloat label="Value" value="dsa"></paper-input>
+        </div>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'sweva-input-container',
+                properties: {
+                    index: {
+                        type: Number,
+                        value: 0
+                    },
+                    yjs: {
+                        type: Object,
+                        value: null
+                    },
+                    jsPlumbInstance: {
+                        type: Object,
+                        value: null
+                    },
+                    width: {
+                        type: Number,
+                        value: 200
+                    },
+                    jsPlumbStyles: {
+                        type: Object,
+                        value: {
+                        }
+                    }
+                },
+                ready: function () {
+                    this.index = Math.random();
+
+                    this.prepareStyles();
+                },
+                attached: function () {
+                    this.addEventListener("mousewheel", function (event) { event.stopPropagation(); }, false);
+                },
+                init: function (jsPlumb, yjs, id) {
+                    this.yjs = yjs;
+                    this.jsPlumbInstance = jsPlumb;
+                    this.style.width = this.width + 'px';
+                    this.id = id || this._generateGUID();
+
+                    var endpoint = this.jsPlumbInstance.addEndpoint(this.id, this.jsPlumbStyles.inputEndpoint, {
+                        anchor: [0.5, 1, 0, 1],
+                        uuid: this.id + 'endpoint'
+
+                    });
+                },
+                handleMoveLeft: function () {
+                    this.fire('moveleft', this);
+                },
+                handleMoveRight: function () {
+                    this.fire('moveright', this);
+                },
+                handleClose: function () {
+                    this.fire('close', this);
+                },
+                handleAdd: function(){
+                    this.fire('add', this);
+                },
+                _generateGUID: function () {
+                    function s4() {
+                        return Math.floor((1 + Math.random()) * 0x10000)
+                          .toString(16)
+                          .substring(1);
+                    }
+                    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                      s4() + '-' + s4() + s4() + s4();
+                },
+                prepareStyles: function () {
+                    var inputEndpointHoverStyle = {
+                        fillStyle: "#00cc00",
+                        strokeStyle: "#00cc00"
+                    };
+                    var inputEndpoint = {
+                        endpoint: "Dot",
+                        paintStyle: {
+                            strokeStyle: "none",
+                            fillStyle: "#464646",
+                            radius: 14
+
+                        },
+                        hoverPaintStyle: inputEndpointHoverStyle,
+                        maxConnections: 1,
+                        dropOptions: { hoverClass: "hover", activeClass: "active" },
+                        isSource: true
+                    }
+
+                    this.jsPlumbStyles.inputEndpoint = inputEndpoint;
+                }
+            });
+        })();
+    </script>
+</dom-module>

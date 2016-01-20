@@ -2,7 +2,8 @@
 
 <link rel="stylesheet" href="../../bower_components/basicContext/dist/basicContext.min.css">
 <link rel="stylesheet" href="../../bower_components/basicContext/dist/themes/default.min.css">
-
+<link rel="import" href="sweva-node.html">
+<link rel="import" href="sweva-input-mapper.html">
 <link rel="import" href="sweva-code.html">
 <script src="../../bower_components/basicContext/dist/basicContext.min.js"></script>
 
@@ -12,11 +13,15 @@
             :host {
                 display: block;
             }
+            
         </style>
         <div id="node-canvas">
+            
             <content>
+                
             </content>            
         </div>
+        <sweva-input-mapper id="input-node-container"></sweva-input-mapper>
     </template>
     <script>
         (function () {
@@ -572,6 +577,10 @@
                             })(event);
                         }
                     });
+
+
+                    var container = this.$$('#input-node-container');
+                    container.init(this.jsPlumbInstance, this.yjs);
                 },
                 ready: function () {
 
@@ -620,7 +629,7 @@
                             // make all the window divs draggable
 
                             instance.draggable(jsPlumb.getSelector('sweva-node'), { grid: [20, 20] });
-
+                            instance.draggable(jsPlumb.getSelector('#input-node-container'), { grid: [20, 20] });
                             //instance.draggable(jsPlumb.getSelector(".flowchart-demo .window"), { grid: [20, 20] });
                             // THIS DEMO ONLY USES getSelector FOR CONVENIENCE. Use your library's appropriate selector
                             // method, or document.querySelectorAll:

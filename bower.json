@@ -19,8 +19,10 @@
     "graphlib": "2.0.0",
     "paper-color-picker": "https://github.com/AlexRuppert/paper-color-picker.git#float-offset-fix",
     "axios": "0.8.1",
-    "download-as-file": "https://github.com/bahmutov/download-as-file.git",   
-    "basicContext": "*"
+    "download-as-file": "https://github.com/bahmutov/download-as-file.git",
+    "basicContext": "*",
+    "ace-builds": "^1.2.2",
+    "esprima": "^2.0.0"
     
   },
   "devDependencies": {

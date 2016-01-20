@@ -12,477 +12,477 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="sweva-canvas-controls.html">
 
 <dom-module id="shared-styles">
-    <template>
-        <style>
-            .jsplumb-endpoint {
-                cursor: pointer;
-            }
+	<template>
+		<style>
+			.jsplumb-endpoint {
+				cursor: pointer;
+			}
 
-            .jsplumb-connector {
-                z-index: 4;
-            }
+			.jsplumb-connector {
+				z-index: 4;
+			}
 
-            .jsplumb-endpoint, .endpointTargetLabel, .endpointSourceLabel {
-                z-index: 21;
-                cursor: pointer;
-            }
+			.jsplumb-endpoint, .endpointTargetLabel, .endpointSourceLabel {
+				z-index: 21;
+				cursor: pointer;
+			}
 
-            .node-label {
-                z-index: 20;
-                padding: 0 5px;
-                max-width: 200px;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-                user-select: none;
-                background-color: rgba(255,255,255,0.5);
-            }
+			.node-label {
+				z-index: 20;
+				padding: 0 5px;
+				max-width: 200px;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+				user-select: none;
+				background-color: rgba(255,255,255,0.5);
+			}
 
-            .node-data-out-endpoint-label {
-                transform: translateX(0) !important;
-                border: 2px solid #ff9d00;
-            }
+			.node-data-out-endpoint-label {
+				transform: translateX(0) !important;
+				border: 2px solid #ff9d00;
+			}
 
-            .node-data-in-endpoint-label {
-                transform: translateX(-100%) !important;
-                border: 2px solid #0094ff;
-            }
-        </style>
-    </template>
+			.node-data-in-endpoint-label {
+				transform: translateX(-100%) !important;
+				border: 2px solid #0094ff;
+			}
+		</style>
+	</template>
 </dom-module>
 
 <dom-module id="sweva-canvas">
-    <template>
-        <style include="shared-styles"></style>
-        <style>
-            :host {
-                position: relative;
-                border: 1px solid #9F9FA2;
-                overflow: hidden;
-                width: 100%;
-                height: 100%;
-                display: block;
-            }
-
-            #canvas {
-                display: block;
-                /*height: 100%;
-                width: 100%;*/
-                position: relative;
-                background-color: #fff;
-                border: 1px solid #ddd;
-                width: 10000px;
-                height: 10000px;
-                left: 0;
-                top: 0;
-                cursor: move;
-                transform-origin: 50% 50% 0px;
-                -webkit-backface-visibility: hidden;
-                -moz-backface-visibility: hidden;
-                backface-visibility: hidden;
-            }
-
-            #canvas-view {
-                height: 100%;
-            }
-
-            .grid {
-                background-image: linear-gradient(#eee 2px, transparent 2px), linear-gradient(90deg, #eee 2px, transparent 2px), linear-gradient(rgba(200, 200, 200, 0.298039) 1px, transparent 1px), linear-gradient(90deg, rgba(200, 200, 200, 0.298039) 1px, transparent 1px);
-                background-color: rgb(255, 255, 255);
-                background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
-                background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
-            }
-        </style>
-        <sweva-canvas-controls id="canvas-controls" max-zoom="{{maxZoom}}" min-zoom="{{minZoom}}" on-centerclick="handleCenterCanvas" on-zoomclick="handleZoomClickCanvas" on-zoomslide="handleZoomSlideCanvas">
-        </sweva-canvas-controls>
-        <div id="canvas-view">
-            <div id="canvas" class="grid">
-
-                <content>
-                </content>
-            </div>
-        </div>
-    </template>
-    <script src="Matrix.js"></script>
-    <script>
-
-        (function () {
-            'use strict';
-
-            var MOUSE_WHEEL_SLOWDOWN = 1000;
-
-            Polymer({
-                is: 'sweva-canvas',
-                properties: {
-                    mousePos: {
-                        type: Object,
-                        value: {
-                            x: 0,
-                            y: 0
-                        }
-                    },
-                    mousePan: {
-                        type: Object,
-                        value: {
-                            panning: false,
-                            lastPanUpdate: 0,
-                            x: 0,
-                            y: 0,
-                            offsetX: 0,
-                            offsetY: 0
-                        }
-                    },
-                    jsPlumbInstance: {
-                        type: Object,
-                        value: null
-                    },
-                    canvasOffsetX: {
-                        type: Number,
-                        value: -2000
-                    },
-                    canvasOffsetY: {
-                        type: Number,
-                        value: -2000
-                    },
-                    canvasDims: {
-                        type: Object,
-                        value: {
-                            width: 0,
-                            height: 0
-                        }
-                    },
-                    regexMatrix: {
-                        type: Object,
-                        value: null
-                    },
-                    maxZoom: {
-                        type: Number,
-                        value: 3
-                    },
-                    minZoom: {
-                        type: Number,
-                        value: 0.2
-                    }
-
-                },
-                ready: function () {
-                    var floating = '(\\-?[\\d\\.e]+)';
-                    var commaSpace = '\\,?\\s*';
-                    this.regexMatrix = new RegExp(
-		                '^matrix\\(' +
-		                floating + commaSpace +
-		                floating + commaSpace +
-		                floating + commaSpace +
-		                floating + commaSpace +
-		                floating + commaSpace +
-		                floating + '\\)$'
-	                );
-                },
-                attached: function () {
-                    this.date = new Date();
-                    var canvas = this.querySelector('#canvas');
-                    var canvasView = this.querySelector('#canvas-view');
-                    //init canvas matrix
-                    canvas.style.transform = 'matrix(1, 0, 0, 1, ' + this.canvasOffsetX + ', ' + this.canvasOffsetY + ')';
-                    canvas.style.transition = 'transform ' + 300 + 'ms linear 0s';
-                    canvas.addEventListener("mousemove", this.handleCanvasMouseMove.bind(this), false);
-
-                    canvasView.addEventListener("mousemove", this.handleCanvasViewMouseMove.bind(this), false);
-                    canvasView.addEventListener("mousewheel", this.handleCanvasMouseWheel.bind(this), false);
-                    canvas.addEventListener("mousedown", this.handleCanvasMouseDown.bind(this), false);
-                    canvas.addEventListener("mouseup", this.handleCanvasMouseUp.bind(this), false);
-
-                    this.canvasDims.width = canvas.offsetWidth;
-                    this.canvasDims.height = canvas.offsetHeight;
-                    this.setMatrix(this.getMatrix());
-
-                },
-                handleCenterCanvas: function (event) {
-                    var canvas = this.querySelector('#canvas');
-                    canvas.style.transform = 'matrix(1, 0, 0, 1, ' + this.canvasOffsetX + ', ' + this.canvasOffsetY + ')';
-                    this.setMatrix(this.getMatrix());
-                },
-                handleZoomClickCanvas: function (event) {
-                    this.zoomCenter(event.detail.delta * 0.4);
-                },
-                handleZoomSlideCanvas: function (event) {
-                    this.zoomToCenter(event.detail.value);
-                },
-                handleCanvasMouseDown: function (event) {
-
-                    if (event.target.id == 'canvas') {
-                        this.mousePan = { panning: true, lastPanUpdate: 0, x: this.mousePos.x, y: this.mousePos.y };
-                    }
-
-                },
-                handleCanvasMouseUp: function (event) {
-
-                    this.mousePan.panning = false;
-
-                },
-                handleCanvasMouseMove: function (event) {
-
-                    var x = event.offsetX;
-                    var y = event.offsetY;
-                    var current = event.target;
-                    while (current.parentNode && current.id != 'canvas') {
-                        x += current.offsetLeft;
-                        y += current.offsetTop;
-
-                        if (current.style.transform) {
-                            var matrix = this.getMatrix(current.style.transform);
-
-                            var left = -(this.canvasDims.width - this.canvasDims.width * matrix[0]) / 2
-                            var top = -(this.canvasDims.height - this.canvasDims.height * matrix[0]) / 2
-
-                            x += +matrix[4]
-                            y += +matrix[5]
-
-                        }
-
-                        current = current.parentNode;
-                    }
-
-                    this.fire('canvasmousemove', { x: x, y: y });
-                },
-                handleCanvasViewMouseMove: function (event) {
-
-                    var x = event.offsetX;
-                    var y = event.offsetY;
-
-                    var current = event.target;
-                    //get correct position if over children, stupid event bubbling
-                    while (current.parentNode && current.id != 'canvas-view') {
-
-                        x += current.offsetLeft;
-                        y += current.offsetTop;
-
-                        if (current.style.transform) {
-                            var matrix = this.getMatrix(current.style.transform);
-
-                            var left = -(this.canvasDims.width - this.canvasDims.width * matrix[0]) / 2
-                            var top = -(this.canvasDims.height - this.canvasDims.height * matrix[0]) / 2
-
-                            x = matrix[4] - left + x * matrix[0];
-                            y = matrix[5] - top + y * matrix[0];
-                        }
-                        current = current.parentNode;
-                    }
-                    this.mousePos = { x: x, y: y };
-
-                    //pan
-                    if (event.buttons == 0) {
-                        this.mousePan.panning = false;
-                    }
-                    if (this.mousePan.panning) {
-
-                        var now = Date.now();
-                        //for performance reasons (reduce CPU load)
-                        if (now - this.mousePan.lastPanUpdate > 20) {
-
-                            this.pan((this.mousePos.x - this.mousePan.x), (this.mousePos.y - this.mousePan.y));
-
-                            this.mousePan.x = this.mousePos.x;
-                            this.mousePan.y = this.mousePos.y;
-                            this.mousePan.lastPanUpdate = now;
-                        }
-                    }
-
-                },
-                handleCanvasMouseWheel: function (event) {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    var zoomDelta = event.wheelDelta / MOUSE_WHEEL_SLOWDOWN;
-
-                    // this.zoomTo(this.mousePos.x, this.mousePos.y, zoom);
-
-                    this.zoom(event.wheelDelta / MOUSE_WHEEL_SLOWDOWN, this.mousePos);
-                },
-                getViewCenter: function () {
-                    var result = { x: 0, y: 0 };
-                    var matrix = this.getMatrix();
-                    var canvasView = this.querySelector('#canvas-view');
-                    var container = {
-                        width: canvasView.offsetWidth,
-                        height: canvasView.offsetHeight
-                    };
-
-                    result.x = -matrix[4] + container.width / 2;
-                    result.y = -matrix[5] + container.height / 2;
-                    return result;
-                },
-                pan: function (x, y) {
-                    var matrix = this.getMatrix();
-                    x += +matrix[4];
-                    y += +matrix[5];
-                    matrix[4] = x;
-                    matrix[5] = y;
-                    if (this.$.canvas.style.transition) {
-                        this.$.canvas.style.transition = '';
-                    }
-                    this.setMatrix(matrix);
-                },
-
-                zoomTo: function (scale, focal) {
-                    var matrix = this.getMatrix();
-
-                    var oldScale = matrix[0];
-                    if (scale == matrix[0]) {
-                        return;
-                    }
-                    // Constrain scale
-                    if (scale > this.maxZoom) {
-                        scale = this.maxZoom;
-                    } else if (scale < this.minZoom) {
-                        scale = this.minZoom;
-                    }
-
-                    // Calculate focal point based on scale
-
-                    if (focal) {
-                        // Adapted from code by Florian Günther
-                        // https://github.com/florianguenther/zui53
-
-                        var clientX = focal.x;
-                        var clientY = focal.y;
-
-                        // Adjust the focal point for default transform-origin => 50% 50%
-
-                        clientX -= (this.canvasDims.width) / 2;
-                        clientY -= (this.canvasDims.height) / 2;
-
-                        var clientV = new Vector(clientX, clientY, 1);
-
-                        var surfaceM = new Matrix(matrix);
-                        // Supply an offset manually if necessary
-                        var o = { left: 0, top: 0 };
-                        var offsetM = new Matrix(1, 0, o.left - 0, 0, 1, o.top - 0);
-                        var surfaceV = surfaceM.inverse().x(offsetM.inverse().x(clientV));
-
-                        var scaleBy = scale / matrix[0];
-                        surfaceM = surfaceM.x(new Matrix([scaleBy, 0, 0, scaleBy, 0, 0]));
-                        clientV = offsetM.x(surfaceM.x(surfaceV));
-
-                        matrix[4] = +matrix[4] + (clientX - clientV.e(0));
-                        matrix[5] = +matrix[5] + (clientY - clientV.e(1));
-                    }
-
-                    // Set the scale
-                    matrix[0] = scale;
-                    matrix[3] = scale;
-
-                    //this.animateMatrix(oldMatrix, matrix.slice(0), 3000, 15);
-
-                    if (matrix[0] < 0.8) {
-                        this.$.canvas.style.transition = 'transform ' + 0 + 'ms linear 0s';
-                    } else {
-                        this.$.canvas.style.transition = 'transform ' + 100 * matrix[0] + 'ms linear 0s';
-                    }
-
-                    if (matrix[0] == this.maxZoom) {
-
-                        //redraw for proper scaling (otherwise looks picelated, check backface-visibility)
-                        this.$.canvas.style.display = 'none';
-                        this.setMatrix(matrix);
-                        this.$.canvas.style.display = 'block';
-
-                    }
-                    else {
-                        this.setMatrix(matrix);
-                    }
-
-                    //this.querySelector('#canvas').style.backfaceVisibility = 'hidden!important;'
-                    this.querySelector('#canvas-controls').adjustZoomSlider(matrix[0]);
-                },
-
-                zoomToCenter: function (scale) {
-
-                    var canvasView = this.querySelector('#canvas-view');
-                    var container = {
-                        width: canvasView.offsetWidth,
-                        height: canvasView.offsetHeight
-                    };
-                    this.zoomTo(scale, { x: container.width / 2, y: container.height / 2 });
-                },
-                zoomCenter: function (delta) {
-                    var matrix = this.getMatrix();
-                    var scale = matrix[0] + delta;
-
-                    this.zoomToCenter(scale);
-                },
-                zoom: function (delta, focal) {
-                    var matrix = this.getMatrix();
-                    var scale = matrix[0] + delta;
-                    this.zoomTo(scale, focal);
-                },
-
-                getMatrix: function (transform) {
-
-                    var matrix = this.regexMatrix.exec(transform || this.$.canvas.style.transform);
-
-                    var result = [1, 0, 0, 1, 0, 0];
-                    if (matrix) {
-                        result = [];
-                        for (var i = 1; i <= 6; i++) {
-                            result.push(+matrix[i]);
-                        }
-                    }
-                    return result;
-                },
-                setMatrix: function (matrix) {
-
-                    // Convert to array
-                    if (typeof matrix === 'string') {
-                        matrix = this.getMatrix(matrix);
-                    }
-
-                    var scale = +matrix[0];
-
-                    var canvasView = this.querySelector('#canvas-view');
-                    var dims = this.canvasDims;
-                    var container = {
-                        width: canvasView.offsetWidth,
-                        height: canvasView.offsetHeight
-
-                    };
-
-                    //keep canvas in view
-                    var maxLeft = ((-1 + scale) * dims.width + container.width) / 2;
-                    var maxRight = ((-1 - scale) * dims.width + container.width) / 2;
-                    var maxTop = ((-1 + scale) * dims.height + container.height) / 2;
-                    var maxBottom = ((-1 - scale) * dims.height + container.height) / 2;
-
-                    if (matrix[4] > maxLeft) {
-                        matrix[4] = maxLeft;
-                    }
-
-                    if (matrix[4] < maxRight) {
-                        matrix[4] = maxRight;
-                    }
-
-                    if (matrix[5] > maxTop) {
-                        matrix[5] = maxTop;
-                    }
-                    if (matrix[5] < maxBottom) {
-                        matrix[5] = maxBottom;
-                    }
-
-                    this.$.canvas.style.transform = ('matrix(' + matrix.join(',') + ')');
-                    if (this.jsPlumbInstance) {
-                        this.jsPlumbInstance.setZoom(matrix[0]);
-                    }
-
-                    //viewport
-                    var left = (-matrix[4] + (-1 + scale) * dims.width / 2) / scale;
-                    var top = (-matrix[5] + (-1 + scale) * dims.height / 2) / scale;
-                    var right = left + container.width / scale;
-                    var bottom = top + container.height / scale;
-
-                    this.fire('viewportchanged', { left: left, top: top, right: right, bottom: bottom });
-                    return matrix;
-                }
-
-            });
-        })();
-    </script>
+	<template>
+		<style include="shared-styles"></style>
+		<style>
+			:host {
+				position: relative;
+				border: 1px solid #9F9FA2;
+				overflow: hidden;
+				width: 100%;
+				height: 100%;
+				display: block;
+			}
+
+			#canvas {
+				display: block;
+				/*height: 100%;
+				width: 100%;*/
+				position: relative;
+				background-color: #fff;
+				border: 1px solid #ddd;
+				width: 10000px;
+				height: 10000px;
+				left: 0;
+				top: 0;
+				cursor: move;
+				transform-origin: 50% 50% 0px;
+				-webkit-backface-visibility: hidden;
+				-moz-backface-visibility: hidden;
+				backface-visibility: hidden;
+			}
+
+			#canvas-view {
+				height: 100%;
+			}
+
+			.grid {
+				background-image: linear-gradient(#eee 2px, transparent 2px), linear-gradient(90deg, #eee 2px, transparent 2px), linear-gradient(rgba(200, 200, 200, 0.298039) 1px, transparent 1px), linear-gradient(90deg, rgba(200, 200, 200, 0.298039) 1px, transparent 1px);
+				background-color: rgb(255, 255, 255);
+				background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+				background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+			}
+		</style>
+		<sweva-canvas-controls id="canvas-controls" max-zoom="{{maxZoom}}" min-zoom="{{minZoom}}" on-centerclick="handleCenterCanvas" on-zoomclick="handleZoomClickCanvas" on-zoomslide="handleZoomSlideCanvas">
+		</sweva-canvas-controls>
+		<div id="canvas-view">
+			<div id="canvas" class="grid">
+
+				<content>
+				</content>
+			</div>
+		</div>
+	</template>
+	<script src="Matrix.js"></script>
+	<script>
+
+		(function () {
+			'use strict';
+
+			var MOUSE_WHEEL_SLOWDOWN = 1000;
+
+			Polymer({
+				is: 'sweva-canvas',
+				properties: {
+					mousePos: {
+						type: Object,
+						value: {
+							x: 0,
+							y: 0
+						}
+					},
+					mousePan: {
+						type: Object,
+						value: {
+							panning: false,
+							lastPanUpdate: 0,
+							x: 0,
+							y: 0,
+							offsetX: 0,
+							offsetY: 0
+						}
+					},
+					jsPlumbInstance: {
+						type: Object,
+						value: null
+					},
+					canvasOffsetX: {
+						type: Number,
+						value: -2000
+					},
+					canvasOffsetY: {
+						type: Number,
+						value: -2000
+					},
+					canvasDims: {
+						type: Object,
+						value: {
+							width: 0,
+							height: 0
+						}
+					},
+					regexMatrix: {
+						type: Object,
+						value: null
+					},
+					maxZoom: {
+						type: Number,
+						value: 3
+					},
+					minZoom: {
+						type: Number,
+						value: 0.2
+					}
+
+				},
+				ready: function () {
+					var floating = '(\\-?[\\d\\.e]+)';
+					var commaSpace = '\\,?\\s*';
+					this.regexMatrix = new RegExp(
+						'^matrix\\(' +
+						floating + commaSpace +
+						floating + commaSpace +
+						floating + commaSpace +
+						floating + commaSpace +
+						floating + commaSpace +
+						floating + '\\)$'
+					);
+				},
+				attached: function () {
+					this.date = new Date();
+					var canvas = this.querySelector('#canvas');
+					var canvasView = this.querySelector('#canvas-view');
+					//init canvas matrix
+					canvas.style.transform = 'matrix(1, 0, 0, 1, ' + this.canvasOffsetX + ', ' + this.canvasOffsetY + ')';
+					canvas.style.transition = 'transform ' + 300 + 'ms linear 0s';
+					canvas.addEventListener("mousemove", this.handleCanvasMouseMove.bind(this), false);
+
+					canvasView.addEventListener("mousemove", this.handleCanvasViewMouseMove.bind(this), false);
+					canvasView.addEventListener("mousewheel", this.handleCanvasMouseWheel.bind(this), false);
+					canvas.addEventListener("mousedown", this.handleCanvasMouseDown.bind(this), false);
+					canvas.addEventListener("mouseup", this.handleCanvasMouseUp.bind(this), false);
+
+					this.canvasDims.width = canvas.offsetWidth;
+					this.canvasDims.height = canvas.offsetHeight;
+					this.setMatrix(this.getMatrix());
+
+				},
+				handleCenterCanvas: function (event) {
+					var canvas = this.querySelector('#canvas');
+					canvas.style.transform = 'matrix(1, 0, 0, 1, ' + this.canvasOffsetX + ', ' + this.canvasOffsetY + ')';
+					this.setMatrix(this.getMatrix());
+				},
+				handleZoomClickCanvas: function (event) {
+					this.zoomCenter(event.detail.delta * 0.4);
+				},
+				handleZoomSlideCanvas: function (event) {
+					this.zoomToCenter(event.detail.value);
+				},
+				handleCanvasMouseDown: function (event) {
+
+					if (event.target.id == 'canvas') {
+						this.mousePan = { panning: true, lastPanUpdate: 0, x: this.mousePos.x, y: this.mousePos.y };
+					}
+
+				},
+				handleCanvasMouseUp: function (event) {
+
+					this.mousePan.panning = false;
+
+				},
+				handleCanvasMouseMove: function (event) {
+
+					var x = event.offsetX;
+					var y = event.offsetY;
+					var current = event.target;
+					while (current.parentNode && current.id != 'canvas') {
+						x += current.offsetLeft;
+						y += current.offsetTop;
+
+						if (current.style.transform) {
+							var matrix = this.getMatrix(current.style.transform);
+
+							var left = -(this.canvasDims.width - this.canvasDims.width * matrix[0]) / 2
+							var top = -(this.canvasDims.height - this.canvasDims.height * matrix[0]) / 2
+
+							x += +matrix[4]
+							y += +matrix[5]
+
+						}
+
+						current = current.parentNode;
+					}
+
+					this.fire('canvasmousemove', { x: x, y: y });
+				},
+				handleCanvasViewMouseMove: function (event) {
+
+					var x = event.offsetX;
+					var y = event.offsetY;
+
+					var current = event.target;
+					//get correct position if over children, stupid event bubbling
+					while (current.parentNode && current.id != 'canvas-view') {
+
+						x += current.offsetLeft;
+						y += current.offsetTop;
+
+						if (current.style.transform) {
+							var matrix = this.getMatrix(current.style.transform);
+
+							var left = -(this.canvasDims.width - this.canvasDims.width * matrix[0]) / 2
+							var top = -(this.canvasDims.height - this.canvasDims.height * matrix[0]) / 2
+
+							x = matrix[4] - left + x * matrix[0];
+							y = matrix[5] - top + y * matrix[0];
+						}
+						current = current.parentNode;
+					}
+					this.mousePos = { x: x, y: y };
+
+					//pan
+					if (event.buttons == 0) {
+						this.mousePan.panning = false;
+					}
+					if (this.mousePan.panning) {
+
+						var now = Date.now();
+						//for performance reasons (reduce CPU load)
+						if (now - this.mousePan.lastPanUpdate > 20) {
+
+							this.pan((this.mousePos.x - this.mousePan.x), (this.mousePos.y - this.mousePan.y));
+
+							this.mousePan.x = this.mousePos.x;
+							this.mousePan.y = this.mousePos.y;
+							this.mousePan.lastPanUpdate = now;
+						}
+					}
+
+				},
+				handleCanvasMouseWheel: function (event) {
+					event.stopPropagation();
+					//event.preventDefault();
+					var zoomDelta = event.wheelDelta / MOUSE_WHEEL_SLOWDOWN;
+
+					// this.zoomTo(this.mousePos.x, this.mousePos.y, zoom);
+
+					this.zoom(event.wheelDelta / MOUSE_WHEEL_SLOWDOWN, this.mousePos);
+				},
+				getViewCenter: function () {
+					var result = { x: 0, y: 0 };
+					var matrix = this.getMatrix();
+					var canvasView = this.querySelector('#canvas-view');
+					var container = {
+						width: canvasView.offsetWidth,
+						height: canvasView.offsetHeight
+					};
+
+					result.x = -matrix[4] + container.width / 2;
+					result.y = -matrix[5] + container.height / 2;
+					return result;
+				},
+				pan: function (x, y) {
+					var matrix = this.getMatrix();
+					x += +matrix[4];
+					y += +matrix[5];
+					matrix[4] = x;
+					matrix[5] = y;
+					if (this.$.canvas.style.transition) {
+						this.$.canvas.style.transition = '';
+					}
+					this.setMatrix(matrix);
+				},
+
+				zoomTo: function (scale, focal) {
+					var matrix = this.getMatrix();
+
+					var oldScale = matrix[0];
+					if (scale == matrix[0]) {
+						return;
+					}
+					// Constrain scale
+					if (scale > this.maxZoom) {
+						scale = this.maxZoom;
+					} else if (scale < this.minZoom) {
+						scale = this.minZoom;
+					}
+
+					// Calculate focal point based on scale
+
+					if (focal) {
+						// Adapted from code by Florian Günther
+						// https://github.com/florianguenther/zui53
+
+						var clientX = focal.x;
+						var clientY = focal.y;
+
+						// Adjust the focal point for default transform-origin => 50% 50%
+
+						clientX -= (this.canvasDims.width) / 2;
+						clientY -= (this.canvasDims.height) / 2;
+
+						var clientV = new Vector(clientX, clientY, 1);
+
+						var surfaceM = new Matrix(matrix);
+						// Supply an offset manually if necessary
+						var o = { left: 0, top: 0 };
+						var offsetM = new Matrix(1, 0, o.left - 0, 0, 1, o.top - 0);
+						var surfaceV = surfaceM.inverse().x(offsetM.inverse().x(clientV));
+
+						var scaleBy = scale / matrix[0];
+						surfaceM = surfaceM.x(new Matrix([scaleBy, 0, 0, scaleBy, 0, 0]));
+						clientV = offsetM.x(surfaceM.x(surfaceV));
+
+						matrix[4] = +matrix[4] + (clientX - clientV.e(0));
+						matrix[5] = +matrix[5] + (clientY - clientV.e(1));
+					}
+
+					// Set the scale
+					matrix[0] = scale;
+					matrix[3] = scale;
+
+					//this.animateMatrix(oldMatrix, matrix.slice(0), 3000, 15);
+
+					if (matrix[0] < 0.8) {
+						this.$.canvas.style.transition = 'transform ' + 0 + 'ms linear 0s';
+					} else {
+						this.$.canvas.style.transition = 'transform ' + 100 * matrix[0] + 'ms linear 0s';
+					}
+
+					if (matrix[0] == this.maxZoom) {
+
+						//redraw for proper scaling (otherwise looks picelated, check backface-visibility)
+						this.$.canvas.style.display = 'none';
+						this.setMatrix(matrix);
+						this.$.canvas.style.display = 'block';
+
+					}
+					else {
+						this.setMatrix(matrix);
+					}
+
+					//this.querySelector('#canvas').style.backfaceVisibility = 'hidden!important;'
+					this.querySelector('#canvas-controls').adjustZoomSlider(matrix[0]);
+				},
+
+				zoomToCenter: function (scale) {
+
+					var canvasView = this.querySelector('#canvas-view');
+					var container = {
+						width: canvasView.offsetWidth,
+						height: canvasView.offsetHeight
+					};
+					this.zoomTo(scale, { x: container.width / 2, y: container.height / 2 });
+				},
+				zoomCenter: function (delta) {
+					var matrix = this.getMatrix();
+					var scale = matrix[0] + delta;
+
+					this.zoomToCenter(scale);
+				},
+				zoom: function (delta, focal) {
+					var matrix = this.getMatrix();
+					var scale = matrix[0] + delta;
+					this.zoomTo(scale, focal);
+				},
+
+				getMatrix: function (transform) {
+
+					var matrix = this.regexMatrix.exec(transform || this.$.canvas.style.transform);
+
+					var result = [1, 0, 0, 1, 0, 0];
+					if (matrix) {
+						result = [];
+						for (var i = 1; i <= 6; i++) {
+							result.push(+matrix[i]);
+						}
+					}
+					return result;
+				},
+				setMatrix: function (matrix) {
+
+					// Convert to array
+					if (typeof matrix === 'string') {
+						matrix = this.getMatrix(matrix);
+					}
+
+					var scale = +matrix[0];
+
+					var canvasView = this.querySelector('#canvas-view');
+					var dims = this.canvasDims;
+					var container = {
+						width: canvasView.offsetWidth,
+						height: canvasView.offsetHeight
+
+					};
+
+					//keep canvas in view
+					var maxLeft = ((-1 + scale) * dims.width + container.width) / 2;
+					var maxRight = ((-1 - scale) * dims.width + container.width) / 2;
+					var maxTop = ((-1 + scale) * dims.height + container.height) / 2;
+					var maxBottom = ((-1 - scale) * dims.height + container.height) / 2;
+
+					if (matrix[4] > maxLeft) {
+						matrix[4] = maxLeft;
+					}
+
+					if (matrix[4] < maxRight) {
+						matrix[4] = maxRight;
+					}
+
+					if (matrix[5] > maxTop) {
+						matrix[5] = maxTop;
+					}
+					if (matrix[5] < maxBottom) {
+						matrix[5] = maxBottom;
+					}
+
+					this.$.canvas.style.transform = ('matrix(' + matrix.join(',') + ')');
+					if (this.jsPlumbInstance) {
+						this.jsPlumbInstance.setZoom(matrix[0]);
+					}
+
+					//viewport
+					var left = (-matrix[4] + (-1 + scale) * dims.width / 2) / scale;
+					var top = (-matrix[5] + (-1 + scale) * dims.height / 2) / scale;
+					var right = left + container.width / scale;
+					var bottom = top + container.height / scale;
+
+					this.fire('viewportchanged', { left: left, top: top, right: right, bottom: bottom });
+					return matrix;
+				}
+
+			});
+		})();
+	</script>
 </dom-module>
