@@ -28,7 +28,7 @@
                     },
                     maxUserAge: {
                         type: Number,
-                        value: 600000 //10 min, before getting 'kicked'
+                        value: 60000//600000 //10 min, before getting 'kicked'
                     },
                     colorTable: {
                         type: Array,
@@ -308,7 +308,7 @@
                             var event = events[i];
                             (function (event) {
 
-                                if (event.type === 'add') {
+                                if (event.type !== 'delete') {
                                     // console.log('eventuser', event.name, event.type);
 
                                     // console.log(yjs.share.users);

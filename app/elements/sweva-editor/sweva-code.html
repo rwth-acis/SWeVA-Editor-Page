@@ -114,7 +114,19 @@
                     this.title = title;
                     this.currentId = id;
                     this.editor.$blockScrolling = Infinity;
-                    this.editor.setValue(code,1);
+                    this.editor.setValue('', 1);
+                    if (code && code.length > 0) {
+                        this.editor.setValue(code, 1);
+                    }
+                    var self = this;
+                    /*this.yjs.share.nodes.get(node.id).then(function (map) {
+                        map.get('sharedCode').then(function (text) {
+                            text.instances = [];
+                            text.bind(self.editor);
+                        });
+                    });*/
+
+
                     this.querySelector('paper-dialog').open();
                     this.isOpen = true;
                     this.editor.focus();
@@ -136,7 +148,7 @@
                             dialog.close();
                         }
                     }
-                    //this.fire('edited', { id: this.currentId, code: code });
+                    this.fire('edited', { id: this.currentId, code: code });
                 },
                 syntaxCheck: function (code){
                     code = 'function a(){return ' + code + '}';
@@ -168,6 +180,9 @@
                     var code = this.editor.getValue();
                     var errors = this.syntaxCheck(code);
                     this.editor.getSession().setAnnotations(errors);
+                },
+                init: function(yjs){
+                    this.yjs = yjs;
                 },
                 update: function (yjs, code) {
 

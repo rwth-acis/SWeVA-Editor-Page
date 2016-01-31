@@ -53,7 +53,7 @@
 
         <sweva-canvas id="canvas-container"
                       canvas-offset-x="{{canvasOffset.x}}"
-                      canvas-offset-y="{{canvasOffset.x}}"
+                      canvas-offset-y="{{canvasOffset.y}}"
                       on-canvasmousemove="handleCanvasMouseMove"
                       on-viewportchanged="handleViewPortChanced">
 
@@ -65,7 +65,6 @@
                                 on-deletenode="handleDeleteNode"
                                 repository-address="{{repositoryAddress}}"
                                 repository-suffix="{{repositorySuffix}}">
-                
             </sweva-node-manager>
         </sweva-canvas>
 
@@ -79,11 +78,11 @@
                      on-editnode="handleEditNode"
                      on-editproject="handleEditProject"
                      on-execute="handleExecute"
-                     on-editdata="handleEditData"
-                     on-editinput="handleEditInput"
+                    
                      on-downloadproject="handleDownloadProject"
-                     on-generateinputdata="handleGenerateInputData"
-                     on-switchroom="handleSwitchRoom">
+                    
+                     on-switchroom="handleSwitchRoom"
+                     on-updatemodel="handleUpdateModel">
         </sweva-panel>
         <sweva-user-manager on-useradded="handleUserAdded"
                             on-userdeleted="handleUserDeleted"
@@ -99,26 +98,22 @@
         if (!window.module) {
             window.module = {};
         }</script>
-    <!--<script src="https://rawgit.com/y-js/y-memory/dist/y-memory.js"></script>
-    <script src="https://cdn.rawgit.com/y-js/y-array/master/src/Array.js"></script>
-    <script src="https://cdn.rawgit.com/y-js/y-text/master/src/Text.js"></script>
-    <script src="https://rawgit.com/y-js/y-memory/dist/y-memory.js"></script>
-    <!-- <script src="https://rawgit.com/y-js/y-richtext/dist/y-richtext.js"></script>-->
-
     
+
     <script src="../../../bower_components/y-memory/y-memory.js"></script>
     <script src="../../../bower_components/y-map/y-map.js"></script>
     <script src="../../../bower_components/y-array/y-array.js"></script>
     <script src="../../../bower_components/y-text/y-text.js"></script>
 
     <script src="y-websockets-client.js"></script>
+    <script src="Ace.js"></script>
 
     <script src="../../../bower_components/jsplumb/dist/js/jsPlumb-2.1.0.js"></script>
     <script src="../../../bower_components/axios/dist/axios.min.js"></script>
     <script src="https://cdn.rawgit.com/cpettitt/dagre/master/dist/dagre.js"></script>
 
     <!--<script src="https://rawgit.com/rwth-acis/SWeVA-Core/master/app/core.build.js"></script>-->
-    <script src="http://localhost:8021/SWeVA-Core/app/core.build.js"></script>
+    <script src="http://localhost:5001/core.build.js"></script>
     <script src="../../../bower_components/download-as-file/dist/download-as-file.js"></script>
     <!--<script src="../../../bower_components/dagre/dist/dagre.core.min.js"></script>
     <!--<script src="../../../bower_components/graphlib/dist/graphlib.core.min.js"></script>-->
@@ -172,7 +167,7 @@
                         observer: '_roomChanged'
                     }
                 },
-                _roomChanged: function(){
+                _roomChanged: function () {
                     this.start(this.room)
                 },
                 handleNodeSelection: function (event) {
@@ -279,13 +274,24 @@
                         editor.open('Edit Project', 'project.code', code);
                     }
                 },
-                handleGenerateInputData: function () {
+                handleUpdateModel: function () {
+                    
+                    var nodeManager = this.querySelector('sweva-node-manager');
+                    var code = this.project.code;
+                    if (code.trim().length == 0) {
+                        code = sweva.ComposableLoader.getDefaultComposition();
+                    }
+                    var obj = nodeManager.getComposition(code);
+                    console.log(obj);
+                    this.fire('modelupdated', obj);
+                },
+                /*handleGenerateInputData: function () {
                     var nodeManager = this.querySelector('sweva-node-manager');
                     var obj = nodeManager.getDefaultInputData();
 
                     this.yjs.share.project.set('data', JSON.stringify(obj.data, null, 4));
                     this.yjs.share.project.set('input', JSON.stringify(obj.input, null, 4));
-                },
+                },*/
                 handleEditComplete: function (event) {
                     var id = event.detail.id;
                     var code = event.detail.code;
@@ -293,12 +299,12 @@
                         if (id == 'project.code') {
                             this.yjs.share.project.set('code', code);
                         }
-                        else if (id == 'project.input') {
+                       /* else if (id == 'project.input') {
                             this.yjs.share.project.set('input', code);
                         }
                         else if (id == 'project.data') {
                             this.yjs.share.project.set('data', code);
-                        }
+                        }*/
                         else {
                             var node = document.getElementById(id);
 
@@ -313,12 +319,14 @@
 
                     if (node) {
                         var editor = this.querySelector('#editor-dialog');
-
                         if (editor) {
                             editor.open('Edit Node ' + node.alias, node.id, node.code);
+                            
                         }
                     }
+
                 },
+                /*
                 handleExecute: function () {
                     var nodeManager = this.querySelector('sweva-node-manager');
                     var code = this.project.code;
@@ -327,13 +335,9 @@
                     }
                     var obj = nodeManager.getComposition(code);
 
+                   
                     var data = JSON.parse(sweva.ComposableLoader.convertCodeToJson(this.project.data));
                     var input = JSON.parse(sweva.ComposableLoader.convertCodeToJson(this.project.input));
-
-                   
-                   
-
-
                    
                     this.executionManager.setup(obj);
                     var panel = this.querySelector('sweva-panel');
@@ -343,14 +347,14 @@
                     input
                     )
                     .then(function (result) {
-                        
+
                         console.log(result);
 
                     });
-                },
-                handleEditData: function () {
+                },*/
+                /*handleEditData: function () {
                     var editor = this.querySelector('#editor-dialog');
-                    
+
                     if (editor) {
                         editor.open('Edit Execution Data', 'project.data', this.project.data);
                     }
@@ -361,7 +365,7 @@
                     if (editor) {
                         editor.open('Edit Execution Input', 'project.input', this.project.input);
                     }
-                },
+                },*/
                 handleJsPlumbLoaded: function (event) {
                     var canvas = this.querySelector('sweva-canvas');
                     if (canvas) {
@@ -396,6 +400,12 @@
                             if (obj.hasOwnProperty('links')) {
                                 delete obj.links;
                             }
+                            if (obj.hasOwnProperty('controls')) {
+                                delete obj.controls;
+                            }
+                            if (obj.hasOwnProperty('visualization')) {
+                                delete obj.visualization;
+                            }
                             var code = sweva.ComposableLoader.convertJsonToCode(obj);
                             this.yjs.share.project.set('code', code);
                             break;
@@ -407,18 +417,18 @@
 
                     }
                 },
-                handleSwitchRoom: function(event){
+                handleSwitchRoom: function (event) {
                     var room = event.detail;
                     if (typeof room !== 'string'
                         || room.trim().length == 0
                         || room == this.room) {
                         return;
                     }
-                    
+
                     this.cleanUp();
                     this.room = room;
                     //this.start(room);
-                    
+
                 },
                 cleanUp: function () {
                     var cursorAwareness = this.querySelector('sweva-cursor-awareness');
@@ -432,17 +442,17 @@
                     this.yjs = null;
                 },
                 start: function (room) {
-                    
+
                     if (typeof room !== 'string'
                         || room.trim().length == 0) {
                         return;
                     }
                     var self = this;
-                    this.executionManager = new sweva.ExecutionManager();
+                    /*this.executionManager = new sweva.ExecutionManager();
                     this.executionManager.onProgress(function (progress) {
                         var panel = self.querySelector('sweva-panel');
                         panel.updateProgress(progress);
-                    });
+                    });*/
                     var panel = this.querySelector('sweva-panel');
                     panel.updateRoom(room);
                     Y({
@@ -462,12 +472,15 @@
                             edges: 'Map',
                             users: 'Map',
                             chat: 'Array',
-                            project: 'Map'
+                            project: 'Map',
+                            mapper: 'Map',
+                            mapperContainers: 'Map',
+                            mapperVisualization: 'Map'
                         }
                     }).then(function (y) {
                         self.yjs = y;
                         var yjs = y;
-                        console.log(y);
+
                         //yjs.share.text.bind(document.querySelector("#editor-dialog #editor"))
                         var userManager = self.querySelector('sweva-user-manager');
                         userManager.init(yjs);
@@ -475,27 +488,26 @@
                         userChat.init(yjs);
                         var nodeManager = self.querySelector('sweva-node-manager');
                         nodeManager.init(yjs);
+                        var editor = self.querySelector('#editor-dialog');
+                        editor.init(yjs);
 
                         yjs.share.project.observe(function (events) {
                             var code = yjs.share.project.get('code') || '';
-                            var input = yjs.share.project.get('input') || {};
-                            var data = yjs.share.project.get('data') || {};
+                           // var input = yjs.share.project.get('input') || {};
+                           // var data = yjs.share.project.get('data') || {};
                             self.project.code = code;
-                            self.project.input = input;
-                            self.project.data = data;
+                           // self.project.input = input;
+                            //self.project.data = data;
                         });
 
-                        console.log('loaded');
+                        console.log(' editor loaded');
                     });
                 },
                 ready: function () {
-                    
-                    
-                    
 
                 },
-                attached: function () {                    
-                    
+                attached: function () {
+
                 }
 
             });

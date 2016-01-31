@@ -98,7 +98,10 @@
 
             var MIN_HEIGHT = 100;
             var BASE_HEIGHT = 30;
+            var MIN_WIDTH = 100;
+            var BASE_WIDTH = 30;
             var ENDPOINT_HEIGHT = 50;
+            var ENDPOINT_WIDTH = 50;
             Polymer({
                 is: 'sweva-node',
                 properties: {
@@ -420,6 +423,22 @@
                         dropOptions: { hoverClass: "hover", activeClass: "active" },
                         isTarget: true
                     }
+
+                    var nodeInputEndpoint = {
+                        endpoint: "Dot",
+                        paintStyle: {
+                            strokeStyle: "#0094ff",
+                            fillStyle: "#ffffff",
+                            radius: 10,
+                            lineWidth: 4
+                        },
+                        hoverPaintStyle: nodeEndpointHoverStyle,
+                        maxConnections: 1,
+                        dropOptions: { hoverClass: "hover", activeClass: "active" },
+                        isTarget: true
+                    }
+
+
                     var nodeConnectorPaintStyle = {
                         lineWidth: 4,
                         strokeStyle: "#0094ff",
@@ -456,15 +475,21 @@
                         dragOptions: {},
 
                     }
+                    this.jsPlumbStyles.nodeInputEndpoint = nodeInputEndpoint;
                     this.jsPlumbStyles.nodeDataInEndpoint = nodeDataInEndpoint;
                     this.jsPlumbStyles.nodeDataOutEndpoint = nodeDataOutEndpoint;
                 },
-                _adjustHeight: function (endpoints) {
-                    var height = BASE_HEIGHT + endpoints * ENDPOINT_HEIGHT;
+                _adjustHeight: function (endpointsX, endpointsY) {
+                    var height = BASE_HEIGHT + endpointsY * ENDPOINT_HEIGHT;
+                    var width = BASE_WIDTH + endpointsX * ENDPOINT_WIDTH;
                     if (height < MIN_HEIGHT) {
                         height = MIN_HEIGHT;
                     }
+                    if (width < MIN_WIDTH) {
+                        width = MIN_WIDTH;
+                    }
                     this.style.height = height + 'px';
+                    this.style.width = width + 'px';
                 },
 
                 init: function (jsPlumbInstance, yjs, edges, alias, code, fixed, position, id, fromYjs) {
@@ -481,16 +506,17 @@
                     this.style.top = this.posY + 'px';
                     //jsPlumbInstance.draggable(this, { grid: [20, 20] });
                     Polymer.dom.flush();
+                    this.jsPlumbInstance = jsPlumbInstance;
 
                     if (!code) {
                         code = '';
-                        this._addEndpoints(jsPlumbInstance, ['IN1'], ['OUT1']);
+                        this._addEndpoints(['IN1'], ['OUT1'], ['INPUT1']);
                     }
                     else {
                         var obj = JSON.parse(sweva.ComposableLoader.convertCodeToJson(code));
                         this.name = obj.name || 'Node';
                         this.description = obj.description || this.name;
-                        this._addEndpoints(jsPlumbInstance, obj.dataInNames, obj.dataOutNames, obj.dataInSchema, obj.dataOutSchema);
+                        this._addEndpoints(obj.dataInNames, obj.dataOutNames, obj.inputNames, obj.dataInSchema, obj.dataOutSchema, obj.inputSchema);
                     }
                     this.code = code;
 
@@ -504,17 +530,17 @@
                             map.set('alias', alias);
                             map.set('code', code);
                             map.set('fixed', self.fixed);
-                            map.set('sharedCode', Y.Text).then(function (text) {
+                            /*map.set('sharedCode', Y.Ace).then(function (text) {
 
-                                //text.insert(0, code);
+                                text.insert(0, code);
 
-                            });
+                            });*/
 
                         });
                         this.updatePos();
 
                     }
-                    this.jsPlumbInstance = jsPlumbInstance;
+                    
                     jsPlumbInstance.draggable(this, {
                         stop: function (event) {
                             self.updatePos(event.el.offsetLeft, event.el.offsetTop);
@@ -589,27 +615,25 @@
                     return result;
                 },
 
-                _addEndpoints: function (jsPlumbInstance, dataIn, dataOut, dataInSchema, dataOutSchema) {
+                _addEndpoints: function (dataIn, dataOut,  input, dataInSchema, dataOutSchema, inputSchema) {
 
-                    this._adjustHeight(Math.max(dataIn.length, dataOut.length));
+                    this._adjustHeight(input.length, Math.max(dataIn.length, dataOut.length));
 
                     var nodeId = this.id;
 
                     var self = this;
-                    var innerHtml = self.innerHTML;//because jsPlumbInstance.empty kills all children too
-                    // jsPlumbInstance.empty(nodeId);
-                    // Polymer.dom.flush();
-                    //  self.innerHTML = innerHtml;
+                    
 
-                    jsPlumbInstance.selectEndpoints({ source: nodeId }).each(function (endpoint) {
-                        jsPlumbInstance.deleteEndpoint(endpoint);
+                    this.jsPlumbInstance.selectEndpoints({ source: nodeId }).each(function (endpoint) {
+                        self.jsPlumbInstance.deleteEndpoint(endpoint);
                     });
-                    jsPlumbInstance.selectEndpoints({ target: nodeId }).each(function (endpoint) {
-                        jsPlumbInstance.deleteEndpoint(endpoint);
+                    this.jsPlumbInstance.selectEndpoints({ target: nodeId }).each(function (endpoint) {
+                        self.jsPlumbInstance.deleteEndpoint(endpoint);
                     });
 
-                    jsPlumbInstance.batch(function () {
+                    this.jsPlumbInstance.batch(function () {
 
+                        //dataIn
                         var stepSizeIn = (1) / (dataIn.length + 1);
                         var schemaInfo = null;
                         if (dataInSchema) {
@@ -619,9 +643,9 @@
                         for (var i = 0; i < dataIn.length; i++) {
 
                             var labelId = nodeId + dataIn[i] + 'label';
-                            var endpoint = jsPlumbInstance.addEndpoint(nodeId, self.jsPlumbStyles.nodeDataInEndpoint, {
+                            var endpoint = self.jsPlumbInstance.addEndpoint(nodeId, self.jsPlumbStyles.nodeDataInEndpoint, {
                                 anchor: [0, stepSizeIn * (i + 1), -1, 0],
-                                uuid: nodeId + dataIn[i],
+                                uuid: nodeId + dataIn[i]+'in',
                                 overlays: [
                                     ["Label", {
                                         location: [0.4, -0.5],
@@ -667,15 +691,17 @@
                             endpoint.tooltip = self._readableJsonToHtml(self._jsonSchemaToReadable(jsonString));
 
                         }
+                        //dataOut
                         schemaInfo = null;
                         if (dataOutSchema) {
                             schemaInfo = dataOutSchema.properties;
                         }
+                        
                         var stepSizeOut = (1) / (dataOut.length + 1);
                         for (var i = 0; i < dataOut.length; i++) {
-                            var endpoint = jsPlumbInstance.addEndpoint(nodeId, self.jsPlumbStyles.nodeDataOutEndpoint, {
+                            var endpoint = self.jsPlumbInstance.addEndpoint(nodeId, self.jsPlumbStyles.nodeDataOutEndpoint, {
                                 anchor: [1, stepSizeOut * (i + 1), 1, 0],
-                                uuid: nodeId + dataOut[i],
+                                uuid: nodeId + dataOut[i] + 'out',
                                 overlays: [
                                     ["Label", {
                                         location: [0.6, -0.5],
@@ -719,6 +745,59 @@
                             }
                             endpoint.tooltip = self._readableJsonToHtml(self._jsonSchemaToReadable(jsonString));
                         }
+                        //input
+                        schemaInfo = null;
+                        if (inputSchema) {
+                            schemaInfo = inputSchema.properties;
+                        }
+                        var stepSizeOut = (1) / (input.length + 1);
+                        for (var i = 0; i < input.length; i++) {
+                            var endpoint = self.jsPlumbInstance.addEndpoint(nodeId, self.jsPlumbStyles.nodeInputEndpoint, {
+                                anchor: [stepSizeOut * (i + 1), 0 , 0, -1],
+                                uuid: nodeId + input[i] + 'input',
+                                overlays: [
+                                    ["Label", {
+                                        location: [0.6, -0.5],
+                                        label: input[i],
+                                        cssClass: "node-input-endpoint-label node-label"
+                                    }]
+                                ],
+                                events: {
+                                    mouseover: function (c) {
+                                        var tooltip = self.querySelector('.endpoint-tooltip');
+
+                                        if (c.tooltip && c.tooltip.length > 0) {
+                                            self.tooltip = c.tooltip;
+                                            if (!tooltip._showing) {
+                                                tooltip.show();
+                                            }
+                                        }
+
+                                    },
+                                    mouseout: function (c) {
+                                        var tooltip = self.querySelector('.endpoint-tooltip');
+                                        tooltip.hide();
+                                    }
+                                }
+                            });
+                            endpoint.isInput = true;
+                            endpoint.tooltip = '';
+                            var jsonString = '{}';
+
+                            if (schemaInfo) {
+
+                                if (schemaInfo[input[i]]) {
+                                    jsonString = JSON.stringify(schemaInfo[input[i]], null, 2);
+                                }
+                                else if (inputSchema) {
+                                    jsonString = JSON.stringify(inputSchema, null, 2);
+                                }
+                            }
+                            else if (inputSchema) {
+                                jsonString = JSON.stringify(inputSchema, null, 2);
+                            }
+                            endpoint.tooltip = self._readableJsonToHtml(self._jsonSchemaToReadable(jsonString));
+                        }
                     });
 
                 },
@@ -745,13 +824,14 @@
                         var obj = JSON.parse(sweva.ComposableLoader.convertCodeToJson(this.code));
                         this.name = obj.name;
 
-                        if (this.jsPlumbInstance && obj.dataInNames && obj.dataOutNames) {
+                        if (this.jsPlumbInstance && obj.dataInNames && obj.dataOutNames && obj.inputNames) {
 
                             if (oldCode && oldCode.length > 0) {
                                 var oldObj = JSON.parse(sweva.ComposableLoader.convertCodeToJson(oldCode));
 
                                 if (obj.dataInNames.length == oldObj.dataInNames.length
-                                    && obj.dataOutNames.length == oldObj.dataOutNames.length) {
+                                    && obj.dataOutNames.length == oldObj.dataOutNames.length
+                                    && obj.inputNames.length == oldObj.inputNames.length) {
                                     var same = true;
                                     for (var i = 0; i < obj.dataInNames.length; i++) {
                                         if (obj.dataInNames[i] != oldObj.dataInNames[i]) {
@@ -763,6 +843,11 @@
                                             same = false;
                                         }
                                     }
+                                    for (var i = 0; i < obj.inputNames.length; i++) {
+                                        if (obj.inputNames[i] != oldObj.inputNames[i]) {
+                                            same = false;
+                                        }
+                                    }
                                     if (same) {
 
                                         return;
@@ -770,7 +855,7 @@
                                 }
                             }
                            
-                            this._addEndpoints(this.jsPlumbInstance, obj.dataInNames, obj.dataOutNames, obj.dataInSchema, obj.dataOutSchema);
+                            this._addEndpoints(obj.dataInNames, obj.dataOutNames, obj.inputNames, obj.dataInSchema, obj.dataOutSchema, obj.inputSchema);
                             this.updateConnections();
                         }
                     }

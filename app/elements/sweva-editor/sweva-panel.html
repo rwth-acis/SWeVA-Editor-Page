@@ -8,13 +8,22 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 
+
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+
+
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item-body.html">
+
 <link rel="import" href="../../bower_components/paper-color-picker/paper-color-input.html">
 <link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
 
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
-
-
 
 <link rel="import" href="sweva-import-export-dialog.html">
 
@@ -23,25 +32,35 @@
         <style>
             :host {
                 display: flex;
-                width: 300px;
+                width: 230px;
                 background-color: white;
                 box-shadow: 0 2px 8px #555;
                 position: relative;
                 flex-direction: column;
             }
+
             iron-pages {
                 flex: 1 1 0;
                 overflow: auto;
             }
-            #demo-controls{
+            paper-button {
+                background-color: #0094ff;
+                color: #fff;
+                margin: 5px;
+                width: 100%;
+            }
+            #demo-controls {
                 border-top: 1px solid #999;
-                
-
+                padding: 5px;
             }
-            #demo-controls paper-progress{
-               width: 100%;
 
-            }
+                #demo-controls paper-progress {
+                    width: 100%;
+                }
+                #demo-controls paper-button {
+                    margin: 0;
+                }
+
             paper-tabs, paper-toolbar {
                 background-color: #0094ff;
                 color: #fff;
@@ -62,17 +81,13 @@
                 overflow: auto;
             }
 
-            paper-button {
-                background-color: #0094ff;
-                color: #fff;
-                margin: 5px;
-                width: 100%;
-            }
+            
 
             paper-card {
                 width: 100%;
                 margin-bottom: 18px;
                 --paper-card-header-text:
+
                 {
                     padding: 8px;
                     text-align: center;
@@ -95,25 +110,39 @@
             paper-dialog {
                 background: #fff;
             }
-            paper-icon-button.pink{
+
+            paper-icon-button.pink {
                 color: #db0064;
             }
-            #room-selector{
+
+            #room-selector {
                 display: flex;
                 padding: 0 10px;
             }
-            #room-selector paper-icon-button{
-                margin-top: 10px;
-            }
-            #room-name{
+
+                #room-selector paper-icon-button {
+                    margin-top: 10px;
+                }
+
+            #room-name {
                 flex: 1 1 0;
             }
+
+            paper-icon-item{
+                padding: 0 3px;
+                height: 0;
+                cursor: pointer;
+            }
+
            
+             paper-icon-item .text{
+                 margin-left: -20px;
+             }
         </style>
-        <div id="room-selector">
+        <!--<div id="room-selector">
             <paper-input id="room-name" label="Room" value="{{room}}"></paper-input>
             <paper-icon-button title="Switch Room" icon="icons:launch" on-click="handleSwitchRoom"></paper-icon-button>
-        </div>
+        </div>-->
         <paper-tabs selected="{{selectedTab}}" noink>
             <paper-tab>Create</paper-tab>
             <paper-tab>Edit</paper-tab>
@@ -133,26 +162,70 @@
                         <paper-input id="create-node-name" label="Alias" value="{{createNodeAlias}}"></paper-input>
                         <paper-input id="create-node-url" label="Url" value="{{createNodeUrl}}"></paper-input>
 
-                        <paper-button raised on-click="handleCreateNodeUrlFixed">Create From Url (read-only)</paper-button>
+                        <!--<paper-button raised on-click="handleCreateNodeUrlFixed">Create From Url (read-only)</paper-button>
                         <paper-button raised on-click="handleCreateNode">Create Empty</paper-button>
                         <paper-button raised on-click="handleCreateNodeUrl">Create From Url</paper-button>
 
                         <paper-button raised on-click="handleImportNodeJSON">Import as JSON</paper-button>
-                        <paper-button raised on-click="handleImportNodeObject">Import as Object</paper-button>
+                        <paper-button raised on-click="handleImportNodeObject">Import as Object</paper-button>-->
+                       
+
+                        <paper-icon-item on-click="handleCreateNodeUrlFixed">
+                            <iron-icon item-icon icon="icons:cloud-circle"></iron-icon>
+                            <paper-item-body class="text" two-line>
+                                <div>Create From Url</div>
+                                <div secondary>(read-only)</div>
+                            </paper-item-body>
+                        </paper-icon-item>
+                        <paper-icon-item on-click="handleCreateNode">
+                            <iron-icon item-icon icon="icons:cloud-off"></iron-icon>
+                            <div class="text">Create Empty</div>
+                        </paper-icon-item>
+                        <paper-icon-item on-click="handleCreateNodeUrl">
+                            <iron-icon item-icon icon="icons:cloud-queue"></iron-icon>
+                            <div class="text">Create From Url</div>
+                        </paper-icon-item>
+                       
+                        <paper-icon-item>
+                            <iron-icon item-icon icon="icons:exit-to-app"></iron-icon>
+                            <paper-dropdown-menu label="Import">
+                                <paper-menu class="dropdown-content">
+                                    <paper-item on-click="handleImportNodeJSON">JSON</paper-item>
+                                    <paper-item on-click="handleImportNodeObject">Object</paper-item>
+                                </paper-menu>
+                            </paper-dropdown-menu>
+                        </paper-icon-item>
+
+                       
                     </div>
                 </paper-card>
 
                 <paper-card heading="Import Project">
                     <div class="card-content">
-                        <paper-button raised on-click="handleImportCompositionJSON">Import as JSON</paper-button>
-                       <!-- <paper-button raised on-click="handleImportCompositionObject">Import as Object</paper-button>-->
+                        <!--<paper-button raised on-click="handleImportCompositionJSON">Import as JSON</paper-button>
+                        <!-- <paper-button raised on-click="handleImportCompositionObject">Import as Object</paper-button>-->
+
+                        <paper-icon-item on-click="handleImportCompositionJSON">
+                            <iron-icon item-icon icon="icons:exit-to-app"></iron-icon>
+                            <div class="text">Import as JSON</div>
+                        </paper-icon-item>
                     </div>
                 </paper-card>
 
                 <paper-card heading="Utilities">
                     <div class="card-content">
-                        <paper-button raised on-click="handleClearAll">Clear All</paper-button>
+                       <!-- <paper-button raised on-click="handleClearAll">Clear All</paper-button>
                         <paper-button raised on-click="handleAutoLayout">Auto Layout</paper-button>
+                           -->
+                        <paper-icon-item on-click="handleClearAll">
+                            <iron-icon item-icon icon="icons:clear"></iron-icon>
+                            <div class="text">Clear All</div>
+                        </paper-icon-item>
+                        <paper-icon-item on-click="handleAutoLayout">
+                            <iron-icon item-icon icon="icons:apps"></iron-icon>
+                            <div class="text">Auto Layout</div>
+                        </paper-icon-item>
+
                     </div>
                 </paper-card>
             </div>
@@ -161,20 +234,35 @@
                     <div class="card-content">
                         <paper-input id="node-alias" label="Alias" on-blur="handlePotentialAliasUpdate" on-focus="handlePotentialAliasUpdate" value="{{selectedNode.alias}}"></paper-input>
                         <paper-textarea id="node-description" label="Description" readonly value="{{selectedNode.description}}"></paper-textarea>
+                        <!--
                         <paper-button raised on-click="handleNodeEdit">Edit Code Collaboratively</paper-button>
                         <!--<paper-button raised on-click="handleNodeUpdate">Update</paper-button>-->
+
+                        <paper-icon-item on-click="handleNodeEdit">
+                            <iron-icon item-icon icon="icons:code"></iron-icon>
+                            <div class="text">Edit Code</div>
+                        </paper-icon-item>
                     </div>
                 </paper-card>
                 <paper-card heading="Edit Project">
                     <div class="card-content">
-                       
-                        <paper-button raised on-click="handleProjectEdit">Edit Code Collaboratively</paper-button>
-                        <!--<paper-button raised on-click="handleProjectUpdate">Update</paper-button>-->
+
+                       <!-- <paper-button raised on-click="handleProjectEdit">Edit Code Collaboratively</paper-button>
+                        <paper-button raised on-click="handleProjectUpdate">Update</paper-button>-->
+
+                        <paper-icon-item on-click="handleProjectEdit">
+                            <iron-icon item-icon icon="icons:code"></iron-icon>
+                            <div class="text">Edit Code</div>
+                        </paper-icon-item>
                     </div>
                 </paper-card>
                 <paper-card heading="Delete Node">
                     <div class="card-content">
-                        <paper-button raised on-click="handleNodeDelete">Delete</paper-button>
+                        <!--<paper-button raised on-click="handleNodeDelete">Delete</paper-button>-->
+                        <paper-icon-item on-click="handleNodeDelete">
+                            <iron-icon item-icon icon="icons:close"></iron-icon>
+                            <div class="text">Delete</div>
+                        </paper-icon-item>
                     </div>
                 </paper-card>
             </div>
@@ -182,15 +270,35 @@
 
                 <paper-card heading="Export Project">
                     <div class="card-content">
-                        <paper-button raised on-click="handleDownloadComposition">Download Project</paper-button>
-                        <paper-button raised on-click="handleSubmitComposition">Submit to Repository</paper-button>
+                        <!--<paper-button raised on-click="handleDownloadComposition">Download Project</paper-button>
+                        <paper-button raised on-click="handleSubmitComposition">Submit to Repository</paper-button>-->
+
+                        <paper-icon-item>
+                            <iron-icon item-icon icon="icons:save"></iron-icon>
+                            <paper-dropdown-menu label="Export">
+                                <paper-menu class="dropdown-content">
+                                    <paper-item on-click="handleDownloadComposition">Download</paper-item>
+                                    <paper-item on-click="handleSubmitComposition">Submit to Repository</paper-item>
+                                </paper-menu>
+                            </paper-dropdown-menu>
+                        </paper-icon-item>
                     </div>
                 </paper-card>
 
                 <paper-card heading="Export Node">
                     <div class="card-content">
-                        <paper-button raised on-click="handleDownloadNode">Download Node</paper-button>
-                        <paper-button raised on-click="handleSubmitNode">Submit to Repository</paper-button>
+                        <!--<paper-button raised on-click="handleDownloadNode">Download Node</paper-button>
+                        <paper-button raised on-click="handleSubmitNode">Submit to Repository</paper-button>-->
+
+                        <paper-icon-item>
+                            <iron-icon item-icon icon="icons:save"></iron-icon>
+                            <paper-dropdown-menu label="Export">
+                                <paper-menu class="dropdown-content">
+                                    <paper-item on-click="handleDownloadNode">Download</paper-item>
+                                    <paper-item on-click="handleSubmitNode">Submit to Repository</paper-item>
+                                </paper-menu>
+                            </paper-dropdown-menu>
+                        </paper-icon-item>
                     </div>
                 </paper-card>
             </div>
@@ -205,14 +313,15 @@
             </div>
         </iron-pages>
         <div id="demo-controls">
-            <paper-progress value="{{progress}}"></paper-progress>
+            <paper-button on-click="handleUpdateModel"><iron-icon icon="icons:extension"></iron-icon> Update Model</paper-button>
+            <!--<paper-progress value="{{progress}}"></paper-progress>
             <paper-icon-button title="Execute" icon="av:play-arrow" on-click="handleExecute"></paper-icon-button>
             <paper-icon-button title="Set Data For Execution" icon="icons:input" on-click="handleEditData"></paper-icon-button>
             <paper-icon-button title="Set Input For Execution" icon="icons:system-update-alt" on-click="handleEditInput"></paper-icon-button>
-            <paper-icon-button title="Generate Input and Data  Templates" icon="av:playlist-add" on-click="handleGenerateInputData" class="pink"></paper-icon-button>
+            <paper-icon-button title="Generate Input and Data  Templates" icon="av:playlist-add" on-click="handleGenerateInputData" class="pink"></paper-icon-button>-->
         </div>
     </template>
-    
+
     <script>
         (function () {
             'use strict';
@@ -236,9 +345,9 @@
                         type: Object,
                         value: null
                     },
-                    progress:{
+                    progress: {
                         type: Number,
-                        value:0
+                        value: 0
                     },
                     username: {
                         type: String,
@@ -265,13 +374,17 @@
                 attached: function () {
 
                 },
-                updateProgress: function(value){
+                handleUpdateModel: function(){
+                    this.fire('updatemodel', {});
+                },
+                /*
+                updateProgress: function (value) {
                     this.progress = value;
                 },
-                resetProgress: function(){
+                resetProgress: function () {
                     this.progress = 0;
                 },
-                handleExecute: function(){
+                handleExecute: function () {
                     this.fire('execute', {});
                 },
                 handleEditData: function () {
@@ -280,9 +393,9 @@
                 handleEditInput: function () {
                     this.fire('editinput', {});
                 },
-                handleGenerateInputData: function(){
+                handleGenerateInputData: function () {
                     this.fire('generateinputdata', {});
-                },
+                },*/
                 handlePotentialAliasUpdate: function (event) {
                     var input = this.querySelector('#node-alias');
                     if (input && this.selectedNode) {
@@ -291,7 +404,7 @@
                         }
                     }
                 },
-                handleSwitchRoom: function (){
+                handleSwitchRoom: function () {
                     this.fire('switchroom', this.room);
                 },
                 updateRoom: function (room) {
@@ -386,7 +499,7 @@
                     if (typeof fixed !== 'undefined' && fixed) {
                         fix = true;
                     }
-                   
+
                     this.fire('createnode', { alias: alias, url: url, fixed: fix });
                 },
                 handleCreateNodeUrlFixed: function (event, a) {

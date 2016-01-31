@@ -69,6 +69,7 @@
                         type: Object,
                         value: null
                     }
+                    
 
                 },
                 handleNodeSelected: function (event) {
@@ -156,6 +157,10 @@
                     composition.links = {};
                     for (var i = 0; i < graph.edges.length; i++) {
                         var edge = graph.edges[i];
+
+                        if (!nodeDictionary.hasOwnProperty(edge.from)) {
+                            continue;
+                        }
                         var alias = nodeDictionary[edge.from].alias;
                         if (!composition.links.hasOwnProperty(alias)) {
                             composition.links[alias] = [];
@@ -183,10 +188,21 @@
                         }
                     }
 
+                    composition.controls = {};
+                    composition.visualization = '';
+                    var container = this.$$('#input-node-container');
+                    if (container) {
+                        var mapping = container.getInformation();
+                        composition.visualization = mapping.visualization;
+                        composition.controls = mapping.sections;
+                    }
+
                     var obj = JSON.parse(sweva.ComposableLoader.convertCodeToJson(code));
 
                     obj.composables = composition.composables;
                     obj.links = composition.links;
+                    obj.controls = composition.controls;
+                    obj.visualization = composition.visualization;
                     
                     return obj;
                 },
@@ -257,6 +273,12 @@
                         }
                     });
 
+                    var container = this.$$('#input-node-container');
+                    if (container) {
+                        container.updatePos(-canvasOffset.x, -canvasOffset.y  - 500);
+
+                    }
+
                     this.jsPlumbInstance.repaintEverything();
                 },
                 deleteNode: function (node) {                   
@@ -269,6 +291,11 @@
                     var nodes = document.getElementById('canvas').querySelectorAll('sweva-node');
                     for (var i = 0; i < nodes.length; i++) {
                         nodes[i].remove();
+                    }
+
+                    var container = this.$$('#input-node-container');
+                    if (container) {
+                        container.clear();
                     }
                 },
                 importNodeJson: function (alias, content) {
@@ -284,6 +311,8 @@
                     var obj = JSON.parse(content);
                     var nodeDictionary = {};
                     var promises = [];
+
+                    var self = this;
                     if (obj.composables) {
                         for (var key in obj.composables) {
                             if (obj.composables.hasOwnProperty(key)) {
@@ -339,16 +368,54 @@
                                         //console.log(from, fromEndpoint, to, toEndpoint);
                                         if (nodeDictionary[from] && nodeDictionary[to]) {
                                             if (fromEndpoint) {
-                                                fromEndpoint = nodeDictionary[from].id + fromEndpoint;
+                                                fromEndpoint = nodeDictionary[from].id + fromEndpoint + 'out';
                                             }
                                             if (toEndpoint) {
-                                                toEndpoint = nodeDictionary[to].id + toEndpoint;
+                                                toEndpoint = nodeDictionary[to].id + toEndpoint + 'in';
                                             }
                                             nodeDictionary[from].addConnection(fromEndpoint, nodeDictionary[to].id, toEndpoint);
                                         }
                                     }
                                     
                                 }
+                            }
+                        }
+                       
+                        if (obj.controls) {
+                            var container = self.$$('#input-node-container');
+                           
+                            if (container) {
+                                
+                                for (var i = 0; i < obj.controls.length; i++) {
+                                    var section = obj.controls[i];
+                                    container.add({ type: 'header', label: section.label });
+                                    
+                                    for (var k = 0; k < section.controls.length; k++) {
+                                        var added = container.add(section.controls[k]);
+
+                                        if (section.controls[k].map) {
+                                            for (var j = 0; j < section.controls[k].map.length; j++) {
+                                                var parts = section.controls[k].map[j].split('.');
+                                                if (parts.length == 3) {
+                                                    var node = nodeDictionary[parts[1]];
+                                                    if (node) {
+                                                        var fromEndpoint = added.id + 'endpoint';
+                                                        var toEndpoint = node.id + parts[2] + 'input';
+                                                        added.addConnection(fromEndpoint, node.id, toEndpoint);
+                                                    }
+                                                }
+                                            }
+                                            
+                                        }
+                                    }
+                                }
+                            }                           
+                        }
+                        if (obj.visualization) {
+                            var container = self.$$('#input-node-container');
+                           
+                            if (container) {
+                                container.setVisualization(obj.visualization);
                             }
                         }
 
@@ -380,6 +447,7 @@
                             var alias = options.alias || 'Node';
                             var code = options.code || sweva.ComposableLoader.getDefaultModule();
 
+                           
                             if (options.url) {
                                 var url = options.url;
                                 //if not full url specified, add the required rest
@@ -453,11 +521,16 @@
                                                 for (var k = 0; k < nodes.length; k++) {
                                                     nodes[k].updateConnections();
                                                 }
+
+                                                nodes = self.querySelectorAll('sweva-input-container');
+                                                for (var k = 0; k < nodes.length; k++) {
+                                                    nodes[k].updateConnections();
+                                                }
                                                 self.jsPlumbInstance.repaintEverything();
                                                 
                                                
                                                 map.observe(function (events2) {
-
+                                                    
                                                     var position = map.get('position');
                                                     var alias = map.get('alias');
                                                     var code = map.get('code');
@@ -580,7 +653,7 @@
 
 
                     var container = this.$$('#input-node-container');
-                    container.init(this.jsPlumbInstance, this.yjs);
+                    container.init(this.jsPlumbInstance, this.yjs, this.edges);
                 },
                 ready: function () {
 
@@ -628,8 +701,8 @@
 
                             // make all the window divs draggable
 
-                            instance.draggable(jsPlumb.getSelector('sweva-node'), { grid: [20, 20] });
-                            instance.draggable(jsPlumb.getSelector('#input-node-container'), { grid: [20, 20] });
+                            //instance.draggable(jsPlumb.getSelector('sweva-node'), { grid: [20, 20] });
+                         
                             //instance.draggable(jsPlumb.getSelector(".flowchart-demo .window"), { grid: [20, 20] });
                             // THIS DEMO ONLY USES getSelector FOR CONVENIENCE. Use your library's appropriate selector
                             // method, or document.querySelectorAll:
@@ -649,6 +722,11 @@
                             instance.bind("beforeDrop", function (connection) {
                                 
                                 if (connection.sourceId === connection.targetId) {
+                                    return false;
+                                }
+                                var source = document.getElementById(connection.sourceId);
+                                
+                                if (source && source.tagName == 'SWEVA-INPUT-CONTAINER' && !connection.dropEndpoint.isInput) {
                                     return false;
                                 }
 
@@ -737,6 +815,7 @@
                                         }
 
                                     }
+                                    
                                     connection.source.addConnection(sourceEndpoint, connection.targetId, targetEndpoint);
                                 }
                                 else {

@@ -8,24 +8,31 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
 
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+
 <dom-module id="sweva-input-container">
     <template>
         <style>
             :host {
                 background: #fff;
                 position: relative;
-                
                 border-bottom-left-radius: 10px;
                 border-top-left-radius: 10px;
                 border-bottom-right-radius: 10px;
                 box-shadow: 1px 1px 10px #555;
-                margin-right: 35px;
+                margin-right: 5px;
+                box-sizing: border-box;
+                border-right: 8px solid #fff;
+            }
+
+            .hidden {
+                display: none;
             }
 
             .order-switcher {
                 background: #464646;
                 height: 20px;
-                width: 50%;
+                width: 80%;
                 position: absolute;
                 top: -20px;
                 right: 0;
@@ -41,19 +48,20 @@
                     padding: 2px;
                 }
 
-            .add-area {
-                position: absolute;
-                right: -38px;
-                top: calc(50% - 30px);
-            }
-
             .content {
                 overflow: auto;
-                padding: 8px;
+                padding: 6px;
                 position: absolute;
-                top: 8px;
+                top: 0;
                 bottom: 10px;
+                right: 0;
+                left: 0;
+                box-sizing: border-box;
             }
+
+                .content paper-toggle-button {
+                    margin-top: 10px;
+                }
 
             select {
                 font-family: inherit;
@@ -90,34 +98,56 @@
                     border-top: 0.35em solid #BDBDBD;
                     pointer-events: none;
                 }
+
+            #minimizedtext {
+                transform: rotate(-90deg);
+                transform-origin: 0% -30%;
+                position: absolute;
+                width: 145px;
+                text-overflow: ellipsis;
+                bottom: 0;
+                display: none;
+                overflow: hidden;
+            }
+
+                #minimizedtext.hidden {
+                    display: block;
+                }
         </style>
 
         <div class="order-switcher">
-            <paper-icon-button title="Move Left"
-                               icon="icons:arrow-back"
-                               on-click="handleMoveLeft">
+            <paper-icon-button title="Minimize"
+                               icon="icons:check-box-outline-blank"
+                               on-click="handleMinimize">
             </paper-icon-button>
-            <paper-icon-button title="Move Right"
-                               icon="icons:arrow-forward"
-                               on-click="handleMoveRight">
-            </paper-icon-button>
-            <paper-icon-button title="Close"
-                               icon="icons:close"
-                               on-click="handleClose">
-            </paper-icon-button>
+            <template is="dom-if" if="{{!minimized}}">
+
+                <paper-icon-button title="Add"
+                                   icon="icons:add-circle-outline"
+                                   on-click="handleAdd">
+                </paper-icon-button>
+                <paper-icon-button title="Move Left"
+                                   icon="icons:arrow-back"
+                                   on-click="handleMoveLeft">
+                </paper-icon-button>
+                <paper-icon-button title="Move Right"
+                                   icon="icons:arrow-forward"
+                                   on-click="handleMoveRight">
+                </paper-icon-button>
+                <paper-icon-button title="Close"
+                                   icon="icons:close"
+                                   on-click="handleClose">
+                </paper-icon-button>
+            </template>
         </div>
-        <div class="add-area">
-            <paper-icon-button title="Add"
-                               icon="icons:add-circle-outline"
-                               on-click="handleAdd">
-            </paper-icon-button>
-        </div>
-        <div class="content">
+
+        <div class$="content {{minimizedClass}}">
 
             <div class="material-select">
-                <select>
+                <select id="type">
                     <option value="" disabled selected>Select Type</option>
                     <option value="header">Section Header</option>
+                    <option value="text">Text</option>
                     <option value="multiline">Multi-Line Text</option>
                     <option value="number">Number</option>
                     <option value="slider">Slider</option>
@@ -125,11 +155,21 @@
                     <option value="dropdown">Dropdown</option>
                 </select>
             </div>
-            <paper-input noLabelFloat  label="Label" value="dsa"></paper-input>
-            <paper-textarea noLabelFloat label="Description" value="dsa"></paper-textarea>
-            <paper-input noLabelFloat label="Min" value="dsa"></paper-input>
-            <paper-input noLabelFloat label="Max" value="dsa"></paper-input>
-            <paper-input noLabelFloat label="Value" value="dsa"></paper-input>
+
+            <paper-input hidden$="{{!showElement('label',type)}}" id="label" label="Label" value="" on-input="handleInputChanged" data-parent="this"></paper-input>
+            <paper-input hidden$="{{!showElement('stringvalue',type)}}" id="stringvalue" label="Value" value="" on-input="handleInputChanged" data-parent="this"></paper-input>
+            <paper-input hidden$="{{!showElement('numbervalue',type)}}" id="numbervalue" type="number" label="Value" value="" on-input="handleInputChanged" data-parent="this"></paper-input>
+            <paper-toggle-button hidden$="{{!showElement('booleanvalue',type)}}" id="booleanvalue" label="Value" data-parent="this"
+                                 on-iron-change="toggleButtonValueChanged">
+                {{toggleButtonValue}}
+            </paper-toggle-button>
+            <paper-input hidden$="{{!showElement('min',type)}}" id="min" type="number" label="Min" value="" on-input="handleInputChanged" data-parent="this"></paper-input>
+            <paper-input hidden$="{{!showElement('max',type)}}" id="max" type="number" label="Max" value="" on-input="handleInputChanged" data-parent="this"></paper-input>
+            <paper-textarea hidden$="{{!showElement('items',type)}}" id="items" label="Items ; Separated" value="" on-input="handleInputChanged" data-parent="this"></paper-textarea>
+            <paper-textarea hidden$="{{!showElement('description',type)}}" id="description" label="Description" value="" on-input="handleInputChanged" data-parent="this"></paper-textarea>
+        </div>
+
+        <div id="minimizedtext" class$="{{minimizedClass}}">
         </div>
     </template>
     <script>
@@ -153,13 +193,39 @@
                     },
                     width: {
                         type: Number,
-                        value: 200
+                        value: 180
+                    },
+                    minimizedWidth: {
+                        type: Number,
+                        value: 45
                     },
                     jsPlumbStyles: {
                         type: Object,
                         value: {
                         }
+                    },
+                    type: {
+                        type: Object,
+                        value: ''
+                    },
+                    toggleButtonValue: {
+                        type: Boolean,
+                        value: false
+
+                    },
+                    minimized: {
+                        type: Boolean,
+                        value: false
+                    },
+                    minimizedClass: {
+                        type: String,
+                        valu: ''
+                    },
+                    edges: {
+                        type: Object,
+                        value: null
                     }
+
                 },
                 ready: function () {
                     this.index = Math.random();
@@ -167,19 +233,364 @@
                     this.prepareStyles();
                 },
                 attached: function () {
-                    this.addEventListener("mousewheel", function (event) { event.stopPropagation(); }, false);
+                    this.addEventListener('mousewheel', function (event) { event.stopPropagation(); }, false);
+
+                    this.$$('#type').addEventListener('change', this.handleTypeChanged.bind(this), false)
                 },
-                init: function (jsPlumb, yjs, id) {
+                init: function (jsPlumb, yjs, edges, id, fromYjs) {
+                    this.edges = edges;
                     this.yjs = yjs;
                     this.jsPlumbInstance = jsPlumb;
                     this.style.width = this.width + 'px';
                     this.id = id || this._generateGUID();
 
-                    var endpoint = this.jsPlumbInstance.addEndpoint(this.id, this.jsPlumbStyles.inputEndpoint, {
+                    this.endpoint = this.jsPlumbInstance.addEndpoint(this.id, this.jsPlumbStyles.inputEndpoint, {
                         anchor: [0.5, 1, 0, 1],
                         uuid: this.id + 'endpoint'
 
                     });
+                    var self = this;
+                    if (typeof fromYjs === 'undefined' || fromYjs == false) {
+
+                        self.yjs.share.mapperContainers.set(self.id, Y.Map).then(function (map) {
+
+                            map.set('index', self.index);
+                            map.set('type', self.$$('#type').value || '');
+                            map.set('label', self.$$('#label').value || '');
+                            map.set('stringvalue', self.$$('#stringvalue').value || '');
+                            map.set('numbervalue', self.$$('#numbervalue').value || '');
+                            map.set('booleanvalue', self.$$('#booleanvalue').checked || '');
+                            map.set('min', self.$$('#min').value || '');
+                            map.set('max', self.$$('#max').value || '');
+                            map.set('items', self.$$('#items').value || '');
+                            map.set('description', self.$$('#description').value||'');
+
+                        });
+
+                    }
+                },
+                clear: function () {
+                    this.clearConnections();
+                    this.jsPlumbInstance.deleteEndpoint(this.endpoint);
+                },
+                addConnection: function (sourceEndpointId, targetId, targetEndpointId, fromYjs) {
+                    var connectionExists = false;
+                    var possibleSourceEndpoint = '';
+                    var possibleTargetEndpoint = '';
+
+                    this.jsPlumbInstance.select({ source: this.id }).each(function (connection) {
+                        var targetEndpoint = null;
+                        var sourceEndpoint = null;
+                        for (var i = 0; i < connection.endpoints.length; i++) {
+                            var endpoint = connection.endpoints[i];
+                            if (endpoint.isSource) {
+                                sourceEndpoint = endpoint.getUuid();
+                            }
+                            else if (endpoint.isTarget) {
+                                targetEndpoint = endpoint.getUuid();
+                            }
+
+                        }
+
+                        if (sourceEndpoint == sourceEndpointId && targetEndpoint == targetEndpointId) {
+                            connectionExists = true;
+                        }
+                    });
+
+                    this.jsPlumbInstance.selectEndpoints({ source: this.id }).each(function (endpoint) {
+                        if (endpoint.isSource) {
+                            possibleSourceEndpoint = endpoint.getUuid();
+                        }
+                    });
+
+                    if (!connectionExists) {
+                        try {
+
+                            if (!sourceEndpointId) {
+
+                                this.jsPlumbInstance.selectEndpoints({ source: this.id }).each(function (endpoint) {
+                                    if (endpoint.isSource) {
+                                        sourceEndpointId = endpoint.getUuid();
+
+                                    }
+                                });
+                            }
+                            if (!targetEndpointId) {
+                                this.jsPlumbInstance.selectEndpoints({ target: targetId }).each(function (endpoint) {
+                                    if (endpoint.isTarget) {
+                                        targetEndpointId = endpoint.getUuid();
+                                    }
+                                });
+                            }
+
+                            if (sourceEndpointId && targetEndpointId) {
+                                this.jsPlumbInstance.connect({ uuids: [sourceEndpointId, targetEndpointId], editable: true, deleteEndpointsOnDetach: false });
+
+                            }
+                        } catch (e) {
+
+                        }
+
+                    }
+                    if (sourceEndpointId && targetEndpointId) {
+                        var self = this;
+                        if (typeof fromYjs === 'undefined' || fromYjs == false) {
+
+                            this.yjs.share.edges.set(sourceEndpointId + targetEndpointId, Y.Map).then(function (map) {
+
+                                map.set('source', self.id);
+                                map.set('target', targetId);
+                                map.set('sourceEndpoint', sourceEndpointId);
+                                map.set('targetEndpoint', targetEndpointId);
+
+                            });
+                        }
+                    }
+
+                },
+                removeConnection: function (sourceEndpointId, targetEndpointId, fromYjs) {
+                    var self = this;
+                    this.jsPlumbInstance.select({ source: this.id }).each(function (connection) {
+                        var targetEndpoint = null;
+                        var sourceEndpoint = null;
+                        for (var i = 0; i < connection.endpoints.length; i++) {
+                            var endpoint = connection.endpoints[i];
+                            if (endpoint.isSource) {
+                                sourceEndpoint = endpoint.getUuid();
+                            }
+                            else if (endpoint.isTarget) {
+                                targetEndpoint = endpoint.getUuid();
+                            }
+
+                        }
+                        //console.log('weg')
+                        if (sourceEndpoint == sourceEndpointId && targetEndpoint == targetEndpointId) {
+
+                            self.jsPlumbInstance.detach(connection);
+                        }
+                    });
+
+                    if (typeof fromYjs === 'undefined' || fromYjs == false) {
+                        this.yjs.share.edges.delete(sourceEndpointId + targetEndpointId);
+                    }
+
+                },
+                clearConnections: function () {
+                    var self = this;
+                    this.jsPlumbInstance.select().each(function (connection) {
+                        if (connection.sourceId == self.id || connection.targetId == self.id) {
+                            var targetEndpoint = null;
+                            var sourceEndpoint = null;
+                            for (var i = 0; i < connection.endpoints.length; i++) {
+                                var endpoint = connection.endpoints[i];
+                                if (endpoint.isSource) {
+                                    sourceEndpoint = endpoint.getUuid();
+                                }
+                                else if (endpoint.isTarget) {
+                                    targetEndpoint = endpoint.getUuid();
+                                }
+
+                            }
+
+                            if (targetEndpoint && sourceEndpoint) {
+                                self.removeConnection(sourceEndpoint, targetEndpoint);
+                            }
+                        }
+                    });
+                },
+                updateConnections: function () {
+                    var edges = this.edges;
+                    if (edges) {
+                        for (var key in edges) {
+                            if (edges.hasOwnProperty(key)) {
+                                var edge = edges[key];
+                                if (this.id == edge.source) {
+                                    //console.log('target', edge.target);
+
+                                    this.addConnection(edge.sourceEndpoint, edge.target, edge.targetEndpoint);
+                                }
+                            }
+
+                        }
+                    }
+                },
+                getInformation: function () {
+                    var result = {};
+
+                    result.type = this.type;
+
+                    switch (this.type) {
+                        case 'header':
+                            result.label = this.$$('#label').value;
+                            break;
+                        case 'text':
+                            result.label = this.$$('#label').value;
+                            result.description = this.$$('#description').value;
+                            result.value = this.$$('#stringvalue').value;
+                            break;
+                        case 'multiline':
+                            result.label = this.$$('#label').value;
+                            result.description = this.$$('#description').value;
+                            result.value = this.$$('#stringvalue').value;
+                            break;
+                        case 'number':
+                            result.label = this.$$('#label').value;
+                            result.description = this.$$('#description').value;
+                            result.value = this.$$('#numbervalue').value || 0;
+                            if (this.$$('#min').value) {
+                                result.min = this.$$('#min').value;
+                            }
+                            if (this.$$('#max').value) {
+                                result.max = this.$$('#max').value;
+                            }
+                            break;
+                        case 'slider':
+                            result.label = this.$$('#label').value;
+                            result.description = this.$$('#description').value;
+                            result.value = this.$$('#numbervalue').value || 0;
+                            if (this.$$('#min').value) {
+                                result.min = this.$$('#min').value;
+                            }
+                            if (this.$$('#max').value) {
+                                result.max = this.$$('#max').value;
+                            }
+                            break;
+                        case 'toggle':
+                            result.label = this.$$('#label').value;
+                            result.description = this.$$('#description').value;
+                            result.value = this.$$('#booleanvalue').checked;
+                            break;
+                        case 'dropdown':
+                            result.label = this.$$('#label').value;
+                            result.description = this.$$('#description').value;
+                            result.items = this.$$('#items').value.split(';');
+                            break;
+                        default:
+
+                    }
+
+                    //mapping
+                    result.map = [];
+                    if (this.type !== 'header') {
+                        this.jsPlumbInstance.select({ source: this.id }).each(function (connection) {
+
+                            var inputLabel = '';
+                            var nodeAlias = connection.target.alias;
+
+                            for (var i = 0; i < connection.endpoints.length; i++) {
+                                var endpoint = connection.endpoints[i];
+                                if (endpoint.isTarget) {
+                                    var labels = endpoint.getOverlays();
+                                    for (var key in labels) {
+                                        if (labels.hasOwnProperty(key)) {
+                                            inputLabel = labels[key].label;
+                                        }
+                                    }
+                                }
+                            }
+                            result.map.push('input.' + nodeAlias + '.' + inputLabel);
+                        });
+                    }
+
+                    return result;
+                },
+                handleMinimize: function () {
+
+                    this.minimize(!this.minimized);
+                    this.fire('minimized', this);
+                },
+                minimize: function (status) {
+                    if (this.minimized == status) {
+                        return;
+                    }
+                    this.minimized = status;
+
+                    if (this.minimized) {
+
+                        this.style.width = this.minimizedWidth + 'px';
+                        this.minimizedClass = 'hidden';
+
+                        var label = this.$$('#label');
+                        if (label) {
+                            this.$$('#minimizedtext').innerHTML = label.value;
+                        }
+
+                    }
+                    else {
+
+                        this.style.width = this.width + 'px';
+                        this.minimizedClass = '';
+                    }
+                },
+                toggleButtonValueChanged: function (event) {
+                    if (event.target) {
+                        this.toggleButtonValue = event.target.checked;
+                        this.handleInputChanged(event);
+                    }
+
+                },
+                handleTypeChanged: function (event) {
+
+                    this.updateType(event.target);
+
+                },
+                updateType: function (element, fromYjs) {
+                    this.type = element.value;
+
+                    this.style.backgroundColor = '';
+
+                    switch (this.type) {
+                        case 'header':
+                            this.style.backgroundColor = '#F7DCDC';
+                            this.style.borderRight = '8px solid #f00';
+                            break;
+                        case 'text':
+                            this.style.borderRight = '8px solid #00802b';
+                            break;
+                        case 'multiline':
+                            this.style.borderRight = '8px solid #00802b';
+                            break;
+                        case 'number':
+                            this.style.borderRight = '8px solid #007fff';
+                            break;
+                        case 'slider':
+                            this.style.borderRight = '8px solid #000596';
+                            break;
+                        case 'toggle':
+                            this.style.borderRight = '8px solid #111';
+                            break;
+                        case 'dropdown':
+                            this.style.borderRight = '8px solid #ff00bf';
+                            break;
+                        default:
+                            this.style.borderRight = '';
+                    }
+                    if (typeof fromYjs === 'undefined' || !fromYjs) {
+                        this.updateYjs(element);
+                    }
+
+                },
+
+                showElement: function (element, type) {
+                    switch (type) {
+                        case 'header':
+                            return (['label'].indexOf(element) >= 0);
+                        case 'text':
+                            return (['label', 'description', 'stringvalue'].indexOf(element) >= 0);
+                        case 'multiline':
+                            return (['label', 'description', 'stringvalue'].indexOf(element) >= 0);
+                        case 'number':
+                            return (['label', 'description', 'min', 'max', 'numbervalue'].indexOf(element) >= 0);
+                        case 'slider':
+                            return (['label', 'description', 'min', 'max', 'numbervalue'].indexOf(element) >= 0);
+                        case 'toggle':
+                            return (['label', 'description', 'booleanvalue'].indexOf(element) >= 0);
+                        case 'dropdown':
+                            return (['label', 'description', 'items'].indexOf(element) >= 0);
+
+                        default:
+                            return false;
+                    }
                 },
                 handleMoveLeft: function () {
                     this.fire('moveleft', this);
@@ -190,8 +601,25 @@
                 handleClose: function () {
                     this.fire('close', this);
                 },
-                handleAdd: function(){
+                handleAdd: function () {
                     this.fire('add', this);
+                },
+
+                handleInputChanged: function (event) {
+                    if (event.target == null) {
+                        return;
+                    }
+
+                    var self = this;
+                    var currentElement = event.target;
+                    this.debounce('inputupdate', function () {
+                        if (currentElement) {
+                            while (!currentElement.dataset.parent && currentElement.parentNode) {
+                                currentElement = currentElement.parentNode;
+                            }
+                            self.updateYjs(currentElement);
+                        }
+                    }, 600);
                 },
                 _generateGUID: function () {
                     function s4() {
@@ -207,6 +635,27 @@
                         fillStyle: "#00cc00",
                         strokeStyle: "#00cc00"
                     };
+
+                    var connectorPaintStyle = {
+                        lineWidth: 4,
+                        strokeStyle: "#0094ff",
+                        joinstyle: "round",
+                        outlineColor: "white",
+                        outlineWidth: 2,
+                        gradient: {
+                            stops: [[0, "#464646"], [1, "#0094ff"]]
+                        }
+                    }
+                    var connectorHoverStyle = {
+                        lineWidth: 4,
+                        strokeStyle: "#00cc00",
+                        outlineWidth: 2,
+                        outlineColor: "#00cc00",
+                        gradient: {
+                            stops: [[0, "#00cc00"], [1, "#00cc00"]]
+                        }
+                    }
+
                     var inputEndpoint = {
                         endpoint: "Dot",
                         paintStyle: {
@@ -216,12 +665,121 @@
 
                         },
                         hoverPaintStyle: inputEndpointHoverStyle,
-                        maxConnections: 1,
+                        maxConnections: -1,
                         dropOptions: { hoverClass: "hover", activeClass: "active" },
-                        isSource: true
+                        isSource: true,
+                        connector: ["Bezier"],
+                        connectorStyle: connectorPaintStyle,
+                        hoverPaintStyle: inputEndpointHoverStyle,
+                        connectorHoverStyle: connectorHoverStyle,
+                        dragOptions: {},
                     }
 
                     this.jsPlumbStyles.inputEndpoint = inputEndpoint;
+                },
+                updateYjs: function (element) {
+
+                    if (element == null) {
+                        return;
+                    }
+
+                    var self = this;
+                    try {
+                        this.yjs.share.mapperContainers.get(this.id).then(function (map) {
+
+                            var value;
+                            if (element.id == 'booleanvalue') {
+                                value = element.checked;
+                            }
+                            else {
+                                value = element.value;
+                            }
+                            map.set(element.id + '', value);
+
+                        });
+                    }
+                    catch (e) {
+
+                    }
+
+                },
+                updateIndex: function (index) {
+                    if (this.index != index) {
+                        this.index = index;
+                        this.yjs.share.mapperContainers.get(this.id).then(function (map) {
+                            map.set('index', index);
+                        });
+                    }
+                },
+                update: function (options, fromYjs) {
+                   
+                    if (typeof options === 'object') {
+
+                        for (var key in options) {
+                            if (options.hasOwnProperty(key)) {
+
+                                if (key == 'index') {
+                                    if (this.index != options.index) {
+                                        this.index = options.index;
+                                        this.fire('indexchangedyjs');
+                                    }
+                                }
+                                else if (key == 'booleanvalue') {
+                                    var element = this.$$('#booleanvalue');
+                                    if (element.checked != options.booleanvalue) {
+                                        element.checked = options.booleanvalue;
+                                    }
+                                }
+                                else if (key == 'value') {
+                                    if (typeof options.type === 'string') {
+
+                                        switch (this.type) {
+                                            case 'header':                                                
+                                                break;
+                                            case 'text':
+                                            case 'multiline':
+                                                var element = this.$$('#stringvalue');
+                                                element.value = options[key];
+                                                break;
+                                            case 'number':
+                                            case 'slider':
+                                                var element = this.$$('#numbervalue');
+                                                element.value = options[key];
+                                                break;                                           
+                                            case 'toggle':
+                                                var element = this.$$('#booleanvalue');
+                                                element.checked = options[key];
+                                                break;
+                                            case 'dropdown':
+                                                var element = this.$$('#items');
+                                                element.value = options[key];
+                                                break;
+                                            default:
+                                                
+                                        }
+
+
+                                       
+                                    }
+                                }
+                                else if (key == 'map') {
+
+                                }
+                                else {
+                                    var element = this.$$('#' + key);
+                                    if (element && element.value != options[key]) {
+                                        element.value = options[key];
+
+                                        if (element.id == 'type') {
+
+                                            this.updateType(element, true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
                 }
             });
         })();
