@@ -32,7 +32,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   // Listen for template bound event to know when bindings
   // have resolved and content has been stamped to the page
-  app.addEventListener('dom-change', function() {
+  app.addEventListener('dom-change', function () {
+     
     console.log('Our app is ready to rock!');
   });
 
@@ -84,6 +85,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       //app.querySelector('#paperDrawerPanel').closeDrawer();
    app.$.paperDrawerPanel.closeDrawer();
   };
+  window.addEventListener('modelupdated', function (e) {
+      var visualization = Polymer.dom(document).querySelector('sweva-visualization-container');
+      if (window.module) {
+          delete window.module;
+      }
 
-  
+      visualization.load(e.detail);
+  })
+
+  app.handleEditorOpened = function () {
+      var boxes = document.querySelectorAll('sweva-component-box');
+      for (var i = 0; i < boxes.length; i++) {
+          var box = boxes[i];
+         
+          box.setRelativeContentSize();
+
+      }
+  }
 })(document);

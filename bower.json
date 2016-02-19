@@ -9,28 +9,15 @@
     "platinum-elements": "PolymerElements/platinum-elements#^1.1.0",
     "polymer": "Polymer/polymer#^1.2.0",
     "paper-menu": "PolymerElements/paper-menu#4fecb43601",
-    "jsplumb": "2.1.0",
-    "y-memory": "^0.6.2",
-    "yjs": "^0.7.3",
-    "y-map": "^0.7.1",
-    "y-text": "^0.7",
-    "y-array": "^0.7",
-    "y-websockets-client": "^0.7.8",
-    "dagre": "0.7.4",
-    "graphlib": "2.0.0",
-    "paper-color-picker": "https://github.com/AlexRuppert/paper-color-picker.git#float-offset-fix",
-    "axios": "0.8.1",
-    "download-as-file": "https://github.com/bahmutov/download-as-file.git",
-    "basicContext": "*",
-    "ace-builds": "^1.2.2",
-    "esprima": "^2.0.0"
-    
+    "sweva-editor": "https://github.com/rwth-acis/sweva-editor.git",
+    "sweva-visualization-container": "https://github.com/rwth-acis/sweva-visualization-container.git"
   },
   "devDependencies": {
     "web-component-tester": "*"
   },
   "ignore": [],
   "resolutions": {
-    "paper-menu": "4fecb43601"
+    "paper-menu": "4fecb43601",
+    "graphlib": "2.0.0"
   }
 }

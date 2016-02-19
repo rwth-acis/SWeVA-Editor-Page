@@ -1,0 +1,211 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<dom-module id="sweva-component-box">
+    <template>
+        <style>
+            :host {
+                display: block;
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+
+                :host > div.maximized {
+                    position: fixed;
+                    background-color: rgba(0, 0, 0, 0.56);
+                    left: 0;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 1;
+                }
+
+            #container {
+                margin: 25px;
+                padding: 10px 20px 20px 20px;
+                position: relative;
+                background-color: #fff;
+                position: absolute;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                transition: all 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            }
+
+                #container h1 {
+                    margin: 3px 0;
+                    font-size: 15px;
+                    width: 100%;
+                    overflow: hidden;
+                    line-height: 15px;
+                }
+
+                #container.maximized {
+                    position: fixed;
+                    left: 0;
+                    top: 10px;
+                    right: 10px;
+                    bottom: 0;
+                }
+
+                #container .content-wrapper ::content {
+                    position: absolute;
+                    display: block;
+                    top: 35px;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                }
+
+                    #container .content-wrapper ::content > * {
+                        transform: scale(0.2);
+                        transform-origin: 0% 0%;
+                    }
+
+                #container.maximized .content-wrapper ::content {
+                    overflow: auto;
+                }
+
+                    #container.maximized .content-wrapper ::content > * {
+                        transform: scale(1);
+                    }
+
+            #minmax-button {
+                position: absolute;
+                right: -20px;
+                top: -20px;
+            }
+        </style>
+        <div class$="{{getContainerClass(minimized)}}" on-click="handleMinMaxButtonClick">
+            <paper-material id="container" class$="{{getContainerClass(minimized)}}" elevation="{{getContainerElevation(minimized)}}" on-click="handleContainerClick">
+                <paper-fab id="minmax-button" mini icon$="{{getMinMaxButtonIcon(minimized)}}" on-click="handleMinMaxButtonClick"></paper-fab>
+                <h1>{{label}}</h1>
+                <div class="content-wrapper">
+                    <content id="content">
+                    </content>
+                </div>
+            </paper-material>
+        </div>
+    </template>
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'sweva-component-box',
+                properties: {
+                    minimized: {
+                        type: Boolean,
+                        value: true,
+                        observer: 'minimizedChanged'
+                    },
+                    label: {
+                        type: String,
+                        value: ' '
+                    }
+                },
+                ready: function () {
+
+                },
+                attached: function () {
+                    this.setRelativeContentSize();
+                    window.addEventListener('resize', this.setRelativeContentSize.bind(this));
+                },
+                handleMinMaxButtonClick: function () {
+                    this.minimized = !this.minimized;
+                },
+                handleContainerClick: function (event) {
+                    event.stopPropagation();
+                },
+                minimizedChanged: function (minimized) {
+                    if (this.minimized) {
+                        this.setRelativeContentSize();
+                    }
+                    else {
+                        this.setRelativeContentSize(1);
+                    }
+
+                },
+                setRelativeContentSize: function (size) {
+                    var wrapper = this.$$('#container .content-wrapper');
+                    var scale = 1;
+                    var relativeWidth = 1;
+                    var relativeHeight = 1;
+                    var distributed = this.getContentChildren('#content');
+
+                    if (typeof size !== 'number') {
+
+                        var width = wrapper.offsetWidth;
+                        var fullWidth = document.body.offsetWidth - 100;
+
+                        var height = wrapper.offsetHeight;
+                        var fullHeight = document.body.offsetHeight - 100;
+
+                        var scaleX = width / fullWidth;
+                        var scaleY = height / fullHeight;
+                        scale = Math.min(scaleX, scaleY);
+
+                        
+                        for (var i = 0; i < distributed.length; i++) {
+                            var element = distributed[i];
+
+                            if (element.dataset.minwidth < width && element.dataset.minheight < height) {
+                                scale = 1;
+                            }
+                        }
+
+                        if (scale > 1) {
+                            scale = 1;
+                        }
+                        if (scale < 0.1) {
+                            scale = 0.1;
+                        }
+                        relativeWidth = 1 / scale;
+                        relativeHeight = 1 / scale;
+
+                    }
+                    else {
+                        scale = size;
+                    }
+
+                    for (var i = 0; i < distributed.length; i++) {
+                        var element = distributed[i];
+                        element.style.transform = 'scale(' + scale + ')';
+                        element.style.width = (relativeWidth * 100) + '%';
+                        element.style.height = (relativeHeight * 100) + '%';
+                    }
+
+                },
+                getMinMaxButtonIcon: function (minimized) {
+                    if (minimized) {
+                        return 'icons:fullscreen';
+                    }
+                    else {
+                        return 'icons:fullscreen-exit';
+                    }
+                },
+                getContainerClass: function (minimized) {
+                    if (minimized) {
+                        return '';
+                    }
+                    else {
+                        return 'maximized';
+                    }
+                },
+                getContainerElevation: function (minimized) {
+                    if (minimized) {
+                        return '1';
+                    }
+                    else {
+                        return '5';
+                    }
+                }
+
+            });
+        })();
+    </script>
+</dom-module>
