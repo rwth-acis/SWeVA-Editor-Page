@@ -1,7 +1,9 @@
-![](https://cloud.githubusercontent.com/assets/110953/7877439/6a69d03e-0590-11e5-9fac-c614246606de.png)
-## Polymer Starter Kit
 
-> A starting point for building web applications with Polymer 1.0
+## SWeVA-Editor-Page
+
+A Web page that displays the Collaborative Modeling and Visualization Tools.
+
+Before deployment you need to adjust the urls in index.html from http://localhost to the respective repository and yjs signaling server urls.
 
 ### Included out of the box:
 
