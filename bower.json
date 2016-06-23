@@ -3,15 +3,15 @@
   "private": true,
   "dependencies": {
     "iron-elements": "PolymerElements/iron-elements#^1.0.8",
-    
+
     "neon-elements": "PolymerElements/neon-elements#^1.0.0",
     "page": "visionmedia/page.js#~1.6.4",
     "paper-elements": "PolymerElements/paper-elements#^1.0.7",
     "platinum-elements": "PolymerElements/platinum-elements#^1.1.0",
     "polymer": "Polymer/polymer#^1.2.0",
     "paper-menu": "PolymerElements/paper-menu#4fecb43601",
-    "sweva-editor": "https://github.com/rwth-acis/sweva-editor.git",
-    "sweva-visualization-container": "https://github.com/rwth-acis/sweva-visualization-container.git"
+    "sweva-editor": "rwth-acis/sweva-editor#yjs-dependencies-fixed",
+    "sweva-visualization-container": "rwth-acis/sweva-visualization-container#yjs-dependencies-fixed"
   },
   "devDependencies": {
     "web-component-tester": "*"
