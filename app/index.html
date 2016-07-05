@@ -88,7 +88,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <!-- Main Content -->
                 <div class="content">
 
-                   
+
 
                     <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
@@ -111,11 +111,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             </paper-material>
                         </section>
                         <section data-route="editor" >
-                            
+
                             <div class="box-container">
                                 <div class="box">
                                     <sweva-component-box label="Editor">
-                                        <sweva-editor repository-url-prefix="http://localhost:8021/repo/"
+                                        <sweva-editor repository-url-prefix="/bower_components/sweva-module-repos/"
                                                       repository-url-suffix=".json"
                                                       yjs-server="http://localhost:1234"
                                                       room="[[params.room]]"
@@ -127,8 +127,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                 <div class="box">
                                     <sweva-component-box label="Visualization">
                                         <sweva-visualization-container room="[[params.room]]"
-                                                                       visualization-url-prefix="http://localhost:8021/repo/"
-                                                                       visualization-url-suffix=".html"
+                                                                       visualization-url-prefix="/bower_components/"
+                                                                       visualization-url-suffix=""
                                                                        yjs-server="http://localhost:1234"
                                                                        data-minwidth="400"
                                                                        data-minheight="400">
