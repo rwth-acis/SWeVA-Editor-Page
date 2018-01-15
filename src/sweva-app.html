@@ -1,0 +1,36 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/sweva-editor/sweva-editor.html">
+
+<dom-module id="sweva-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <sweva-editor repository-url-prefix="/bower_components/sweva-module-repos/"
+                  repository-url-suffix=".json"
+                  yjs-server="http://localhost:1234"
+                  room="room"
+                  data-minwidth="400"
+                  data-minheight="400">
+    </sweva-editor>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class SWEVAApp extends Polymer.Element {
+      static get is() { return 'sweva-app'; }
+      static get properties() {
+        return {
+        };
+      }
+    }
+
+    window.customElements.define(SWEVAApp.is, SWEVAApp);
+  </script>
+</dom-module>
