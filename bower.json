@@ -4,7 +4,9 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
     "sweva-editor": "rwth-acis/sweva-editor#sweva-update",
-    "sweva-module-repos": "rwth-acis/sweva-module-repos#sweva-update"
+    "sweva-module-repos": "rwth-acis/sweva-module-repos#sweva-update",
+    "sweva-visualization-container": "rwth-acis/sweva-visualization-container#sweva-update",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.1"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
