@@ -6,7 +6,11 @@
     "sweva-editor": "rwth-acis/sweva-editor#sweva-update",
     "sweva-module-repos": "rwth-acis/sweva-module-repos#sweva-update",
     "sweva-visualization-container": "rwth-acis/sweva-visualization-container#sweva-update",
-    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.1"
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.1",
+    "app-layout": "PolymerElements/app-layout#^2.0.5",
+    "app-route": "PolymerElements/app-route#^2.0.3",
+    "iron-pages": "PolymerElements/iron-pages#^2.1.0",
+    "paper-styles": "PolymerElements/paper-styles#^2.1.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
@@ -18,7 +22,7 @@
     "paper-styles": "^1.1.5",
     "web-animations-js": "^2.2.0",
     "d3": "3.5.12",
-    "lodash": "^3.7.0",
+    "lodash": "^4.11.1",
     "polymer": "^2.0.0",
     "paper-input": "^2.0.2",
     "iron-overlay-behavior": "^2.2.0",

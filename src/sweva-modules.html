@@ -1,0 +1,77 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/sweva-editor/sweva-editor.html">
+<link rel="import" href="../bower_components/sweva-visualization-container/sweva-visualization-container.html">
+
+<!-- Hack for our current issue with D3.js embedding into Shadow DOM -->
+<script src="../bower_components/d3/d3.js"></script>
+<script src="../bower_components/d3-tip/index.js"></script>
+
+<dom-module id="sweva-modules">
+  <template>
+    <style>
+      :host {
+        display: block;
+        height: 100%;
+      }
+
+      #container {
+        @apply(--layout-horizontal);
+        width: 100%;
+        height: 100%;
+      }
+
+      #container > * {
+        @apply(--layout-flex);
+        @apply(--layout-self-stretch);
+      }
+    </style>
+
+    <div id="container">
+      <sweva-editor id="editor"
+                    repository-url-prefix="/bower_components/sweva-module-repos/"
+                    repository-url-suffix=".json"
+                    room="[[room]]"
+                    data-minwidth="400"
+                    data-minheight="400">
+      </sweva-editor>
+
+      <sweva-visualization-container id="visualization"
+                                     room="[[room]]"
+                                     yjs-server="http://localhost:1234"
+                                     visualization-url-prefix="http://127.0.0.1:8081/components/">
+      </sweva-visualization-container>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class SWEVAModules extends Polymer.Element {
+
+      static get is() { return 'sweva-modules'; }
+
+      static get properties() {
+        return {
+          room: {
+            type: String
+          }
+        };
+      }
+
+      ready() {
+        super.ready();
+
+        this.$.editor.addEventListener('modelupdated', e => {
+          let visualization = this.$.visualization;
+          visualization.load(e.detail);
+        });
+      }
+    }
+
+    window.customElements.define(SWEVAModules.is, SWEVAModules);
+  </script>
+</dom-module>

@@ -1,43 +1,80 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
-<script src="../bower_components/d3/d3.js"></script>
-<script src="../bower_components/d3-tip/index.js"></script>
-<link rel="import" href="../bower_components/sweva-editor/sweva-editor.html">
-<link rel="import" href="../bower_components/sweva-visualization-container/sweva-visualization-container.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="sweva-about.html">
+<link rel="import" href="sweva-modules.html">
 
 <dom-module id="sweva-app">
   <template>
     <style>
       :host {
         display: block;
+        min-height: 100vh;
       }
 
-      #container {
-        @apply(--layout-horizontal);
-        width: 100%;
-        height: 100vh;
+      a {
+        text-decoration: none;
+        font-size: inherit;
+        color: inherit;
       }
 
-      #container > * {
-        @apply(--layout-flex);
+      app-toolbar {
+        background-color: #3f51b5;
+        font-family: 'Roboto', Helvetica, sans-serif;
+        color: white;
+        --app-toolbar-font-size: 20px;
+      }
+
+      iron-pages {
+        position: absolute;
+        left: 0;
+        top: 64px;
+        bottom: 0;
+        right: 0;
+      }
+
+      .tabs {
+        height: 100%;
+        @apply --layout-horizontal;
+      }
+
+      .tabs > a {
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+        margin: 12px 16px 12px;
+        border-bottom: 1px solid white;
       }
     </style>
 
-    <div id="container">
-      <sweva-editor id="editor"
-                    repository-url-prefix="/bower_components/sweva-module-repos/"
-                    repository-url-suffix=".json"
-                    yjs-server="http://localhost:1234"
-                    room="room"
-                    data-minwidth="400"
-                    data-minheight="400">
-      </sweva-editor>
+    <app-location route="{{route}}"></app-location>
 
-      <sweva-visualization-container id="visualization"
-                                     room="swevavisualtest10"
-                                     visualization-url-prefix="http://127.0.0.1:8081/components/">
-      </sweva-visualization-container>
-    </div>
+    <app-route route="{{route}}"
+               pattern="/:view"
+               data="{{routeData}}"
+               tail="{{subroute}}"></app-route>
+
+    <app-route route="{{subroute}}"
+               pattern="/:room"
+               data="{{routeDataRoom}}"></app-route>
+
+    <app-toolbar>
+      <div main-title>Social Web Environment for Visual Analytics</div>
+      <div class="tabs">
+        <a href="/">About</a>
+        <a href="/editor/sandbox">Editor</a>
+      </div>
+    </app-toolbar>
+
+    <iron-pages selected="[[view]]" attr-for-selected="name">
+
+      <sweva-about name="about"></sweva-about>
+
+      <sweva-modules name="editor" room="[[routeDataRoom.room]]"></sweva-modules>
+
+    </iron-pages>
 
   </template>
 
@@ -52,17 +89,30 @@
 
       static get properties() {
         return {
+          routeData: {
+            type: Object,
+            observer: '_routeDataChanged'
+          },
+          view: {
+            type: String,
+            value: 'about'
+          }
         };
       }
 
-      ready() {
-        super.ready();
-
-        this.$.editor.addEventListener('modelupdated', e => {
-          let visualization = this.$.visualization;
-          visualization.load(e.detail);
-        });
+      _routeDataChanged(newValue) {
+        if (newValue.view === 'editor') {
+          if (this.subroute.path === '') {
+            //TODO: should be a view that allows to "create" a room.
+            this.view = 'about'
+          } else {
+            this.view = 'editor';
+          }
+        } else {
+          this.view = 'about';
+        }
       }
+
     }
 
     window.customElements.define(SWEVAApp.is, SWEVAApp);

@@ -1,0 +1,86 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/paper-styles/shadow.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<dom-module id="sweva-about">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: #fafafa;
+        height: 100%;
+      }
+
+      #container {
+        @apply --layout-vertical;
+        @apply --layout-center;
+        padding: 20px;
+      }
+
+      #content {
+        @apply --shadow-elevation-2dp;
+        width: 100%;
+        max-width: 600px;
+
+        border-bottom: 1px solid #e0e0e0;
+        background-color: white;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .title {
+        @apply --paper-font-headline;
+      }
+
+      .body {
+        @apply --paper-font-body1;
+      }
+    </style>
+
+    <div id="container">
+      <div id="content">
+        <img src="/images/swevalogo.svg" width="200" height="200" style="margin-right: 50px">
+        <div class="title">Social Web Environment for Visual Analytics</div>
+
+        <div class="body">
+          SWEVA is a collaborative framework for design and execution of reusable data processing components in the
+          domain of visual analytics.
+
+          It consists of:
+          <ul>
+            <li>An interactive collaborative editor to design where to get data and what to do with it.</li>
+            <li>An execution engine that handles the data processing using web services and local computation.</li>
+            <li>A configurable presenter that allows visualization and interaction with the data.</li>
+          </ul>
+
+          You can directly start with your own projects using the <a href="/editor/sandbox">collaborative editor</a>.
+        </div>
+
+        <div style="display: flex; align-items:center; flex-wrap: wrap; margin-top: 20px;">
+          <img src="/images/layerslogo.png" width="100px" style="margin-right: 20px">
+          <div style="font-weight:bold;font-size:20px">Learning Layers</div>
+        </div>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class SWEVAAbout extends Polymer.Element {
+
+      static get is() { return 'sweva-about'; }
+
+      static get properties() {
+        return {
+        };
+      }
+    }
+
+    window.customElements.define(SWEVAAbout.is, SWEVAAbout);
+  </script>
+</dom-module>
