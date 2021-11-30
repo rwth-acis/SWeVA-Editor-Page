@@ -3,9 +3,9 @@
   "main": "index.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "sweva-editor": "rwth-acis/sweva-editor#sweva-update",
+    "sweva-editor": "rwth-acis/sweva-editor#sweva-webassembly",
     "sweva-module-repos": "rwth-acis/sweva-module-repos#sweva-update",
-    "sweva-visualization-container": "rwth-acis/sweva-visualization-container#sweva-update",
+    "sweva-visualization-container": "rwth-acis/sweva-visualization-container#sweva-webassembly",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.1",
     "app-layout": "PolymerElements/app-layout#^2.0.5",
     "app-route": "PolymerElements/app-route#^2.0.3",
