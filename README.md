@@ -1,6 +1,7 @@
+## The SWeVA project, revitalized !
 
-## SWeVA-Editor-Page
+We are currently working on new features for the SWeVA project. 
 
-A Web page that displays the Collaborative Modeling and Visualization Tools of SWEVA.
+We aim to enhance the capabilities and usability of the SWeVA tool for various IoT use cases.
 
-Before deployment you need to adjust the urls in index.html from http://localhost to the respective repository and yjs signaling server urls.
+Please stay informed for further updates :)
