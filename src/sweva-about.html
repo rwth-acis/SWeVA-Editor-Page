@@ -36,34 +36,128 @@
       .body {
         @apply --paper-font-body1;
       }
+
+      .logo-and-text {
+        display: flex;
+        align-items: center;
+      }
+      .center-logo {
+        margin-right: 10px;
+      }
+      .button-container {
+        @apply --paper-font-body1;
+        background-color: orange;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .button-container a {
+        text-decoration: none;
+        color: white;
+      }
+
+      .button-container a:hover {
+        text-decoration: underline;
+      }
+      .slider-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
+        margin-top: 20px;
+      }
+      .column {
+        display: grid;
+        grid-gap: 10px;
+      }
+
+
+      .slider-container input[type="range"] {
+        width: 200px;
+        margin-right: 10px;
+      }
+
+      .slider-container .slider-value {
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .center-logo {
+        display: flex;
+        justify-content: center;
+      }
     </style>
 
     <div id="container">
       <div id="content">
-        <img src="/images/swevalogo.svg" width="200" height="200" style="margin-right: 50px">
         <div class="title">Social Web Environment for Visual Analytics</div>
 
-        <div class="body">
-          SWEVA is a collaborative framework for design and execution of reusable data processing components in the
-          domain of visual analytics.
-
-          It consists of:
-          <ul>
-            <li>An interactive collaborative editor to design where to get data and what to do with it.</li>
-            <li>An execution engine that handles the data processing using web services and local computation.</li>
-            <li>A configurable presenter that allows visualization and interaction with the data.</li>
-          </ul>
-
-          You can directly start with your own projects using the <a href="/editor/sandbox">collaborative editor</a>.
+        <div class="logo-and-text">
+          <div class="center-logo">
+            <img src="./images/swevalogo.svg" width="200" height="200">
+          </div>
+          <div class="text">
+            <div class="body">
+              SWEVA is a collaborative framework for design and execution of reusable data processing components in the domain of visual analytics.
+              <br><br>
+              Please choose the Offloading Decision Thresholds (OD) and Offloading Resources (OR) for your device.
+              <br><br>
+            </div>
+          </div>
         </div>
 
-        <div style="display: flex; align-items:center; flex-wrap: wrap; margin-top: 20px;">
-          <img src="/images/layerslogo.png" width="100px" style="margin-right: 20px">
-          <div style="font-weight:bold;font-size:20px">Learning Layers</div>
+        <div class="slider-container">
+          <div class="column">
+            <div class="slider-title"><b>OD Thresholds:</b></div>
+            <div class="slider">
+
+              <div class="slider-text">CPU (%)</div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" index="od_cpu">
+              <div class="slider-value">50</div>
+            </div>
+            <div class="slider">
+              <div class="slider-text">Memory (%)</div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" index="od_mem">
+              <div class="slider-value">50</div>
+            </div>
+            <div class="slider">
+              <div class="slider-text">Battery (%)</div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" index="od_battery">
+              <div class="slider-value">50</div>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="slider-title"><b>OR Thresholds:</b></div>
+            <div class="slider">
+
+              <div class="slider-text">CPU (%)</div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" index="or_cpu">
+              <div class="slider-value">50</div>
+            </div>
+            <div class="slider">
+              <div class="slider-text">Memory (%)</div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" index="or_mem">
+              <div class="slider-value">50</div>
+            </div>
+            <div class="slider">
+              <div class="slider-text">Battery (%)</div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" index="or_battery">
+              <div class="slider-value">50</div>
+            </div>
+            <div class="slider">
+              <div class="slider-text">is Charging (binary)</div>
+              <input type="range" min="0" max="1" value="0" class="slider-input" index="or_isCharging">
+              <div class="slider-value">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-container">
+          <a href="/editor/sandbox">Save and Go to Sandbox Editor</a>
         </div>
       </div>
     </div>
-
   </template>
 
   <script>
@@ -73,14 +167,34 @@
      */
     class SWEVAAbout extends Polymer.Element {
 
-      static get is() { return 'sweva-about'; }
+      static get is() {
+        return 'sweva-about';
+      }
+      connectedCallback() {
+        super.connectedCallback();
+
+        var sliderInputs = this.shadowRoot.querySelectorAll('.slider-input');
+        sliderInputs.forEach(function(sliderInput) {
+          var sliderValue = sliderInput.nextElementSibling;
+          sliderInput.addEventListener('input', function() {
+            sliderValue.textContent = sliderInput.value;
+          });
+        });
+      }
 
       static get properties() {
         return {
+          sliderValues: {
+            type: Array,
+            value: function() {
+              return [50, 50, 50, 50, 50, 50, 50, 0];
+            },
+          },
         };
       }
     }
-
     window.customElements.define(SWEVAAbout.is, SWEVAAbout);
+
   </script>
+
 </dom-module>
