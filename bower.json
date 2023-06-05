@@ -14,8 +14,7 @@
     "web-animations-js": "^2.3.2",
     "peer": "^1.0.0",
     "peerjs": "^1.4.7",
-    "requirejs": "^2.3.6",
-    "systeminformation": "^5.17.12"
+    "requirejs": "^2.3.6"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
