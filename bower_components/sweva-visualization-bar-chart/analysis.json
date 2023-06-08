@@ -1,0 +1,1334 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "",
+      "summary": "",
+      "path": "sweva-visualization-bar-chart.html",
+      "properties": [
+        {
+          "name": "dimensions",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 82,
+              "column": 16
+            },
+            "end": {
+              "line": 88,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "data",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 89,
+              "column": 16
+            },
+            "end": {
+              "line": 92,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "[]"
+        },
+        {
+          "name": "config",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 93,
+              "column": 16
+            },
+            "end": {
+              "line": 96,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "{}"
+        }
+      ],
+      "methods": [
+        {
+          "name": "set",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 99,
+              "column": 12
+            },
+            "end": {
+              "line": 123,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "value"
+            }
+          ]
+        },
+        {
+          "name": "append",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 125,
+              "column": 12
+            },
+            "end": {
+              "line": 127,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "value"
+            }
+          ]
+        },
+        {
+          "name": "getText",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 129,
+              "column": 12
+            },
+            "end": {
+              "line": 138,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "value"
+            }
+          ]
+        },
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 141,
+              "column": 12
+            },
+            "end": {
+              "line": 146,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 148,
+              "column": 12
+            },
+            "end": {
+              "line": 153,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 155,
+              "column": 12
+            },
+            "end": {
+              "line": 160,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "setup",
+          "description": "Element Behavior",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 163,
+              "column": 12
+            },
+            "end": {
+              "line": 253,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "config"
+            }
+          ]
+        },
+        {
+          "name": "update",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 254,
+              "column": 12
+            },
+            "end": {
+              "line": 335,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "data"
+            }
+          ]
+        },
+        {
+          "name": "mousemove",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 336,
+              "column": 12
+            },
+            "end": {
+              "line": 365,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "resize",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 366,
+              "column": 12
+            },
+            "end": {
+              "line": 375,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "width"
+            },
+            {
+              "name": "height"
+            }
+          ]
+        },
+        {
+          "name": "clear",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 377,
+              "column": 12
+            },
+            "end": {
+              "line": 385,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "cleanUp",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 386,
+              "column": 12
+            },
+            "end": {
+              "line": 390,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "convertSvg",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 392,
+              "column": 12
+            },
+            "end": {
+              "line": 421,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "handleExportClicked",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 423,
+              "column": 12
+            },
+            "end": {
+              "line": 432,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "getSvg",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 433,
+              "column": 12
+            },
+            "end": {
+              "line": 441,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "getPng",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 442,
+              "column": 12
+            },
+            "end": {
+              "line": 476,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 78,
+          "column": 16
+        },
+        "end": {
+          "line": 478,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "dimensions",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 82,
+              "column": 16
+            },
+            "end": {
+              "line": 88,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "data",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 89,
+              "column": 16
+            },
+            "end": {
+              "line": 92,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "config",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 93,
+              "column": 16
+            },
+            "end": {
+              "line": 96,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-bar-chart"
+    },
+    {
+      "description": "",
+      "summary": "",
+      "path": "dist/sweva-visualization-bar-chart.html",
+      "properties": [
+        {
+          "name": "dimensions",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1449,
+              "column": 16
+            },
+            "end": {
+              "line": 1455,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "data",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1456,
+              "column": 16
+            },
+            "end": {
+              "line": 1459,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "[]"
+        },
+        {
+          "name": "config",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1460,
+              "column": 16
+            },
+            "end": {
+              "line": 1463,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "{}"
+        }
+      ],
+      "methods": [
+        {
+          "name": "set",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1466,
+              "column": 12
+            },
+            "end": {
+              "line": 1490,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "value"
+            }
+          ]
+        },
+        {
+          "name": "append",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1492,
+              "column": 12
+            },
+            "end": {
+              "line": 1494,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "value"
+            }
+          ]
+        },
+        {
+          "name": "getText",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1496,
+              "column": 12
+            },
+            "end": {
+              "line": 1505,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "value"
+            }
+          ]
+        },
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 1508,
+              "column": 12
+            },
+            "end": {
+              "line": 1513,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 1515,
+              "column": 12
+            },
+            "end": {
+              "line": 1520,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 1522,
+              "column": 12
+            },
+            "end": {
+              "line": 1527,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "setup",
+          "description": "Element Behavior",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1530,
+              "column": 12
+            },
+            "end": {
+              "line": 1620,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "config"
+            }
+          ]
+        },
+        {
+          "name": "update",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1621,
+              "column": 12
+            },
+            "end": {
+              "line": 1702,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "data"
+            }
+          ]
+        },
+        {
+          "name": "mousemove",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1703,
+              "column": 12
+            },
+            "end": {
+              "line": 1732,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "resize",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1733,
+              "column": 12
+            },
+            "end": {
+              "line": 1742,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "width"
+            },
+            {
+              "name": "height"
+            }
+          ]
+        },
+        {
+          "name": "clear",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1744,
+              "column": 12
+            },
+            "end": {
+              "line": 1752,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "cleanUp",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1753,
+              "column": 12
+            },
+            "end": {
+              "line": 1757,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "convertSvg",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1759,
+              "column": 12
+            },
+            "end": {
+              "line": 1788,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "handleExportClicked",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1790,
+              "column": 12
+            },
+            "end": {
+              "line": 1799,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "getSvg",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1800,
+              "column": 12
+            },
+            "end": {
+              "line": 1808,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "getPng",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1809,
+              "column": 12
+            },
+            "end": {
+              "line": 1843,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 1445,
+          "column": 16
+        },
+        "end": {
+          "line": 1845,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "dimensions",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 1449,
+              "column": 16
+            },
+            "end": {
+              "line": 1455,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "data",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 1456,
+              "column": 16
+            },
+            "end": {
+              "line": 1459,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "config",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 1460,
+              "column": 16
+            },
+            "end": {
+              "line": 1463,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-bar-chart"
+    },
+    {
+      "description": "",
+      "summary": "",
+      "path": "dist/sweva-visualization-bar-chart.min.html",
+      "properties": [
+        {
+          "name": "dimensions",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37090
+            },
+            "end": {
+              "line": 4,
+              "column": 37143
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "data",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37144
+            },
+            "end": {
+              "line": 4,
+              "column": 37171
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "[]"
+        },
+        {
+          "name": "config",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37172
+            },
+            "end": {
+              "line": 4,
+              "column": 37201
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "{}"
+        }
+      ],
+      "methods": [
+        {
+          "name": "set",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37203
+            },
+            "end": {
+              "line": 4,
+              "column": 37524
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "t"
+            }
+          ]
+        },
+        {
+          "name": "append",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37525
+            },
+            "end": {
+              "line": 4,
+              "column": 37588
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "t"
+            }
+          ]
+        },
+        {
+          "name": "getText",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37589
+            },
+            "end": {
+              "line": 4,
+              "column": 37673
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "t"
+            }
+          ]
+        },
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37674
+            },
+            "end": {
+              "line": 4,
+              "column": 37748
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37749
+            },
+            "end": {
+              "line": 4,
+              "column": 37868
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37869
+            },
+            "end": {
+              "line": 4,
+              "column": 37890
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "setup",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37891
+            },
+            "end": {
+              "line": 4,
+              "column": 40124
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "t"
+            }
+          ]
+        },
+        {
+          "name": "update",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 40125
+            },
+            "end": {
+              "line": 4,
+              "column": 41608
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "t"
+            }
+          ]
+        },
+        {
+          "name": "mousemove",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 41609
+            },
+            "end": {
+              "line": 4,
+              "column": 41975
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "resize",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 41976
+            },
+            "end": {
+              "line": 4,
+              "column": 42120
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "t"
+            },
+            {
+              "name": "i"
+            }
+          ]
+        },
+        {
+          "name": "clear",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 42121
+            },
+            "end": {
+              "line": 4,
+              "column": 42268
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "cleanUp",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 42269
+            },
+            "end": {
+              "line": 4,
+              "column": 42321
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "convertSvg",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 42322
+            },
+            "end": {
+              "line": 4,
+              "column": 42925
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "handleExportClicked",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 42926
+            },
+            "end": {
+              "line": 4,
+              "column": 43051
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "t"
+            }
+          ]
+        },
+        {
+          "name": "getSvg",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 43052
+            },
+            "end": {
+              "line": 4,
+              "column": 43153
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "getPng",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 43154
+            },
+            "end": {
+              "line": 4,
+              "column": 43661
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 4,
+          "column": 37042
+        },
+        "end": {
+          "line": 4,
+          "column": 43662
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "dimensions",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37090
+            },
+            "end": {
+              "line": 4,
+              "column": 37143
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "data",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37144
+            },
+            "end": {
+              "line": 4,
+              "column": 37171
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "config",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 4,
+              "column": 37172
+            },
+            "end": {
+              "line": 4,
+              "column": 37201
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-bar-chart"
+    }
+  ]
+}

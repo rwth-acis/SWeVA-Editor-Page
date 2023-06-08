@@ -1,0 +1,50 @@
+{
+    "type": "module",
+    "name": "array_concat",
+    "description": "Concatenates up to 3 arrays into one.",
+    "dataInNames": [
+        "array1",
+        "array2",
+        "array3"
+    ],
+    "dataInSchema": {
+        
+    },
+    "dataOutNames": [
+        "concated"
+    ],
+    "dataOutSchema": {
+       
+    },
+    "inputNames": [],
+    "inputSchema": {},
+    "compute": [
+        "function (data, input, libs) {",
+        "var concated = new Array();",
+        "var concatList = new Array();",
+        "",
+        "if(data.array1 && data.array2 && data.array3) {",
+        "concated = concated.concat(data.array1, data.array2, data.array3);",
+        "}",
+        "else if(data.array1 && data.array2) {",
+        "concated = concated.concat(data.array1, data.array2);",
+        "}",
+        "else if(data.array1) {",
+        "concated = data.array1;",
+        "}",
+        "else if(data.array2 && data.array3) {",
+        "concated = concated.concat(data.array3, data.array3);",
+        "}",
+        "else if(data.array2) {",
+        "concated = data.array2;",
+        "}",
+        "else if(data.array1 && data.array3) {",
+        "concated = concated.concat(data.array1, data.array3);",
+        "}",
+        "else if(data.array3) {",
+        "concated = data.array3;",
+        "}",
+        "return {concated: concated};",
+        "}"
+    ]
+}

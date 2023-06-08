@@ -1,0 +1,38 @@
+{
+    "type": "module",
+    "name": "deletions",
+    "description": "A simple module template.",
+    "dataInNames": [
+        "code_frequency"
+    ],
+    "dataInSchema": {},
+    "dataOutNames": [
+        "line"
+    ],
+    "dataOutSchema": {},
+    "inputNames": [
+        
+    ],
+    "inputSchema": {},
+    "compute": [
+        "function (data, input, libs) {",
+        "var element = {};",
+        "element.label = 'deletions';",
+        "element.data = new Array();",
+        "element.type= 'lines';",
+        "",
+       
+        "",
+        "data.code_frequency.forEach(function(week){",
+        "var pair1 = new Array();",
+        "pair1.push(libs.get(week,0)*1000);",
+        "pair1.push(-libs.get(week,2));",
+        "element.data.push(pair1);",
+        "});",
+        "",
+        "var array = new Array();",
+        "array.push(element);",
+        "return {line: array};",
+        "}"
+    ]
+}

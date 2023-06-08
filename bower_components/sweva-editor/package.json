@@ -1,0 +1,9 @@
+{
+  "name": "sweva-editor",
+  "version": "1.0.0",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {
+    "sweva-core": "git+https://github.com/rwth-acis/SWeVA-Core.git#sweva-iot"
+  }
+}

@@ -1,0 +1,91 @@
+﻿<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="sweva-cursor.html">
+<dom-module id="sweva-cursor-awareness">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <div>
+           
+        </div>
+    </template>
+    <script>
+            class SwevaCursorAwareness extends Polymer.Element {
+                static get is() {
+                    return 'sweva-cursor-awareness';
+                }
+
+
+                static get properties() {
+                    return {
+                        /* properties meta data object just like 1.x */
+                        cursors: {
+                            type: Object,
+                            value: {}
+                        },
+                        viewport: {
+                            type: Object,
+                            value: {left: 0, top: 0, right: 1000, bottom: 1000}
+                        }
+                    }
+                }
+
+
+                add(options) {
+                    var cursor = document.getElementById(options.id);
+                    if (options.id && !cursor) {
+                        cursor = document.createElement("sweva-cursor");
+                        Polymer.dom(this.shadowRoot.querySelector('div')).appendChild(cursor);
+                    }
+                    cursor.init(options);
+                    cursor.updateViewport(this.viewport);
+                    this.cursors[cursor.id] = cursor;
+                    return cursor;
+                }
+
+
+                remove(user) {
+                    var cursor = document.getElementById(user.id);
+                    if (cursor) {
+                        Polymer.dom(this.shadowRoot.querySelector('div')).removeChild(cursor);
+                        delete this.cursors[cursor.id];
+                    }
+                }
+
+
+                update(id, options) {
+                    if (this.cursors.hasOwnProperty(id)) {
+                        this.cursors[id].update(options);
+                    }
+                }
+
+
+                updateViewport(viewport) {
+                    this.viewport = viewport;
+                    for (var key in this.cursors) {
+                        if (this.cursors.hasOwnProperty(key)) {
+                            this.cursors[key].updateViewport(viewport);
+                        }
+                    }
+                }
+
+
+                cleanUp() {
+                    var div = this.shadowRoot.querySelector('div');
+                    for (var key in this.cursors) {
+                        if (this.cursors.hasOwnProperty(key)) {
+                            Polymer.dom(div).removeChild(this.cursors[key]);
+                        }
+                    }
+                    Polymer.dom(div).flush();
+                    this.cursors = [];
+                }
+
+            }
+
+            // Register custom element definition using standard platform API
+            customElements.define(SwevaCursorAwareness.is, SwevaCursorAwareness);
+    </script>
+</dom-module>

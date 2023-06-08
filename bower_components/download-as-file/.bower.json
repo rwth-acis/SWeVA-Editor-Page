@@ -1,0 +1,14 @@
+{
+  "name": "download-as-file",
+  "homepage": "https://github.com/bahmutov/download-as-file",
+  "version": "1.1.0",
+  "_release": "1.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.0",
+    "commit": "d373f36309df2bcb4ced8df85bd3ab9157624917"
+  },
+  "_source": "https://github.com/bahmutov/download-as-file.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/bahmutov/download-as-file.git"
+}

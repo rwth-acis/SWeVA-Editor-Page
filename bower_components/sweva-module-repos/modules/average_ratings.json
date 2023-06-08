@@ -1,0 +1,83 @@
+{
+    "type": "module",
+    "name": "average_ratings",
+    "description": "Shows the average rating by user name or rating method.",
+    "dataInNames": [
+        "movies"
+    ],
+    "dataInSchema": {
+        "type": "object",
+        "properties": {
+            "movies": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "details": {
+                            "type": "object"
+                        },
+                        "ratings": {
+                            "type": "array"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "dataOutNames": [
+        "values"
+    ],
+    "dataOutSchema": {
+        "type": "object",
+        "properties": {
+            "values": {
+                "type": "array",
+                "items": {
+                    "type": "array"
+                }
+            }
+        }
+    },
+    "inputNames": [
+        "by"
+    ],
+    "inputSchema": {},
+    "compute": [
+        "function (data, input, libs) {",
+        "var values = new Array();",
+        "var groupBy = input.by || \"type\";",
+        "",
+        "var sums = {};",
+        "var counts = {};",
+        "",
+        "",
+        "data.movies.forEach(function(movie){",
+        "movie.ratings.forEach(function(rating) {",
+        "",
+        "var key = libs.get(rating, groupBy);",
+        "if(!libs.get(sums, key)){",
+        "libs.set(sums, key, 0);",
+        "libs.set(counts, key, 0);",
+        "}",
+        "libs.set(sums, key, libs.get(sums, key) + parseFloat(rating.rating));",
+        "libs.set(counts, key, libs.get(counts, key) + 1);",
+        "",
+        "});",
+        "});",
+        "",
+        "var keys = Object.keys(sums);",
+        "keys.forEach(function(key){",
+        "var pair = new Array();",
+        "pair.push(key + ' avg. rating');",
+        "",
+        "pair.push((+libs.get(sums, key)/+libs.get(counts, key)).toFixed(2));",
+        "pair.push('#0d0');",
+        "values.push(pair);",
+        "});",
+        "return {values: values};",
+        "}"
+    ]
+}

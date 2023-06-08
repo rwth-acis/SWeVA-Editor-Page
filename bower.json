@@ -12,8 +12,7 @@
     "iron-pages": "PolymerElements/iron-pages#^2.1.0",
     "paper-styles": "PolymerElements/paper-styles#^2.1.0",
     "web-animations-js": "^2.3.2",
-    "peer": "^1.0.0",
-    "peerjs": "^1.4.7",
+    "peerjs": "^0.3.14",
     "requirejs": "^2.3.6"
   },
   "devDependencies": {

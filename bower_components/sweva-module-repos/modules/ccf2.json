@@ -1,0 +1,43 @@
+{
+    "type": "module",
+    "name": "ccf2",
+    "description": "A simple module template.",
+    "dataInNames": [
+        "console"
+    ],
+    "dataInSchema": {},
+    "dataOutNames": [
+        "corr"
+    ],
+    "dataOutSchema": {},
+    "inputNames": [],
+    "inputSchema": {},
+    "request": [
+        "function (data, input, libs) {",
+        "",
+        "var address='';",
+        "for(var i=0; i< data.console.length; i++) {",
+        "var charVal= data.console.charAt(i);",
+        "if(charVal==\"R\"){",
+        "break;",
+        "}",
+        "else {",
+        "address += charVal;",
+        "}",
+        "}",
+        "",
+        "",
+        "",
+        "return libs.axios.get(\"http://public.opencpu.org\"+address+\"R/.val\");",
+        "}    "
+    ],
+    "response": [
+        "function (response, input, libs) {",
+        "console.log(response.data);",
+        "",
+        "var data = '0'+libs.get(response.data.split('0'),2);",
+        "",
+        "return {corr:data}",
+        "}"
+    ]
+}

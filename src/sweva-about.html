@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/paper-styles/shadow.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
+<script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
 
 <dom-module id="sweva-about">
   <template>
@@ -110,7 +111,6 @@
           <div class="column">
             <div class="slider-title"><b>OD Thresholds:</b></div>
             <div class="slider">
-
               <div class="slider-text">CPU (%)</div>
               <input type="range" min="0" max="100" value="50" class="slider-input" index="od_cpu">
               <div class="slider-value">50</div>
@@ -126,15 +126,8 @@
               <div class="slider-value">50</div>
             </div>
           </div>
-
           <div class="column">
             <div class="slider-title"><b>OR Thresholds:</b></div>
-            <div class="slider">
-
-              <div class="slider-text">CPU (%)</div>
-              <input type="range" min="0" max="100" value="50" class="slider-input" index="or_cpu">
-              <div class="slider-value">50</div>
-            </div>
             <div class="slider">
               <div class="slider-text">Memory (%)</div>
               <input type="range" min="0" max="100" value="50" class="slider-input" index="or_mem">
@@ -152,11 +145,11 @@
             </div>
           </div>
         </div>
-
         <div class="button-container">
           <a href="/editor/sandbox">Save and Go to Sandbox Editor</a>
         </div>
       </div>
+
     </div>
   </template>
 
@@ -173,12 +166,34 @@
       connectedCallback() {
         super.connectedCallback();
 
-        var sliderInputs = this.shadowRoot.querySelectorAll('.slider-input');
+        let sliderInputs = this.shadowRoot.querySelectorAll('.slider-input');
         sliderInputs.forEach(function(sliderInput) {
-          var sliderValue = sliderInput.nextElementSibling;
+          let sliderValue = sliderInput.nextElementSibling;
           sliderInput.addEventListener('input', function() {
             sliderValue.textContent = sliderInput.value;
           });
+        });
+
+        let saveButton = this.shadowRoot.querySelector('.button-container a');
+        saveButton.addEventListener('click', () => {
+          let odCPU = parseInt(this.shadowRoot.querySelector('.slider-input[index="od_cpu"]').value);
+          let odMem = parseInt(this.shadowRoot.querySelector('.slider-input[index="od_mem"]').value);
+          let odBattery = parseInt(this.shadowRoot.querySelector('.slider-input[index="od_battery"]').value);
+
+          let orMem = parseInt(this.shadowRoot.querySelector('.slider-input[index="or_mem"]').value);
+          let orBattery = parseInt(this.shadowRoot.querySelector('.slider-input[index="or_battery"]').value);
+          let orIsCharging = parseInt(this.shadowRoot.querySelector('.slider-input[index="or_isCharging"]').value);
+          if (orIsCharging === 1) {
+            orIsCharging = true;
+          } else {
+            orIsCharging = false;
+          }
+
+          this.odInputs = [odCPU, odMem, odBattery];
+          sweva.ExecutionManager.setODList(this.odInputs);
+          this.orInputs = [orMem, orBattery, orIsCharging];
+          sweva.ExecutionManager.setORList(this.orInputs);
+
         });
       }
 
@@ -190,6 +205,18 @@
               return [50, 50, 50, 50, 50, 50, 50, 0];
             },
           },
+            odInputs: {
+              type: Array,
+              value: function() {
+                return [];
+              },
+            },
+            orInputs: {
+              type: Array,
+              value: function() {
+                return [];
+              },
+            },
         };
       }
     }

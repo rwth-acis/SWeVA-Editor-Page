@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Offloading folder Test Sandbox:</title>
+    valuable for testing the scripts:<br><br>
+    availableOffloadingResources.js<br>
+    offloadingDecision.js<br><br>
+    In the console, input testOffloadingDecision(odList) to test the offloading decision function. <br>
+    or testAvailableOffloadingResources(orList) to test the available offloading resources function.
+    <br><br>
+    have fun :)
+    <script src ="./availableOffloadingResources.js"></script>
+    <script src ="./offloadingDecision.js"></script>
+
+    <script>
+        function testAvailableOffloadingResources(orList) {
+            let startTime = Date.now();
+            availableOffloadingResources(orList).then((result) => {
+
+                console.log(result);
+                console.log('Elapsed time: ',Date.now()-startTime, ' ms');
+
+            });
+        }
+        function testOffloadingDecision(odList) {
+            let i = 1;
+            let interval = setInterval(()=>{
+
+                let startTime = Date.now();
+                offloadingDecision(odList).then ((result)=>{
+                    let endTime = Date.now();
+                    console.log('Monitoring Round #'+i);
+                    i++;
+                    console.log(result);
+                    console.log('Elapsed time: ',endTime-startTime, ' ms');
+                });
+            },2000);
+
+            // 5 measurements
+            setTimeout  (()=>{
+                console.log('Timeout !');
+                clearInterval(interval);
+            },10000)
+        }
+    </script>
+
+
+</head>
+<body>
+
+</body>
+</html>

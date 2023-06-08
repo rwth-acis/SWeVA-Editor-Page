@@ -1,0 +1,17 @@
+#
+# Start & stop Sauce Connect workers
+#
+[Unit]
+Description=Sauce Connect workers hypervisor
+Wants=local-fs.target network-online.target
+After=local-fs.target network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/true
+ExecReload=/bin/true
+WorkingDirectory=/tmp
+
+[Install]
+WantedBy=multi-user.target

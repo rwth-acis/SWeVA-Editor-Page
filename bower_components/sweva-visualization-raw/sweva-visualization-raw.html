@@ -1,0 +1,88 @@
+<link rel="import" href="../polymer/polymer.html">
+
+
+<!--
+A visualization for showing the raw JSON input on the stage.
+
+Example:
+
+  <sweva-visualization-raw></sweva-visualization-raw>
+
+@demo demo/index.html
+@hero hero.svg
+  <script src="//d3js.org/d3.v3.min.js"></script>
+-->
+<dom-module id="sweva-visualization-raw">
+  <template>
+    <style>
+      :host {
+        display: block;
+        box-sizing: border-box;
+        font-family: monospace;
+        background-color: white;
+        position: relative;
+        color: #000;
+        white-space: pre;
+        overflow: auto;
+      }
+
+      #content {
+        padding: 10px;
+      }
+    </style>
+
+    <div id="content">
+    </div>
+        
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class SWEVAVisualizationRaw extends Polymer.Element {
+
+      static get is() { return 'sweva-visualization-raw'}
+
+      static get properties() {
+        return {
+          data: {
+            type: Object,
+            value: {}
+          }
+        };
+      }
+
+      set(value) {
+        this.$.content.textContent = this.getText(value);
+      }
+
+      append(value) {
+        this.$.content.textContent += this.getText(value);
+      }
+
+      getText(value){
+        var text = '';
+        if (typeof value === 'object') {
+          text = JSON.stringify(value, null, 2);
+        } else {
+          text = value;
+        }
+        return text;
+      }
+
+      // Element behavior
+
+      resize(width, height) {
+      }
+
+      clear() {
+        this.$.content.textContent = '';
+      }
+
+    }
+
+    window.customElements.define(SWEVAVisualizationRaw.is, SWEVAVisualizationRaw);
+    </script>
+</dom-module>

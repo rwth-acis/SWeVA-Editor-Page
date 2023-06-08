@@ -1,0 +1,108 @@
+﻿<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/image-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<dom-module id="sweva-canvas-controls">
+    <template>
+        <style>
+            :host {
+                display: block;
+                width: 50px;
+                background-color: white;
+                box-shadow: 0 2px 8px #555;
+                position: absolute;
+                left: 0;
+                z-index: 9;
+                top: 50%;
+                transform: translate(0, -50%);
+            }
+
+            paper-icon-button {
+
+
+
+                border: none;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                display: block;
+                outline: none;
+                cursor: pointer;
+            }
+
+               
+
+            input[type=range][orient=vertical] {
+                writing-mode: bt-lr; /* IE */
+                -webkit-appearance: slider-vertical; /* WebKit */
+                width: 8px;
+                height: 175px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                padding: 0 5px;
+                display: block;
+                outline: none;
+                cursor: pointer;
+            }
+        </style>
+        <paper-icon-button title="Center" icon="image:filter-center-focus" on-click="handleCenterClick"></paper-icon-button>
+        <paper-icon-button title="Zoom In" icon="icons:zoom-in" on-click="handleZoomInClick"></paper-icon-button>
+        <input id="zoom-slider" type="range" min="{{minZoom}}" max="{{maxZoom}}" step="0.2" value="{{zoomValue}}" orient="vertical" on-input="handleZoomSlider" on-change="handleZoomSlider" />
+        <paper-icon-button title="Zoom Out" icon="icons:zoom-out" on-click="handleZoomOutClick"></paper-icon-button>
+       
+    </template>
+    <script>
+            class SwevaCanvasControls extends Polymer.Element {
+                static get is() {
+                    return 'sweva-canvas-controls';
+                }
+
+                static get properties() {
+                    return {
+                        /* properties meta data object just like 1.x */
+                        zoomValue: {
+                            type: Number,
+                            value: 1
+                        },
+                        maxZoom: {
+                            type: Number,
+                            value: 1
+                        },
+                        minZoom: {
+                            type: Number,
+                            value: 0.2
+                        }
+                    }
+                }
+                ready() {
+                    super.ready();
+                }
+
+                handleCenterClick(event) {
+                    this.dispatchEvent(new CustomEvent('centerclick', { bubbles: true, composed: true , detail:{} }));
+                }
+
+                handleZoomInClick(event) {
+                    this.dispatchEvent(new CustomEvent('zoomclick', { bubbles: true, composed: true, detail:{delta: 1}  }));
+                }
+                handleZoomOutClick(event) {
+                    this.dispatchEvent(new CustomEvent('zoomclick', { bubbles: true, composed: true, detail:{delta: -1} }));
+                }
+                handleZoomSlider(event) {
+                    var value = this.shadowRoot.querySelector('#zoom-slider').value;
+                    this.dispatchEvent(new CustomEvent('zoomslide', { bubbles: true, composed: true, detail:{value: value }}));
+                }
+                adjustZoomSlider(zoom) {
+                    if (this.zoomValue != zoom) {
+                        this.zoomValue = zoom;
+                    }
+                }
+
+            }
+
+            // Register custom element definition using standard platform API
+            customElements.define(SwevaCanvasControls.is, SwevaCanvasControls);
+    </script>
+</dom-module>

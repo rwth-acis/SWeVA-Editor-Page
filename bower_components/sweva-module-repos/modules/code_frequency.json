@@ -1,0 +1,32 @@
+{
+    "type": "module",
+    "name": "code_frequency",
+    "description": "A simple module template.",
+    "dataInNames": [],
+    "dataInSchema": {},
+    "dataOutNames": [
+        "code_frequency"
+    ],
+    "dataOutSchema": {},
+    "inputNames": [
+        "repository"
+    ],
+    "inputSchema": {},
+    "request": [
+        "function (data, input, libs) {",
+        "",
+        "var repo = 'LAS2peer';",
+        "",
+        "if(input.repository){",
+        "repo = input.repository;",
+        "}",
+        "console.log(repo)",
+        "return libs.axios.get('https://api.github.com/repos/rwth-acis/'+repo+'/stats/code_frequency');",
+        "}"
+    ],
+    "response": [
+        "function (response, input, libs) {",
+        "return { code_frequency:response.data }",
+        "}"
+    ]
+}

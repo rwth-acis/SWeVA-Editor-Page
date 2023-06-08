@@ -1,0 +1,249 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="sweva-visualization-container-panel.html">
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <seed-element></seed-element>
+
+Example:
+
+    <seed-element>
+      <h2>Hello seed-element</h2>
+    </seed-element>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="sweva-visualization-container-chat">
+    <template>
+
+        <style>
+            :host {
+                position: relative;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .message-list {
+                padding: 8px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                display: block;
+                flex: 1 1 0;
+            }
+
+            .type-area {
+                display: flex;
+                align-items: center;
+                padding: 0 10px;
+                border-top: 1px solid #BBB9B9;
+                overflow: hidden;
+            }
+
+            .name {
+                font-weight: 600;
+            }
+
+            .time {
+                float: right;
+            }
+
+            .text {
+                white-space: pre-wrap;
+            }
+
+            .container {
+                width: 100%;
+            }
+
+            .paper-font-caption {
+                font-size: 12px;
+                font-weight: 400;
+                letter-spacing: 0.011em;
+                line-height: 20px;
+            }
+
+            paper-textarea {
+                display: block;
+                width: 100%;
+                max-height: 100px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        </style>
+        <div class="message-list">
+            <div class="container">
+                <template is="dom-repeat" items="{{messages}}">
+                    <div class="message">
+                        <div class="headline">
+                            <span class="name paper-font-subhead" style$="{{_colorToStyle(item.color)}}">{{item.name}}</span>
+                            <span class="time paper-font-caption">{{_timestampToTime(item.timestamp)}}</span>
+                        </div>
+                        <div class="content">
+                            <span class="text paper-font-body1">{{item.message}}</span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        <div class="type-area">
+            <paper-textarea label="Message" on-keydown="handleEnter" value="{{currentMessage}}"></paper-textarea>
+            <paper-icon-button icon="icons:send" on-click="handleSendMessage"></paper-icon-button>
+        </div>
+    </template>
+
+    <script>
+
+      class SwevaVisualizationContainerChat extends Polymer.Element {
+            static get is() {
+              return 'sweva-visualization-container-chat';
+            }
+
+            static get properties() {
+              return {
+                  /* properties meta data object just like 1.x */
+                  messages: {
+                    type: Array,
+                    value: []
+
+                  },
+                  currentMessage: {
+                    type: String,
+                    value: ''
+                  },
+                  maxMessages: {
+                    type: Number,
+                    value: 5
+                  },
+                  user: {
+                    type: Object,
+                    value: {
+                      name: 'Anonymous',
+                      color: '#000'
+                    }
+                  },
+                  yjs: {
+                    type: Object,
+                    value: null
+                  }
+              }
+            }
+
+            ready() {
+              super.ready();
+            }
+
+            connectedCallback() {
+              super.connectedCallback();
+              Polymer.RenderStatus.beforeNextRender(this, function() {
+                this._messagesChanged();
+              });
+            }
+
+            init(yjs) {
+                var self = this;
+                this.yjs = yjs;
+                yjs.share.chat.observe(function (event) {
+
+                  if (event.type === 'insert') {
+                    self.appendMessage(event.object._content[event.index].val, event.index);
+                  } else if (event.type === 'delete') {
+                    self.removeMessage(event.index);
+                  }
+
+                  // concurrent insertions may result in a history > 7, so cleanup here
+                  self.cleanupChat()
+                });
+            }
+
+            appendMessage(message, position) {
+                var messages = this.messages.slice(0);
+                messages.splice(position, 0, message);
+                this.messages = messages;
+                this._messagesChanged();
+                this.dispatchEvent(new CustomEvent('newmessage', { bubbles: true, composed: true , detail: message }));
+            }
+
+            removeMessage(position) {
+                var messages = this.messages.slice(0);
+                messages.splice(position, 1);
+                this.messages = messages;
+            }
+
+            cleanupChat() {
+                var len;
+                while ((len = this.yjs.share.chat.length) > 50) {
+                  this.yjs.share.chat.delete(0)
+                }
+            }
+
+            _colorToStyle(color) {
+                return 'color:' + color + ';';
+            }
+
+            _timestampToTime(timestamp) {
+                var d = new Date(+timestamp);
+                return d.toLocaleTimeString();
+            }
+
+            _messagesChanged() {
+                Polymer.dom.flush();  // problem do not know yet how to convert to Polymer 2.0
+                //  this.scrollHeight = this.$$('.message-list').scrollHeight;
+                var container = this.shadowRoot.querySelector('.message-list');
+                container.scrollTop = 999999999;//this.scrollHeight
+            }
+
+            handleEnter(e) {
+                // check if 'enter' was pressed
+                if (e.keyCode === 13 && !e.ctrlKey && !e.shiftKey) {
+                  e.preventDefault();
+                  this.handleSendMessage();
+                }
+            }
+
+            addMessage(data) {
+                var message = {};
+                message.name = data.name || this.user.name || 'Anonymous';
+                message.color = data.color || this.user.color || '#000';
+                message.timestamp = data.timestamp || Date.now();
+                message.message = data.message || 'no message';
+
+                if (this.yjs.share.chat.length >= 50) {
+                  this.yjs.share.chat.delete(0);
+                }
+
+                this.yjs.share.chat.insert(this.yjs.share.chat.length, [message]);
+            }
+
+            handleSendMessage() {
+                var message = this.currentMessage;
+                if (message.trim().length > 0) {
+                  this.currentMessage = "";
+                  this.addMessage({ message: message });
+                }
+            }
+
+            updateUser (user) {
+                if (user.name) {
+                  this.user.name = user.name;
+                }
+                if (user.color) {
+                  this.user.color = user.color;
+                }
+            }
+
+            cleanUp () {
+                this.messages = [];
+                this.yjs = null;
+                this.users = [];
+            }
+        }
+
+      // Register custom element definition using standard platform API
+      window.customElements.define(SwevaVisualizationContainerChat.is, SwevaVisualizationContainerChat);
+    </script>
+</dom-module>

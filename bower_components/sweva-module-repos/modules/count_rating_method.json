@@ -1,0 +1,77 @@
+{
+    "type": "module",
+    "name": "count_rating_method",
+    "description": "Counts how often each rating method was used.",
+    "dataInNames": [
+        "movies"
+    ],
+    "dataInSchema": {
+        "type": "object",
+        "properties": {
+            "movies": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "details": {
+                            "type": "object"
+                        },
+                        "ratings": {
+                            "type": "array"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "dataOutNames": [
+        "values"
+    ],
+    "dataOutSchema": {
+        "type": "object",
+        "properties": {
+            "values": {
+                "type": "array",
+                "items": {
+                    "type": "array"
+                }
+            }
+        }
+    },
+    "inputNames": [],
+    "inputSchema": {},
+    "compute": [
+        "function (data, input, libs) {",
+        "var values = new Array();",
+        "var total = 0;",
+        "var methodCount = {};",
+        "data.movies.forEach(function(movie){",
+        "movie.ratings.forEach(function(rating) {",
+        "total++;",
+        "if(!libs.get(methodCount, rating.type)){",
+        "libs.set(methodCount, rating.type, 1);",
+        "}",
+        "else {",
+        "libs.set(methodCount, rating.type, libs.get(methodCount, rating.type) + 1);",
+        "}",
+        "});",
+        "});",
+        "",
+        "var methods = Object.keys(methodCount);",
+        "methods.forEach(function(method){",
+        "var pair = new Array();",
+        "pair.push(method);",
+        "if (total == 0) {",
+        "total++;",
+        "}",
+        "pair.push((libs.get(methodCount, method)/total).toFixed(2));",
+        "pair.push(\"#f00\");",
+        "values.push(pair);",
+        "});",
+        "return {values: values};",
+        "}"
+    ]
+}

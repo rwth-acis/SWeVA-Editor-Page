@@ -1,0 +1,14 @@
+{
+  "name": "d3-selection",
+  "homepage": "https://github.com/d3/d3-selection",
+  "version": "1.4.1",
+  "_release": "1.4.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.4.1",
+    "commit": "41e0b1add1531fd518c45a715c991a1a0d809841"
+  },
+  "_source": "https://github.com/d3/d3-selection.git",
+  "_target": "^1.0.2",
+  "_originalSource": "d3-selection"
+}

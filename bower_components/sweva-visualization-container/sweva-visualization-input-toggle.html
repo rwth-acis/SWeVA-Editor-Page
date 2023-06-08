@@ -1,0 +1,89 @@
+﻿<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../paper-toggle-button/paper-toggle-button.html">
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <seed-element></seed-element>
+
+Example:
+
+    <seed-element>
+      <h2>Hello seed-element</h2>
+    </seed-element>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+<dom-module id="sweva-visualization-input-toggle">
+    <template>
+        <style>
+            :host {
+            }
+
+            paper-toggle-button {
+                padding: 8px;
+                @apply(--paper-font-caption);
+                color: #737373;
+            }
+            paper-tooltip {
+                margin-left: 30px;
+            }
+        </style>
+        <paper-toggle-button checked="{{value}}" on-change="valueChanged">{{label}}</paper-toggle-button>
+        <paper-tooltip>{{description}}</paper-tooltip>
+    </template>
+    <script>
+      class SwevaVisualizationInputToggle extends Polymer.Element {
+
+        static get is() {
+          return 'sweva-visualization-input-toggle';
+        }
+
+        static get properties() {
+          return {
+              /* properties meta data object just like 1.x */
+            label: {
+              type: String,
+              value: 'Title'
+            },
+            description: {
+              type: String,
+              value: 'No description available.'
+            },
+            map: {
+              type: String,
+              value: ''
+            },
+            value: {
+              type: Boolean,
+              value: false,
+              notify: true,
+              //observer: 'valueChanged'
+            }
+          }
+        }
+
+        ready() {
+          super.ready();
+        }
+
+        connectedCallback() {
+          super.connectedCallback();
+          Polymer.RenderStatus.beforeNextRender(this, function() {
+            this.valueChanged();
+          });
+        }
+
+        // Element Behavior
+        valueChanged() {
+          this.dispatchEvent(new CustomEvent('controlupdated', { bubbles: true, composed: true , detail: { map: this.map, value: this.value } }));
+        }
+      }
+
+      // Register custom element definition using standard platform API
+      window.customElements.define(SwevaVisualizationInputToggle.is, SwevaVisualizationInputToggle);
+    </script>
+</dom-module>

@@ -1,0 +1,71 @@
+﻿<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>seed-element Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../sweva-visualization-bar-chart.html">
+</head>
+<body unresolved>
+
+    <sweva-visualization-bar-chart>
+    </sweva-visualization-bar-chart>   
+    <script>
+
+       
+        var config = {
+            barColoring: 'gradient',
+            barColorGradientMin: '#0033cc',
+            barColorGradientMax: '#00cc00'
+        }
+        var data = [
+            ['A', .08167],
+            ['B', .01492],
+            ['C', .02782],
+            ['D', .04253],
+            ['E', .12702],
+            ['F', .02288],
+            ['G', .02015],
+            ['H', .06094],
+            ['I', .06966],
+            ['J', .00153],
+            ['K', .00772],
+            ['L', .04025],
+            ['M', .02406],
+            ['N', .06749],
+            ['O', .07507],
+            ['P', .01929],
+            ['Q', .00095],
+            ['R', .05987],
+            ['S', .06327],
+            ['T', .09056],
+            ['U', .02758],
+            ['V', .00978],
+            ['W', .02360],
+            ['X', .00150],
+            ['Y', .01974],
+            ['Z', .00074]
+        ]
+
+       
+        var graph = document.querySelector('sweva-visualization-bar-chart');
+        //graph.config = config;
+        
+
+        graph.set({ config: config, data: data });
+
+        
+
+    </script>
+</body>
+</html>

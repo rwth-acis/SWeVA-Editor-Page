@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Core test page</title>
+    <script src="../core.build.js"></script>
+    <script src="./examplePipelines.js"></script>
+</head>
+
+<body>
+    <span id="browser-sync-binding"></span>
+    <h1>Open the browser console, to view the results</h1>
+    Press the button, to run a simple test<br>
+    <button onclick="runTests()">Start tests</button>
+
+    <script>
+        let startCpu, startTimestamp, startMemory;
+        let endCpu, endTimestamp, endMemory, memoryUsage , elapsedMs, cpuPercent;
+
+        var manager = new sweva.ExecutionManager();
+
+        async function runTests() {
+            //await testPrecompiledModule()
+            //await testSourceModule()
+            //await testHttpRequest()
+            //await testPipeLine1()
+            await testPipeline2()
+            //await testPipeline3()
+        }
+
+        async function testPrecompiledModule() {
+            console.log("\n\n--- Starting test of precompiled module ---");
+            console.log("Precompiled module:");
+            let tsModule1 = {
+                type: 'module',
+                name: 'add',
+                source: [],
+                dataInNames: ["a", "b"],
+                inputNames: [],
+                outputNames: ["out"],
+                binaryHash: -10343611935,
+                //create base64 uint8: btoa(String.fromCharCode.apply(null, uint8array))
+                binary: new Uint8Array(atob(
+                    "AGFzbQEAAAABGgVgAn9/AX9gAABgBH9/f38AYAF/AX9gAX8AAg0BA2VudgVhYm9ydAACAwcGAAADBAEBBAQBcAABBQMBAAEGDAJ" +
+                    "/AUEAC38AQZAJCwdMCANydW4AAQVfX25ldwACBV9fcGluAAMHX191bnBpbgAECV9fY29sbGVjdAAFC19fcnR0aV9iYXNlAwEGbW" +
+                    "Vtb3J5AgAFdGFibGUBAAgBBgroAQYHACAAIAFqC8gBAQZ/IABB7P///wNLBEBBoAhB4AhB1gBBHhAAAAsgAEEQaiIEQfz///8DS" +
+                    "wRAQaAIQeAIQSFBHRAAAAsjACIDQQRqIgIgBEETakFwcUEEayIEaiIFPwAiBkEQdEEPakFwcSIHSwRAIAYgBSAHa0H//wNqQYCA" +
+                    "fHFBEHYiByAGIAdKG0AAQQBIBEAgB0AAQQBIBEAACwsLIAUkACADIAQ2AgAgAkEEayIDQQA2AgQgA0EANgIIIAMgATYCDCADIAA" +
+                    "2AhAgAkEQagsEACAACwMAAQsDAAELBwBBrAkkAAsLggEFAEGMCAsBPABBmAgLLwEAAAAoAAAAQQBsAGwAbwBjAGEAdABpAG8Abg" +
+                    "AgAHQAbwBvACAAbABhAHIAZwBlAEHMCAsBPABB2AgLJQEAAAAeAAAAfgBsAGkAYgAvAHIAdAAvAHMAdAB1AGIALgB0AHMAQZAJC" +
+                    "w0DAAAAIAAAAAAAAAAgAIIBEGFzLWJpbmRfYmluZGluZ3N7InR5cGVJZHMiOnt9LCJpbXBvcnRlZEZ1bmN0aW9ucyI6e30sImV4" +
+                    "cG9ydGVkRnVuY3Rpb25zIjp7InJ1biI6eyJyZXR1cm5UeXBlIjoiaTMyIiwicGFyYW1ldGVycyI6WyJpMzIiLCJpMzIiXX19fQ=="
+                ).split("").map(function (c) {
+                    return c.charCodeAt(0);
+                }))
+            };
+            var res = await sweva.runners.typescript.exec(tsModule1, {a: 5, b: 15});
+            console.log("Result: ");
+            console.log(res);
+        }
+
+        async function testSourceModule() {
+            console.log("\n\n--- Starting test of source only module ---");
+            let tsModule2 = {
+                type: 'module',
+                name: 'substr',
+                source: [
+                    "export var testvar1:i8 = 0;",
+                    "export var testvar8 : i8[] = [1,2,3];",
+                    "export var testvar32: i32[] = [1,2,300];",
+                    "export var testvar3 :string[][] = [[\"a\",\"b\",\"c\"]];",
+                    "export function z(a: i32): i32 {",
+                    "return 1; }\n",
+                    "export function run(pos: i32,b: string[]): string {",
+                    "    testvar1 = 3",
+                    "    testvar8.push(5)",
+                    "    return b[pos];",
+                    "  }"]
+            };
+
+            var res = await sweva.runners.typescript.exec(tsModule2, {pos: 3, b: ["a1", "b2", "b3", "b4"]}, {});
+            console.log("Result: ");
+            console.log(res);
+        }
+        async function testHttpRequest() {
+            console.log("\n\n--- Starting test of support library ---");
+            let tsModule2 = {
+                type: 'module',
+                name: 'http_request',
+                source: [
+                    "export var response:string = \"\";",
+                    "export function httpRes(a: string): void {",
+                    "response = a",
+                    "}\n",
+                    "export function run(): string {",
+                    "lib.httpRequest('httpRes', 'https://ip.zuim.de/raw/');",
+                    "return lib.test('TestStr');",
+                    "  }"]
+            };
+
+            var res2 = await sweva.runners.typescript.exec(tsModule2, {}, {});
+            console.log("Result: ");
+            console.log(res2);
+        }
+
+        async function testPipeLine1() {
+            console.log("\n\n--- Starting test of pipeline 1 (linked nodes)---");
+            var now = Date.now();
+            manager.setup(simpleAssemblyScriptPipeline);
+            console.log("Setup complete. Setup time: " + (Date.now() - now));
+            manager.onProgress(function (progress) {
+                console.log(progress+"%");
+            });
+            let res = await manager.execute({
+                    "Node1": {
+                        "num": 8
+                    }
+                }, {});
+
+            console.log('time ' + (Date.now() - now) + 'ms');
+            console.log(res);
+        }
+        function outputUsage() {
+            endCpu = performance.now();
+            endTimestamp = performance.now();
+            endMemory = window.performance.memory.usedJSHeapSize;
+            //memoryUsage = endMemory - startMemory;
+            //elapsedMs = endTimestamp - startTimestamp;
+            cpuPercent = (endCpu - startCpu) / (endTimestamp - startTimestamp);
+
+            console.log('RAM usage: ', endMemory - startMemory,'CPU time: ',endCpu - startCpu ,'CPU usage:', cpuPercent);
+        }
+        function initializeMeasurements() {
+            startCpu = performance.now();
+            startTimestamp = performance.now();
+            startMemory = window.performance.memory.usedJSHeapSize;
+
+        }
+        async function testPipeline2() {
+            console.log("\n\n--- Starting test of pipeline 2 (exported results)---");
+            //Pipeline Setup profiling
+
+            var now = Date.now();
+
+            //initializeMeasurements()
+            manager.setup(simpleAssemblyScriptPipeline2);
+            outputUsage();
+            //initializeMeasurements()
+            manager.onProgress(function (progress) {
+                console.log("Progress: "+progress+"%");
+            });
+            let res = await manager.execute({
+                "Node1": {
+                    "num": 8
+                }}, {});
+            //outputUsage();
+            console.log('time ' + (Date.now() - now) + 'ms');
+            console.log(res);
+        }
+
+        async function testPipeline3() {
+            console.log("\n\n--- Starting test of pipeline 3 (branching)---");
+            var now = Date.now();
+            manager.setup(simpleAssemblyScriptPipeline3);
+            manager.onProgress(function (progress) {
+                console.log("Progress: "+progress+"%");
+            });
+
+            let res = await manager.execute({
+                "Node_start": {
+                    "num": 7
+                }}, {});
+            console.log('time ' + (Date.now() - now) + 'ms');
+            console.log(res);
+        }
+
+
+        /*function click(event) {
+
+            var now = Date.now();
+            manager.execute({
+                adder1: {
+                    sum1: 10,
+                    sum2: 50
+                },
+                adder2: {
+                    sum1: 5,
+                    sum2: 15
+                },
+                clone1: {
+                    sum1: 20,
+                    sum2: 10
+                }
+            },
+                {
+                    offset: 0,
+                    invert: 0
+                })
+                .then(function (result) {
+                    console.log('time ' + (Date.now() - now) + 'ms');
+                    console.log(result);
+                });
+        }*/
+
+        runTests()
+    </script>
+</body>
+
+</html>

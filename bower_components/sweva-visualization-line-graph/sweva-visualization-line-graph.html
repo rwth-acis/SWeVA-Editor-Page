@@ -1,0 +1,928 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<!--<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">-->
+<!--<link rel="import" href="../paper-menu/paper-menu.html">-->
+<!--<link rel="import" href="../paper-item/paper-item.html">-->
+<link rel="import" href="../paper-slider/paper-slider.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-input/paper-textarea.html">
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <seed-element></seed-element>
+
+Example:
+
+    <seed-element>
+      <h2>Hello seed-element</h2>
+    </seed-element>
+
+@demo demo/index.html
+@hero hero.svg
+    <script src="//d3js.org/d3.v3.min.js"></script>
+-->
+
+<script src="../d3/d3.js"></script>
+<script src="../download-as-file/dist/download-as-file.js"></script>
+
+<dom-module id="sweva-visualization-line-graph">
+    <template>
+        <style>
+            :host {
+                --paper-input-container-input:{
+                    max-height: 75px;
+                };
+                display: block;
+                box-sizing: border-box;
+                font-family: 'Verdana', sans-serif;
+                background-color: white;
+                position: relative;
+            }
+
+
+            .hidden {
+                display: none;
+            }
+
+            .menu {
+                padding: 8px;
+            }
+
+            .horizontal-flex {
+                display: flex;
+                flex-direction: row;
+                position: relative;
+                align-items: center;
+            }
+
+            .controls {
+                border-top: 1px solid #666;
+                height: 60px;
+            }
+
+                .controls > * {
+                    flex: 1;
+                }
+
+            .label {
+                font-size: small;
+            }
+
+            .dialog-container {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                width: 100%;
+                box-sizing: border-box;
+                padding-bottom: 25px;
+            }
+
+            paper-dialog {
+                background: #fff;
+                width: 100%;
+            }
+
+            paper-button {
+            }
+        </style>
+
+        <div id="canvas">
+        </div>
+        <div class="horizontal-flex controls">
+            <div class="menu">
+                <select id="export-select" name="select" style="width:100%">
+                    <option value="0" disabled selected>Export as...</option>
+                    <option value="1">SVG</option>
+                    <option value="2">PNG</option>
+                    <option value="3">iFrame</option>
+                    <option value="4">Polymer Element</option>
+                </select>              
+            </div>
+            <div>
+                <span class="label">Zoom</span><paper-slider id="zoom-slider" pin style="width:100%"></paper-slider>
+            </div>
+            <paper-button id="reset-zoom" raised on-click="resetZoom">
+                Reset
+            </paper-button>
+        </div>
+        <img id="hiddenImage" class="hidden" />
+        <canvas id="hiddenCanvas" class="hidden"></canvas>
+        <a id="hiddenLink" class="hidden"></a>
+
+        <paper-dialog id="copy-iframe">
+            <div class="dialog-container">
+                <h2>iFrame</h2>
+                <div style="align-items: center;">
+                    <paper-textarea  label="iFrame link" value="{{link}}"></paper-textarea>
+                </div>
+                <div class="buttons">
+                    <paper-button dialog-dismiss>Cancel</paper-button>
+                </div>
+            </div>
+        </paper-dialog>
+
+        <paper-dialog id="copy-polymer">
+            <div class="dialog-container">
+                <h2>Polymer Component</h2>
+                <div style="align-items: center;">
+                    <paper-textarea  label="Component and data" value="{{link}}"></paper-textarea>
+                </div>
+                <div class="buttons">
+                    <paper-button dialog-dismiss>Cancel</paper-button>
+                </div>
+            </div>
+        </paper-dialog>
+
+    </template>
+    <script>
+      class SwevaVisualizationLineGraph extends Polymer.Element {
+        static get is() {
+          return 'sweva-visualization-line-graph';
+        }
+
+        static get properties() {
+          return {
+              /* properties meta data object just like 1.x */
+            dimensions: {
+              type: Object,
+              value: {
+                width: 1000,
+                height: 500
+              }
+            },
+            focuses: {
+              type: Array,
+              value: []
+            },
+            data: {
+              type: Object,
+              value: [],
+              observer: 'dataChanged'
+            },
+            config: {
+              type: Object,
+              value: {},
+              //observer: 'configChanged'
+            },
+            link: {
+              type: String,
+              value: ''
+            }
+          }
+        }
+
+        ready() {
+          super.ready();
+          if (!this.initialized) {
+            this.clear();
+            this.setup(this.config);
+          }
+        }
+
+        connectedCallback() {
+          super.connectedCallback();
+          Polymer.RenderStatus.beforeNextRender(this, function () {
+            var select = this.shadowRoot.querySelector('#export-select');
+            select.addEventListener('click', this.handleExportClicked.bind(this), false);
+            this.shadowRoot.querySelector('#copy-iframe').fitInto = this;
+          });
+        }
+
+        //Not used functions
+        dataChanged() {
+            if (this.data.length == 0) {
+              return;
+            }
+            if (!this.initialized) {
+              this.clear();
+              this.setup(this.config);
+            }
+            this.update();
+        }
+
+        configChanged() {
+            if (Object.keys(this.config).length > 0) {
+              this.clear();
+              this.setup(this.config);
+            }
+        }
+
+        set(value) {
+            if (value.config) {
+              if (JSON.stringify(value.config) !== JSON.stringify(this.config)) {
+                if (Object.keys(value.config).length > 0) {
+                  this.clear();
+                  this.config = value.config;
+                  this.setup(this.config);
+                }
+              }
+            }
+            if (value.data) {
+              if (value.data.length == 0) {
+                return;
+              }
+
+              this.data = value.data;
+              this.update();
+            }
+        }
+
+        // Element Behavior
+        setup(config) {
+            this.initialized = true;
+
+            this.config.label = config.label || 'Graph';
+            this.config.ylabel = config.ylabel || 'y';
+            this.config.xlabel = config.xlabel || 'x';
+            this.config.xtype = config.xtype || 'date';
+            this.config.ytype = config.ytype || 'linear';
+            this.config.xparse = config.xparse || '-';
+            this.config.yparse = config.yparse || '';
+            this.config.xprint = config.xprint || '';
+            this.config.yprint = config.yprint || '';
+
+            this.parseDate = [null, null];
+            if (this.config.xtype == 'date') {
+              this.parseDate[0] = d3.time.format(this.config.xparse).parse;
+            }
+            if (this.config.ytype == 'date') {
+              this.parseDate[1] = d3.time.format(this.config.yparse).parse;
+            }
+
+            this.margin = { top: 50, right: 50, bottom: 150, left: 70 };
+            this.width = this.dimensions.width - this.margin.left - this.margin.right;
+            this.height = this.dimensions.height - this.margin.top - this.margin.bottom;
+            var canvas = this.shadowRoot.querySelector('#canvas');
+            this.svg = d3.select(canvas).append('svg')
+              .attr('viewBox', '0 0 ' + (this.width + this.margin.left + this.margin.right) + ' ' + (this.height + this.margin.top + this.margin.bottom))
+              .attr('font', '15px sans-serif')
+              .append('g')
+              .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+
+            this.svg.append('rect')
+              .attr('x', -this.margin.left)
+              .attr('y', -this.margin.top)
+              .attr('width', this.dimensions.width)
+              .attr('height', this.dimensions.height)
+              .attr('fill', '#fff');
+
+            this.rect = this.svg.append('rect')
+              .attr('id', 'clientRect')
+              .attr('width', this.width)
+              .attr('height', this.height)
+              .attr('fill', '#fff')
+
+              .on('mousemove', this.mousemove.bind(this));
+
+            this.svg.append('clipPath')
+              .attr('id', 'clip-lines')
+              .append('rect')
+              .attr('x', 0)
+              .attr('y', 0)
+              .attr('width', this.width)
+              .attr('height', this.height);
+
+            this.svg.append('text')
+              .attr('class', 'x label')
+              .attr('text-anchor', 'end')
+              .attr('x', this.width - 6)
+              .attr('y', this.height - 6)
+              .style('background', 'rgba(255,255,255,0.5)')
+              .text(this.config.xlabel);
+
+            this.svg.append('text')
+              .attr('class', 'y label')
+              .attr('text-anchor', 'end')
+              .attr('y', 6)
+              .attr('x', -6)
+              .attr('dy', '.75em')
+              .attr('transform', 'rotate(-90)')
+              .text(this.config.ylabel);
+
+            this.svg.append('text')
+              .attr('class', 'title label')
+              .attr('text-anchor', 'middle')
+              .attr('x', this.width / 2)
+              .attr('y', -15)
+              .attr('font-size', 20)
+              .attr('font-weight', 600)
+              .style('background', 'rgba(255,255,255,0.5)')
+              .text(this.config.label);
+
+            this.getX = (function (d) {
+              return this.x(d[0])
+            }).bind(this);
+
+            this.getY = (function (d) {
+              return this.y(d[1])
+            }).bind(this);
+
+            this.svg.append('g')
+              .attr('class', 'x axis');
+
+            this.svg.append('g')
+              .attr('class', 'y axis');
+        }
+
+        resize(width, height) {
+            this.dimensions.width = width;
+            this.dimensions.height = height - 75;
+
+            if (this.initialized) {
+              this.clear();
+              this.setup(this.config);
+              this.update();
+            }
+        }
+
+        update(data) {
+            if (typeof data != 'undefined') {
+              this.data = data;
+              this.data_unchanged = JSON.parse(JSON.stringify(data));
+              return;
+            }
+
+            if(!this.data[0]){
+              return;
+            }else{
+              this.data_unchanged = JSON.parse(JSON.stringify(this.data));
+            }
+            var xMin = Number.POSITIVE_INFINITY;
+            var xMax = 0;
+            var yMin = Number.POSITIVE_INFINITY;
+            var yMax = 0;
+
+            for (var i = 0; i < this.data.length; i++) {
+
+              if (this.config.xtype == 'date') {
+
+                if (this.data[i].data.length > 0) {
+                  for (var k = 0; k < this.data[i].data.length; k++) {
+                    if (this.config.xparse == '-' || this.config.xparse == '') {
+
+                      this.data[i].data[k][0] = new Date(this.data[i].data[k][0]);
+                    }
+                    else {
+                      if(this.data_unchanged[i].data[k][0] === this.data[i].data[k][0]) this.data[i].data[k][0] = this.parseDate[0](this.data[i].data[k][0]);
+                    }
+
+                  }
+                }
+              }
+              if (this.config.ytype == 'date') {
+                if (this.data[i].data.length > 0) {
+                  if (this.config.ytype == 'date') {
+
+                    if (this.config.yparse == '-' || this.config.yparse == '') {
+
+                      this.data[i].data[k][1] = new Date(this.data[i].data[k][1]);
+                    }
+                    else {
+                      if(this.data_unchanged[i].data[k][1] === this.data[i].data[k][1]) this.data[i].data[k][1] = this.parseDate[1](this.data[i].data[k][1]);
+                    }
+                  }
+                }
+
+              }
+            }
+
+            //global min max
+            for (var i = 0; i < this.data.length; i++) {
+
+              if (this.config.xtype == 'linear') {
+                var xmin = d3.min(this.data[i].data, function (d) {
+                  return d[0];
+                });
+                var xmax = d3.max(this.data[i].data, function (d) {
+                  return d[0];
+                });
+
+                if (xmin < xMin) {
+                  xMin = xmin;
+                }
+                if (xmax > xMax) {
+                  xMax = xmax;
+                }
+              }
+
+              if (this.config.ytype == 'linear') {
+                var ymin = d3.min(this.data[i].data, function (d) {
+                  return d[1];
+                });
+
+                var ymax = d3.max(this.data[i].data, function (d) {
+                  return d[1];
+                });
+                if (ymin < yMin) {
+                  yMin = ymin;
+                }
+                if (ymax > yMax) {
+                  yMax = ymax;
+                }
+
+              }
+
+            }
+
+            if (this.config.xtype == 'date') {
+              xMin = (this.data[0].data[0][0]);
+              xMax = (this.data[0].data[this.data[0].data.length - 1][0]);
+              this.x = d3.time.scale()
+                .domain([xMin, xMax])
+                .range([0, this.width]);
+            }
+            else if (this.config.xtype == 'linear') {
+              this.x = d3.scale.linear()
+                .domain([xMin, xMax])
+                .range([0, this.width]);
+            }
+
+            if (this.config.ytype == 'date') {
+              yMin = (this.data[0].data[0][1]);
+              yMax = (this.data[0].data[this.data[0].data.length - 1][1]);
+              this.y = d3.time.scale()
+                .domain([yMin, yMax])
+                .range([this.height, 0]);
+            }
+            else if (this.config.ytype == 'linear') {
+              this.y = d3.scale.linear()
+                .domain([yMin, yMax])
+                .range([this.height, 0]);
+            }
+
+            this.xAxis = d3.svg.axis()
+              .scale(this.x)
+              .orient('bottom')
+              .ticks(10 * Math.floor(this.width / this.height))
+              .tickSize(-this.height);
+
+            if (this.config.xtype == 'date') {
+              this.xAxis = this.xAxis.tickFormat(d3.time.format(this.config.xprint));
+            }
+
+            this.yAxis = d3.svg.axis()
+              .scale(this.y)
+              .orient('left')
+              .ticks(10)
+              .tickSize(-this.width);
+
+            if (this.config.ytype == 'date') {
+              this.yAxis = this.yAxis.tickFormat(d3.time.format(this.config.yprint));
+            }
+            this.zoom = d3.behavior.zoom()
+              .x(this.x)
+              .y(this.y)
+              .scaleExtent([1, 20])
+              .on('zoom', this.zoomed.bind(this));
+
+            var zoomSlider = this.shadowRoot.querySelector('#zoom-slider');
+            var slider = d3.select(zoomSlider)
+              .attr("value", this.zoom.scaleExtent()[0])
+              .attr("min", this.zoom.scaleExtent()[0])
+              .attr("max", this.zoom.scaleExtent()[1])
+              .attr("step", ((this.zoom.scaleExtent()[1] - this.zoom.scaleExtent()[0]) / 100).toFixed(1))
+              .on("immediate-value-change", this.slided.bind(this));
+
+            this.svg.select('.x.axis')
+              .attr('transform', 'translate(0,' + this.height + ')')
+              .call(this.xAxis)
+
+              .selectAll('text')
+              .style('text-anchor', 'end')
+              .attr('dx', '-.8em')
+              .attr('dy', '.15em')
+              .attr('transform', 'rotate(-65)')
+              .attr('font-size', '12px');
+
+            this.svg.select('.y.axis')
+              .call(this.yAxis)
+              .selectAll('text')
+              .attr('font-size', '12px');
+
+            this.svg.selectAll('.axis path, .axis line')
+              .attr('fill', 'none')
+              .attr('stroke', '#7a95ac')
+              .attr('shape-rendering', 'optimizeSpeed');
+
+            this.svg.call(this.zoom);
+
+            this.focuses = [];
+            this.lineGen = d3.svg.line()
+              .x(this.getX)
+              .y(this.getY);
+
+            var colors = [
+              '#008EB5',
+              '#FF8800',
+              '#00B374',
+              '#0AC400',
+              '#5D7EB3',
+              '#000000',
+              '#FF5959',
+              '#EC45FF',
+              '#AACC00'
+
+            ];
+
+            this.svg.selectAll('.data-representation').remove();
+            for (var i = 0; i < this.data.length; i++) {
+
+              if (this.data[i].regions) {
+
+                this.svg.selectAll('.region-marker').remove();
+
+                for (var k = 0; k < this.data[i].regions.length; k++) {
+                  var region = this.data[i].regions[k];
+                  var coordinates = this.getRegionCoordinates(region);
+
+                  var rgb = d3.rgb(this.data[i].color || colors[i]);
+                  if (region.length == 2 || region.length == 4) {
+                    this.svg
+                      .append('rect')
+                      .attr('id', 'region-marker' + i + '-' + k)
+                      .attr('class', 'region-marker')
+                      .attr('clip-path', 'url(#clip-lines)')
+                      .attr('x', coordinates.x)
+                      .attr('y', coordinates.y)
+                      .attr('width', coordinates.width)
+                      .attr('height', coordinates.height)
+                      .style('fill', 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + 0.25 + ')')
+                      .attr('stroke', rgb.toString())
+                      .attr('stroke-width', 1)
+
+                      .style('z-index', 0)
+                      .style('pointer-events', 'none')
+                  }
+                }
+              }
+              if (this.data[i].type == 'dots') {
+                var x = this.x;
+                var y = this.y;
+                this.svg.selectAll('.dot' + i)
+                  .data(this.data[i].data)
+                  .enter()
+                  .append('circle')
+                  .attr('class', 'data-representation dot' + i)
+                  .attr("r", 3)
+                  .attr("cx", this.getX)
+                  .attr("cy", this.getY)
+                  .attr('clip-path', 'url(#clip-lines)')
+                  .attr('stroke', 'none')
+                  .style('z-index', 4)
+                  .attr('fill', this.data[i].color || colors[i]);
+              }
+              else {
+                this.svg
+                  .append('path')
+                  .attr('class', 'data-representation line' + i)
+                  .attr('d', this.lineGen(this.data[i].data))
+                  .attr('clip-path', 'url(#clip-lines)')
+                  .attr('stroke', this.data[i].color || colors[i])
+                  .attr('stroke-width', 2)
+                  .style('z-index', 4)
+                  .attr('fill', 'none');
+              }
+
+            }
+
+            var xSpace = this.width / 3;
+            var xIndex = 0;
+            var yIndex = 0;
+            for (var i = 0; i < this.data.length; i++) {
+              yIndex = i % 3;
+              xIndex = Math.floor(i / 3);
+              this.svg.select('#legend-rect' + i).remove();
+              this.svg.append('rect')
+                .attr('id', 'legend-rect' + i)
+                .attr('x', xIndex * xSpace)
+                .attr('y', this.height + this.margin.bottom - 28 - 30 + yIndex * 20)
+                .attr('width', 15)
+                .attr('height', 15)
+                .style('fill', this.data[i].color || colors[i])
+
+              this.svg.select('#legend-text' + i).remove();
+              this.svg.append('text')
+                .attr('id', 'legend-text' + i)
+                .attr('x', xIndex * xSpace + 20)
+                .attr('y', this.height + this.margin.bottom - 15 - 30 + yIndex * 20)
+                .style('fill', 'black')
+                .text(this.data[i].label);
+            }
+
+            this.svg.selectAll('.focus').remove();
+            for (var i = 0; i < this.data.length; i++) {
+
+              var focus = this.svg.append('g')
+                .attr('class', 'focus')
+                .style('display', '')
+                .style('pointer-events', 'none')
+
+              focus.append('circle')
+                .attr('r', 4.5)
+                .attr('fill', 'none')
+                .attr('stroke', '#00475E')
+
+              focus.append('text')
+                .attr('id', 'text-bx' + i)
+                .attr('x', 9)
+                .attr('y', 19)
+                .attr('fill', 'black')
+                .attr('stroke', 'white')
+                .attr('stroke-width', 3)
+                .attr('dy', '.35em')
+              focus.append('text')
+                .attr('id', 'text-x' + i)
+                .attr('x', 9)
+                .attr('y', 19)
+                .attr('dy', '.35em')
+                .style('background', 'rgba(255,255,255,0.5)')
+
+              focus.append('text')
+                .attr('id', 'text-by' + i)
+                .attr('x', 9)
+                .attr('dy', '.35em')
+                .attr('fill', 'black')
+                .attr('stroke', 'white')
+                .attr('stroke-width', 3)
+
+              focus.append('text')
+                .attr('id', 'text-y' + i)
+                .attr('x', 9)
+                .attr('dy', '.35em')
+                .style('background', 'rgba(255,255,255,0.5)')
+
+              this.focuses.push(focus);
+            }
+        }
+
+        clear() {
+            var children = Polymer.dom(this.$.canvas).children; //TODO change
+            for (var i = 0; i < children.length; i++) {
+              Polymer.dom(this.$.canvas).removeChild(children[i]); //TODO change
+            }
+            Polymer.dom.flush();
+        }
+
+        getRegionCoordinates(region) {
+            var width = 5;
+            var height = this.height;
+            var y = height;
+            if (region.length >= 2) {
+              if (this.config.xtype == 'date' && typeof region[0] === 'string') {
+                region[0] = this.parseDate[0](region[0]);
+                region[1] = this.parseDate[0](region[1]);
+              }
+              width = Math.max(5, this.x(region[1]) - this.x(region[0]));
+            }
+
+            if (region.length == 4) {
+
+              if (this.config.ytype == 'date' && typeof region[2] === 'string') {
+                region[2] = this.parseDate[1](region[2]);
+                region[3] = this.parseDate[1](region[3]);
+              }
+
+              y = this.y(region[2]);
+              height = Math.max(5, (this.y(region[2]) - this.y(region[3])));
+            }
+
+            return { x: this.x(region[0]), y: y - height, width: width, height: height };
+        }
+
+        resetZoom() {
+            this.zoom.translate([0, 0]).scale(this.zoom.scaleExtent()[0]).event(this.svg);
+        }
+
+        slided() {
+            var center = [this.width / 2, this.height / 2];
+            var translate = this.zoom.translate();
+            var scale = this.zoom.scale();
+            var targetZoom = this.shadowRoot.querySelector('#zoom-slider').immediateValue;
+            var target = [(center[0] - translate[0]) / scale, (center[1] - translate[1]) / scale];
+
+            translate[0] += center[0] - (target[0] * targetZoom + translate[0]);
+            translate[1] += center[1] - (target[1] * targetZoom + translate[1]);
+            this.zoom.translate(translate).scale(targetZoom).event(this.svg);
+        }
+
+        zoomed() {
+            var zoomSlider = this.shadowRoot.querySelector('#zoom-slider');
+            d3.select(zoomSlider).property("value", d3.event.scale);
+
+            var t = d3.event.translate,
+              s = d3.event.scale;
+
+            t[0] = Math.max(t[0], this.width - this.width * s);
+            t[0] = Math.min(t[0], 0);
+
+            t[1] = Math.max(t[1], this.height - this.height * s);
+            t[1] = Math.min(t[1], 0);
+
+            this.zoom.translate(t);
+
+            for (var i = 0; i < this.data.length; i++) {
+              this.svg.select('.line' + i).attr('d', this.lineGen(this.data[i].data));
+
+
+              this.svg.selectAll('.dot' + i)
+                .data(this.data[i].data)
+                .attr("r", 3)
+                .attr("cx", this.getX)
+                .attr("cy", this.getY)
+
+              if (this.data[i].regions) {
+                for (var k = 0; k < this.data[i].regions.length; k++) {
+                  var region = this.data[i].regions[k];
+                  var coordinates = this.getRegionCoordinates(region);
+                  this.svg
+                    .select('#region-marker' + i + '-' + k)
+                    .attr('x', coordinates.x)
+                    .attr('y', coordinates.y)
+                    .attr('width', coordinates.width)
+                    .attr('height', coordinates.height)
+                }
+              }
+            }
+            // .attr('transform', 'translate(' + d3.event.translate + ')scale(' + d3.event.scale + ')');
+            this.svg.select('.x.axis').call(this.xAxis).selectAll('text')
+              .style('text-anchor', 'end')
+              .attr('dx', '-.8em')
+              .attr('dy', '.15em')
+              .attr('transform', 'rotate(-65)');
+            this.svg.select('.y.axis').call(this.yAxis);
+
+            this.svg.selectAll('.axis path, .axis line')
+              .attr('fill', 'none')
+              .attr('stroke', '#7a95ac')
+              .attr('shape-rendering', 'optimizeSpeed');
+
+            for (var i = 0; i < this.focuses.length; i++) {
+              var focus = this.focuses[i];
+              focus.style('display', 'none');
+            }
+        }
+
+        mousemove() {
+            //console.log(d3.select('#clientRect'));
+            var bisectDate = d3.bisector(function (d) { return d[0]; }).left;
+            var posHash = {};
+            for (var k = 0; k < this.focuses.length; k++) {
+              var focus = this.focuses[k];
+              var x0 = this.x.invert(d3.mouse(this.rect[0][0])[0]);
+              var i = bisectDate(this.data[k].data, x0, 1);
+              var d0 = this.data[k].data[i - 1],
+                d1 = this.data[k].data[i];
+
+              var d = d0;
+
+              if (typeof d1 !== 'undefined') {
+                d = x0 - d0[0] > d1[0] - x0 ? d1 : d0;
+              }
+
+              var xPos = this.x(d[0]);
+              var yPos = this.y(d[1]);
+              if (yPos < 0 || yPos > this.height) {
+                focus.style('display', 'none');
+                return;
+              }
+
+              if (posHash.hasOwnProperty(xPos + ':' + yPos)) {
+                focus.style('display', 'none');
+              }
+              else {
+                posHash[xPos + ':' + yPos] = true;
+                focus.style('display', '');
+              }
+              //console.log(xPos, yPos);
+              focus.attr('transform', 'translate(' + xPos + ',' + yPos + ')');
+
+              var textX = d[0];
+              var textY = d[1];
+
+              if (this.config.xtype == 'date' && this.config.xprint) {
+                textX = d3.time.format(this.config.xprint)(d[0]);
+              }
+              if (this.config.ytype == 'date' && this.config.yprint) {
+                textY = d3.time.format(this.config.yprint)(d[1]);
+              }
+              focus.select('#text-x' + k).text(textX);
+              focus.select('#text-bx' + k).text(textX);
+              focus.select('#text-y' + k).text(textY);
+              focus.select('#text-by' + k).text(textY);
+            }
+        }
+
+        convertSvg() {
+            //http://stackoverflow.com/questions/23218174/how-do-i-save-export-an-svg-file-after-creating-an-svg-with-d3-js-ie-safari-an
+
+            d3.selectAll('text')
+              .attr('font-family', 'Verdana');
+            for (var i = 0; i < this.focuses.length; i++) {
+              var focus = this.focuses[i];
+              focus.style('display', 'none');
+            }
+            var svg = this.$.canvas.querySelector('svg');
+
+            //get svg source.
+            var serializer = new XMLSerializer();
+            var source = serializer.serializeToString(svg);
+
+            //add name spaces.
+            if (!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+              source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+            }
+            if (!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)) {
+              source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+            }
+
+            //add xml declaration
+            source = '<?xml version="1.0" standalone="no"?>' + source.replace(/\n/g, '');
+
+            return source;
+        }
+
+        handleExportClicked(event) {
+            var index = event.target.selectedIndex;
+            if (index == 1) {
+              this.getSvg();
+            }
+            else if (index == 2) {
+              this.getPng();
+            }
+            else if (index == 3) {
+              this.getiFrame();
+            }
+            else if (index == 4) {
+              this.getPolymerElement();
+            }
+            event.target.selectedIndex = 0;
+        }
+
+        getSvg() {
+            var source = this.convertSvg();
+
+            downloadAsFile({
+              data: source,
+              filename: this.config.label + '.svg'
+            });
+        }
+        getPng() {
+            var source = this.convertSvg();
+            var width = this.dimensions.width;
+            var height = this.dimensions.height;
+            var imgsrc = 'data:image/svg+xml;utf8,' + source;
+            var img = this.$.hiddenImage;
+
+            var canvas = this.$.hiddenCanvas;
+            canvas.height = height;
+            canvas.width = width;
+            var context = canvas.getContext('2d');
+            var title = this.config.label;
+            var link = this.$.hiddenLink;
+
+            img.onload = function () {
+              context.drawImage(img, 0, 0, width, height, 0, 0, width, height);
+              var canvasdata = canvas.toDataURL('image/png');
+
+              link.download = title + '.png';
+              link.href = canvasdata;
+              link.click();
+
+            }
+            img.width = width;
+            img.height = height;
+            img.src = imgsrc;
+        }
+
+        getiFrame() {
+          this.link = '<iframe src="data:text/html;charset=utf-8,' + encodeURI(this.$.canvas.outerHTML) + '" ></iframe>';
+          var iframe_dialog = this.shadowRoot.querySelector('#copy-iframe');
+          if (iframe_dialog) {
+            iframe_dialog.open();
+          }
+        }
+
+        getPolymerElement(){
+          this.link = '<sweva-visualization-line-graph data=\''+ JSON.stringify(this.data_unchanged)/*.replace(/'/g, "\\'")*/ +'\' config=\''+ JSON.stringify(this.config) +'\'></sweva-visualization-line-graph>';
+          var polymer_link_dialog = this.shadowRoot.querySelector('#copy-polymer');
+          if (polymer_link_dialog) {
+            polymer_link_dialog.open();
+          }
+        }
+      }
+
+      // Register custom element definition using standard platform API
+      window.customElements.define(SwevaVisualizationLineGraph.is, SwevaVisualizationLineGraph);
+    </script>
+</dom-module>

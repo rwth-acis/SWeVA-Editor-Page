@@ -1,0 +1,37 @@
+{
+  "name": "sweva-visualization-raw",
+  "authors": [
+    "Alexander Ruppert",
+    "István Koren"
+  ],
+  "description": "Text visualization module for SWeVA.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "sweva-visualization-line-graph.html",
+  "license": "https://raw.githubusercontent.com/rwth-acis/sweva-visualization-raw/master/LICENSE",
+  "homepage": "https://github.com/rwth-acis/sweva-visualization-raw/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^2.0.0",
+    "web-component-tester": "^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "_release": "a3baaf1ca9",
+  "_resolution": {
+    "type": "branch",
+    "branch": "sweva-update",
+    "commit": "a3baaf1ca96d86d5410c3601ecfd4e3ca21225bd"
+  },
+  "_source": "https://github.com/rwth-acis/sweva-visualization-raw.git",
+  "_target": "sweva-update",
+  "_originalSource": "rwth-acis/sweva-visualization-raw"
+}

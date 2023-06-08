@@ -1,0 +1,29 @@
+{
+    "type": "module",
+    "name": "labelOut",
+    "description": "A simple module template.",
+    "dataInNames": [
+        "val"
+    ],
+    "dataInSchema": {},
+    "dataOutNames": [
+        "graph"
+    ],
+    "dataOutSchema": {},
+    "inputNames": [],
+    "inputSchema": {},
+    "compute": [
+        "function (data, input, libs) {",
+        "var arr = new Array();",
+        "var b = new Array();",
+        "b.push(0);",
+        "b.push(0);",
+        "arr.push(b);",
+        "var graph =  {",
+        "label: 'CCF: '+data.val,",
+        "data: arr",
+        "};",
+        "return {graph: graph};",
+        "}"
+    ]
+}

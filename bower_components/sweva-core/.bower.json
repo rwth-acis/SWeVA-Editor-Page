@@ -1,0 +1,13 @@
+{
+  "name": "sweva-core",
+  "homepage": "https://github.com/rwth-acis/sweva-core",
+  "_release": "79e65be34e",
+  "_resolution": {
+    "type": "branch",
+    "branch": "sweva-iot",
+    "commit": "79e65be34ed62691aada61e618cbe13285e7c986"
+  },
+  "_source": "https://github.com/rwth-acis/sweva-core.git",
+  "_target": "sweva-iot",
+  "_originalSource": "rwth-acis/sweva-core"
+}

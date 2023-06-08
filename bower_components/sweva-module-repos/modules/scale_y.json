@@ -1,0 +1,27 @@
+{
+    "type": "module",
+    "name": "scale_y",
+    "description": "A simple module template.",
+    "dataInNames": [
+        "xy"
+    ],
+    "dataInSchema": {},
+    "dataOutNames": [
+        "scaled"
+    ],
+    "dataOutSchema": {},
+    "inputNames": [
+        "scale"
+    ],
+    "inputSchema": {},
+    "compute": [
+        "function (data, input, libs) {",
+        "data.xy.forEach(function(element){",
+        "var y = libs.get(element, 1);",
+        "libs.set(element, 1, y*input.scale);",
+        "});",
+        "",
+        "return {scaled: data.xy};",
+        "}"
+    ]
+}

@@ -1,0 +1,69 @@
+{
+    "type": "module",
+    "name": "fetch_rating_sentiments",
+    "description": "Fetches the sentiment of review text using  Vivek Narayanans open API. A sentiment is identified as Positive, Neutral, Negative with a confidence level.",
+    "dataInNames": [
+        "movies"
+    ],
+    "dataInSchema": {
+        "type": "object",
+        "properties": {
+            "movies": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "ratings": {
+                            "type": "array"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "dataOutNames": [
+        "sentiments"
+    ],
+    "dataOutSchema": {
+        "type": "object",
+        "properties": {
+            "sentiments": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "result": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "inputNames": [],
+    "inputSchema": {},
+    "request": [
+        "function (data, input, libs) {",
+        "var requests = new Array();",
+        "data.movies.forEach(function(movie) {",
+        "movie.ratings.forEach(function(rating){",
+        "if(rating.type==\"text\") {",
+        "requests.push(rating.review);",
+        "}",
+        "});",
+        "});",
+        "return libs.axios.post('https://cors-anywhere.herokuapp.com/http://sentiment.vivekn.com/api/batch/',",
+        "requests",
+        ");",
+        "",
+        "}    "
+    ],
+    "response": [
+        "function (response, input, libs) {",
+        "return {sentiments: response.data};",
+        "}"
+    ]
+}

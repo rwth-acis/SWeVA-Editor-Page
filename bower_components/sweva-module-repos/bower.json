@@ -1,0 +1,33 @@
+{
+  "name": "sweva-module-repos",
+  "version": "1.0.0",
+  "authors": [
+    "Alexander Ruppert",
+    "István Koren"
+  ],
+  "description": "The repositories for modules and visualizations of SWeVA.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "license": "https://raw.githubusercontent.com/rwth-acis/sweva-module-repos/master/LICENSE",
+  "homepage": "https://github.com/rwth-acis/sweva-module-repos/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "sweva-visualization-bar-chart": "rwth-acis/sweva-visualization-bar-chart#sweva-update",
+    "sweva-visualization-raw": "rwth-acis/sweva-visualization-raw#sweva-update",
+    "sweva-visualization-line-graph": "rwth-acis/sweva-visualization-line-graph#sweva-update",
+    "sweva-visualization-graph": "rwth-acis/sweva-visualization-graph#sweva-update"
+  },
+  "devDependencies": {
+    "web-component-tester": "^6.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^3.0.1"
+  },
+  "resolutions": {
+    "d3": "^3.5.12"
+  }
+}

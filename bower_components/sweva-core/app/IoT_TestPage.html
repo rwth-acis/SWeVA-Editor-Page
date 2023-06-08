@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Core test page</title>
+    <script src="core.build.js"></script>
+    <script src="./IoT_TestPipeline.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/peerjs@1.3.2/dist/peerjs.min.js"></script>
+</head>
+
+<body>
+    <span id="browser-sync-binding"></span>
+    <h1>Offloading IoT Test Page</h1>
+    <button onclick="runTests()">Start tests</button>
+
+    <script>
+        let startCpu, startTimestamp, startMemory;
+        let endCpu, endTimestamp, endMemory, memoryUsage , elapsedMs, cpuPercent;
+        var manager = new sweva.ExecutionManager();
+        //const memoryByCategory = {};
+        //const usedHeap = window.performance.memory.usedJSHeapSize;
+
+        async function runTests() {
+           await testPipeline()
+            /* await node2()
+           await node2()
+            initializeMeasurements();
+            console.log(await manager.deviceMonitoringIndex());
+            outputUsage();
+            initializeMeasurements();
+            console.log(await manager.offloadingDecision([10,1900,100000], 0.5, 0.5, 80));
+            outputUsage();*/
+            //randomTests()
+        }
+
+        function randomTests() {
+
+            for (const nodeName in simpleAssemblyScriptPipeline2.composables) {
+                const node = simpleAssemblyScriptPipeline2.composables[nodeName];
+                const cpu = node.requirements.cpu;
+                const memory = node.requirements.memory;
+                console.log(`Node ${nodeName}: cpu=${cpu}, memory=${memory}`);
+            }
+        }
+
+        function initializeMeasurements() {
+            startCpu = performance.now();
+            startTimestamp = performance.now();
+            /*memoryByCategory['Heap'] = usedHeap;
+            memoryByCategory['Non-heap'] = usedHeap * 0.05; // 5% of used heap
+            memoryByCategory['Document'] = usedHeap * 0.95 - memoryByCategory['Non-heap']; // 95% of used heap minus non-heap memory
+*/
+            //startMemory = window.performance.memory.usedJSHeapSize;
+        }
+        function outputUsage() {
+            endCpu = performance.now();
+            endTimestamp = performance.now();
+            //WORKS ONLY ON chrominium
+            //endMemory = window.performance.memory.usedJSHeapSize;
+            //memoryUsage = endMemory - startMemory;
+            //elapsedMs = endTimestamp - startTimestamp;
+            cpuPercent = (endCpu - startCpu) / (endTimestamp - startTimestamp) *100;
+            /*console.log('Memory usage by category:');
+            console.log('-------------------------');
+            Object.entries(memoryByCategory).forEach(([category, usage]) => {
+                console.log(`${category}: ${usage} bytes`);
+            });*/
+            console.log('RAM usage: ', endMemory - startMemory,'\nCPU time: ',endCpu - startCpu,'ms','\nCPU usage:', cpuPercent,'%');
+        }
+
+
+        async function testPipeline() {
+            console.log("_______setup Pipeline______");
+            initializeMeasurements()
+            manager.setup(simpleAssemblyScriptPipeline2);
+            outputUsage();
+
+            //console.log('DECISION ====', await manager.offloadingDecision(10,10,0));
+
+            manager.onProgress(function (progress) {
+                console.log("Progress: "+progress+"%");
+            });
+            console.log("_______Execute Pipeline______");
+            initializeMeasurements()
+                       let res = await manager.execute({
+                "Node1": {
+                    "num": 8
+                }}, {});
+            outputUsage();
+            console.log('Pipeline result:',res);
+        }
+        async function node1() {
+            console.log("_______NODE 1______");
+            //initializeMeasurements()
+            manager.setup(node1);
+            //outputUsage();
+
+            manager.onProgress(function (progress) {
+                console.log("Progress: "+progress+"%");
+            });
+            console.log("_______Execute Pipeline______");
+            initializeMeasurements()
+            let res = await manager.execute({"num": 8}, {});
+            outputUsage();
+            console.log('Pipeline result:',res);
+        }
+        async function node2() {
+            console.log("_______NODE2______");
+            console.log("_______setup Pipeline______");
+            initializeMeasurements()
+            manager.setup(node2);
+            outputUsage();
+
+            manager.onProgress(function (progress) {
+                console.log("Progress: "+progress+"%");
+            });
+            console.log("_______Execute Pipeline______");
+            initializeMeasurements()
+            let res = await manager.execute({
+                "Node2": {
+                    "num": 8
+                }}, {});
+            outputUsage();
+            console.log('Pipeline result:',res);
+        }
+
+        runTests()
+    </script>
+</body>
+
+</html>

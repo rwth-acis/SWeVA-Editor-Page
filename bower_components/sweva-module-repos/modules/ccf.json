@@ -1,0 +1,44 @@
+{
+    "type": "module",
+    "name": "ccf",
+    "description": "A simple module template.",
+    "dataInNames": [
+        "setX",
+        "setY"
+    ],
+    "dataInSchema": {},
+    "dataOutNames": [
+        "console"
+    ],
+    "dataOutSchema": {},
+    "inputNames": [],
+    "inputSchema": {},
+    "request": [
+        "function (data, input, libs) {",
+        "var arrX = new Array();",
+        "var arrY = new Array();",
+        "",
+        "data.setX.forEach(function(element){",
+        "arrX.push(libs.get(element, 1));",
+        "});",
+        "data.setY.forEach(function(element){",
+        "arrY.push(libs.get(element, 1));",
+        "});",
+        "return libs.axios.post(\"http://public.opencpu.org/ocpu/library/stats/R/ccf\", {",
+        "\"x\": arrX,",
+        "\"y\": arrY,",
+        "\"type\":\"correlation\",",
+        "\"plot\": \"FALSE\",",
+        "\"lag.max\": 0",
+        "});",
+        "",
+        "",
+        "}    "
+    ],
+    "response": [
+        "function (response, input, libs) {",
+        "",
+        "return {console: response.data};",
+        "}"
+    ]
+}

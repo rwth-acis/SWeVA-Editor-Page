@@ -1,0 +1,4921 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "An element providing a solution to no problem in particular.\n\nExample:\n\n    <seed-element></seed-element>\n\nExample:\n\n    <seed-element>\n      <h2>Hello seed-element</h2>\n    </seed-element>",
+      "summary": "",
+      "path": "sweva-visualization-container-section.html",
+      "properties": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 80,
+              "column": 16
+            },
+            "end": {
+              "line": 83,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Title\""
+        },
+        {
+          "name": "collapsed",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 84,
+              "column": 16
+            },
+            "end": {
+              "line": 88,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"collapse\""
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "collapsedStyle",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 89,
+              "column": 16
+            },
+            "end": {
+              "line": 92,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 97,
+              "column": 12
+            },
+            "end": {
+              "line": 99,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 101,
+              "column": 12
+            },
+            "end": {
+              "line": 105,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 107,
+              "column": 12
+            },
+            "end": {
+              "line": 109,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "collapse",
+          "description": "Element Behavior",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 112,
+              "column": 12
+            },
+            "end": {
+              "line": 121,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "collapsed"
+            }
+          ]
+        },
+        {
+          "name": "handleHeaderClicked",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 122,
+              "column": 12
+            },
+            "end": {
+              "line": 125,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 76,
+          "column": 16
+        },
+        "end": {
+          "line": 127,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 80,
+              "column": 16
+            },
+            "end": {
+              "line": 83,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "collapsed",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 84,
+              "column": 16
+            },
+            "end": {
+              "line": 88,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "collapsed-style",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 89,
+              "column": 16
+            },
+            "end": {
+              "line": 92,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-container-section"
+    },
+    {
+      "description": "An element providing a solution to no problem in particular.\n\nExample:\n\n    <seed-element></seed-element>\n\nExample:\n\n    <seed-element>\n      <h2>Hello seed-element</h2>\n    </seed-element>",
+      "summary": "",
+      "path": "sweva-visualization-container-chat.html",
+      "properties": [
+        {
+          "name": "messages",
+          "type": "Array",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 103,
+              "column": 16
+            },
+            "end": {
+              "line": 107,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "[]"
+        },
+        {
+          "name": "currentMessage",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 108,
+              "column": 16
+            },
+            "end": {
+              "line": 111,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "maxMessages",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 112,
+              "column": 16
+            },
+            "end": {
+              "line": 115,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "5"
+        },
+        {
+          "name": "user",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 116,
+              "column": 16
+            },
+            "end": {
+              "line": 122,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "yjs",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 123,
+              "column": 16
+            },
+            "end": {
+              "line": 126,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "null"
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 135,
+              "column": 12
+            },
+            "end": {
+              "line": 137,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 139,
+              "column": 12
+            },
+            "end": {
+              "line": 141,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 143,
+              "column": 12
+            },
+            "end": {
+              "line": 145,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "init",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 147,
+              "column": 12
+            },
+            "end": {
+              "line": 162,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "yjs"
+            }
+          ]
+        },
+        {
+          "name": "appendMessage",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 163,
+              "column": 12
+            },
+            "end": {
+              "line": 171,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "message"
+            },
+            {
+              "name": "position"
+            }
+          ]
+        },
+        {
+          "name": "removeMessage",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 172,
+              "column": 12
+            },
+            "end": {
+              "line": 176,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "position"
+            }
+          ]
+        },
+        {
+          "name": "cleanupChat",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 177,
+              "column": 12
+            },
+            "end": {
+              "line": 182,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_colorToStyle",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 184,
+              "column": 12
+            },
+            "end": {
+              "line": 187,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "color"
+            }
+          ]
+        },
+        {
+          "name": "_timestampToTime",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 188,
+              "column": 12
+            },
+            "end": {
+              "line": 191,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "timestamp"
+            }
+          ]
+        },
+        {
+          "name": "_messagesChanged",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 192,
+              "column": 12
+            },
+            "end": {
+              "line": 202,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "handleEnter",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 203,
+              "column": 12
+            },
+            "end": {
+              "line": 210,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "addMessage",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 211,
+              "column": 12
+            },
+            "end": {
+              "line": 226,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "data"
+            }
+          ]
+        },
+        {
+          "name": "handleSendMessage",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 227,
+              "column": 12
+            },
+            "end": {
+              "line": 234,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "updateUser",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 235,
+              "column": 12
+            },
+            "end": {
+              "line": 242,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "user"
+            }
+          ]
+        },
+        {
+          "name": "cleanUp",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 243,
+              "column": 12
+            },
+            "end": {
+              "line": 247,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 99,
+          "column": 16
+        },
+        "end": {
+          "line": 249,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "messages",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 103,
+              "column": 16
+            },
+            "end": {
+              "line": 107,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Array"
+        },
+        {
+          "name": "current-message",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 108,
+              "column": 16
+            },
+            "end": {
+              "line": 111,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "max-messages",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 112,
+              "column": 16
+            },
+            "end": {
+              "line": 115,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "user",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 116,
+              "column": 16
+            },
+            "end": {
+              "line": 122,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "yjs",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 123,
+              "column": 16
+            },
+            "end": {
+              "line": 126,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-container-chat"
+    },
+    {
+      "description": "An element providing a solution to no problem in particular.\n\nExample:\n\n    <seed-element></seed-element>\n\nExample:\n\n    <seed-element>\n      <h2>Hello seed-element</h2>\n    </seed-element>",
+      "summary": "",
+      "path": "sweva-visualization-input-slider.html",
+      "properties": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 54,
+              "column": 16
+            },
+            "end": {
+              "line": 57,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Title\""
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 58,
+              "column": 16
+            },
+            "end": {
+              "line": 61,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "0"
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 62,
+              "column": 16
+            },
+            "end": {
+              "line": 65,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "100"
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 66,
+              "column": 16
+            },
+            "end": {
+              "line": 69,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "1"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 70,
+              "column": 16
+            },
+            "end": {
+              "line": 73,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"No description available.\""
+        },
+        {
+          "name": "map",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 74,
+              "column": 16
+            },
+            "end": {
+              "line": 77,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 78,
+              "column": 16
+            },
+            "end": {
+              "line": 83,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "50"
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 88,
+              "column": 12
+            },
+            "end": {
+              "line": 90,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 92,
+              "column": 12
+            },
+            "end": {
+              "line": 94,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 96,
+              "column": 12
+            },
+            "end": {
+              "line": 98,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "valueChanged",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 99,
+              "column": 12
+            },
+            "end": {
+              "line": 101,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 50,
+          "column": 16
+        },
+        "end": {
+          "line": 104,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 54,
+              "column": 16
+            },
+            "end": {
+              "line": 57,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "min",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 58,
+              "column": 16
+            },
+            "end": {
+              "line": 61,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "max",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 62,
+              "column": 16
+            },
+            "end": {
+              "line": 65,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "step",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 66,
+              "column": 16
+            },
+            "end": {
+              "line": 69,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "description",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 70,
+              "column": 16
+            },
+            "end": {
+              "line": 73,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "map",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 74,
+              "column": 16
+            },
+            "end": {
+              "line": 77,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 78,
+              "column": 16
+            },
+            "end": {
+              "line": 83,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "value-changed",
+          "description": "Fired when the `value` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-input-slider"
+    },
+    {
+      "description": "An element providing a solution to no problem in particular.\n\nExample:\n\n    <seed-element></seed-element>\n\nExample:\n\n    <seed-element>\n      <h2>Hello seed-element</h2>\n    </seed-element>",
+      "summary": "",
+      "path": "sweva-visualization-input-text.html",
+      "properties": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 45,
+              "column": 16
+            },
+            "end": {
+              "line": 48,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Title\""
+        },
+        {
+          "name": "multiline",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 49,
+              "column": 16
+            },
+            "end": {
+              "line": 52,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 53,
+              "column": 16
+            },
+            "end": {
+              "line": 56,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"No description available.\""
+        },
+        {
+          "name": "map",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 57,
+              "column": 16
+            },
+            "end": {
+              "line": 60,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 61,
+              "column": 16
+            },
+            "end": {
+              "line": 66,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "\"\""
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 71,
+              "column": 12
+            },
+            "end": {
+              "line": 73,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 75,
+              "column": 12
+            },
+            "end": {
+              "line": 77,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 79,
+              "column": 12
+            },
+            "end": {
+              "line": 81,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "valueChanged",
+          "description": "Element Behavior",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 84,
+              "column": 12
+            },
+            "end": {
+              "line": 89,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 41,
+          "column": 16
+        },
+        "end": {
+          "line": 91,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 45,
+              "column": 16
+            },
+            "end": {
+              "line": 48,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "multiline",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 49,
+              "column": 16
+            },
+            "end": {
+              "line": 52,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "description",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 53,
+              "column": 16
+            },
+            "end": {
+              "line": 56,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "map",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 57,
+              "column": 16
+            },
+            "end": {
+              "line": 60,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 61,
+              "column": 16
+            },
+            "end": {
+              "line": 66,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "value-changed",
+          "description": "Fired when the `value` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-input-text"
+    },
+    {
+      "description": "An element providing a solution to no problem in particular.\n\nExample:\n\n    <seed-element></seed-element>\n\nExample:\n\n    <seed-element>\n      <h2>Hello seed-element</h2>\n    </seed-element>",
+      "summary": "",
+      "path": "sweva-visualization-input-number.html",
+      "properties": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 40,
+              "column": 16
+            },
+            "end": {
+              "line": 43,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Title\""
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 44,
+              "column": 16
+            },
+            "end": {
+              "line": 47,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "0"
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 48,
+              "column": 16
+            },
+            "end": {
+              "line": 51,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "1"
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 52,
+              "column": 16
+            },
+            "end": {
+              "line": 55,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "1"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 56,
+              "column": 16
+            },
+            "end": {
+              "line": 59,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"No description available.\""
+        },
+        {
+          "name": "map",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 60,
+              "column": 16
+            },
+            "end": {
+              "line": 63,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 64,
+              "column": 16
+            },
+            "end": {
+              "line": 69,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "0"
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 74,
+              "column": 12
+            },
+            "end": {
+              "line": 76,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 78,
+              "column": 12
+            },
+            "end": {
+              "line": 80,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 82,
+              "column": 12
+            },
+            "end": {
+              "line": 84,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "valueChanged",
+          "description": "Element Behavior",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 87,
+              "column": 12
+            },
+            "end": {
+              "line": 92,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 36,
+          "column": 16
+        },
+        "end": {
+          "line": 93,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 40,
+              "column": 16
+            },
+            "end": {
+              "line": 43,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "min",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 44,
+              "column": 16
+            },
+            "end": {
+              "line": 47,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "max",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 48,
+              "column": 16
+            },
+            "end": {
+              "line": 51,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "step",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 52,
+              "column": 16
+            },
+            "end": {
+              "line": 55,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "description",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 56,
+              "column": 16
+            },
+            "end": {
+              "line": 59,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "map",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 60,
+              "column": 16
+            },
+            "end": {
+              "line": 63,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 64,
+              "column": 16
+            },
+            "end": {
+              "line": 69,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "value-changed",
+          "description": "Fired when the `value` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-input-number"
+    },
+    {
+      "description": "An element providing a solution to no problem in particular.\n\nExample:\n\n    <seed-element></seed-element>\n\nExample:\n\n    <seed-element>\n      <h2>Hello seed-element</h2>\n    </seed-element>",
+      "summary": "",
+      "path": "sweva-visualization-input-toggle.html",
+      "properties": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 42,
+              "column": 16
+            },
+            "end": {
+              "line": 45,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Title\""
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 46,
+              "column": 16
+            },
+            "end": {
+              "line": 49,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"No description available.\""
+        },
+        {
+          "name": "map",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 50,
+              "column": 16
+            },
+            "end": {
+              "line": 53,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 54,
+              "column": 16
+            },
+            "end": {
+              "line": 59,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "false"
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 64,
+              "column": 12
+            },
+            "end": {
+              "line": 66,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 68,
+              "column": 12
+            },
+            "end": {
+              "line": 70,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 72,
+              "column": 12
+            },
+            "end": {
+              "line": 74,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "valueChanged",
+          "description": "Element Behavior",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 77,
+              "column": 12
+            },
+            "end": {
+              "line": 79,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 38,
+          "column": 16
+        },
+        "end": {
+          "line": 81,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 42,
+              "column": 16
+            },
+            "end": {
+              "line": 45,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 46,
+              "column": 16
+            },
+            "end": {
+              "line": 49,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "map",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 50,
+              "column": 16
+            },
+            "end": {
+              "line": 53,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 54,
+              "column": 16
+            },
+            "end": {
+              "line": 59,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "value-changed",
+          "description": "Fired when the `value` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-input-toggle"
+    },
+    {
+      "description": "An element providing a solution to no problem in particular.\n\nExample:\n\n    <seed-element></seed-element>\n\nExample:\n\n    <seed-element>\n      <h2>Hello seed-element</h2>\n    </seed-element>",
+      "summary": "",
+      "path": "sweva-visualization-input-dropdown.html",
+      "properties": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 52,
+              "column": 16
+            },
+            "end": {
+              "line": 55,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Title\""
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 56,
+              "column": 16
+            },
+            "end": {
+              "line": 59,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"No description available.\""
+        },
+        {
+          "name": "items",
+          "type": "Array",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 60,
+              "column": 16
+            },
+            "end": {
+              "line": 63,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "[]"
+        },
+        {
+          "name": "selectedIndex",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 64,
+              "column": 16
+            },
+            "end": {
+              "line": 68,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"selectedIndexChanged\""
+            }
+          },
+          "defaultValue": "-1"
+        },
+        {
+          "name": "map",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 69,
+              "column": 16
+            },
+            "end": {
+              "line": 72,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 73,
+              "column": 16
+            },
+            "end": {
+              "line": 78,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "\"\""
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "Element Lifecycle",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 81,
+              "column": 12
+            },
+            "end": {
+              "line": 82,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 83,
+              "column": 12
+            },
+            "end": {
+              "line": 85,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 86,
+              "column": 12
+            },
+            "end": {
+              "line": 87,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "itemsPreprocess",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 90,
+              "column": 12
+            },
+            "end": {
+              "line": 116,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "items"
+            }
+          ]
+        },
+        {
+          "name": "selectedIndexChanged",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 117,
+              "column": 12
+            },
+            "end": {
+              "line": 125,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 49,
+          "column": 16
+        },
+        "end": {
+          "line": 126,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 52,
+              "column": 16
+            },
+            "end": {
+              "line": 55,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 56,
+              "column": 16
+            },
+            "end": {
+              "line": 59,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "items",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 60,
+              "column": 16
+            },
+            "end": {
+              "line": 63,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Array"
+        },
+        {
+          "name": "selected-index",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 64,
+              "column": 16
+            },
+            "end": {
+              "line": 68,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "map",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 69,
+              "column": 16
+            },
+            "end": {
+              "line": 72,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 73,
+              "column": 16
+            },
+            "end": {
+              "line": 78,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "value-changed",
+          "description": "Fired when the `value` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-input-dropdown"
+    },
+    {
+      "description": "An element providing a solution to no problem in particular.\n\nExample:\n\n    <seed-element></seed-element>\n\nExample:\n\n    <seed-element>\n      <h2>Hello seed-element</h2>\n    </seed-element>",
+      "summary": "",
+      "path": "sweva-visualization-container-panel.html",
+      "properties": [
+        {
+          "name": "label",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 318,
+              "column": 16
+            },
+            "end": {
+              "line": 321,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Panel\""
+        },
+        {
+          "name": "input",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 322,
+              "column": 16
+            },
+            "end": {
+              "line": 325,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "{}"
+        },
+        {
+          "name": "collapsed",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 327,
+              "column": 16
+            },
+            "end": {
+              "line": 331,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"collapse\""
+            }
+          },
+          "defaultValue": "true"
+        },
+        {
+          "name": "collapsedStyle",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 332,
+              "column": 16
+            },
+            "end": {
+              "line": 335,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "room",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 336,
+              "column": 16
+            },
+            "end": {
+              "line": 339,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"noroom\""
+        },
+        {
+          "name": "connected",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 340,
+              "column": 16
+            },
+            "end": {
+              "line": 343,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "true"
+        },
+        {
+          "name": "collaborative",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 344,
+              "column": 16
+            },
+            "end": {
+              "line": 347,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "true"
+        },
+        {
+          "name": "selectedTab",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 348,
+              "column": 16
+            },
+            "end": {
+              "line": 351,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "0"
+        },
+        {
+          "name": "presets",
+          "type": "Array",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 352,
+              "column": 16
+            },
+            "end": {
+              "line": 355,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "[]"
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 356,
+              "column": 16
+            },
+            "end": {
+              "line": 359,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"User\""
+        },
+        {
+          "name": "usercolor",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 360,
+              "column": 16
+            },
+            "end": {
+              "line": 367,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "textToSpeech",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 368,
+              "column": 16
+            },
+            "end": {
+              "line": 371,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "sections",
+          "type": "Array",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 372,
+              "column": 16
+            },
+            "end": {
+              "line": 376,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"sectionsChanged\""
+            }
+          },
+          "defaultValue": "[]"
+        },
+        {
+          "name": "autoExecute",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 377,
+              "column": 16
+            },
+            "end": {
+              "line": 380,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "true"
+        },
+        {
+          "name": "progress",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 381,
+              "column": 16
+            },
+            "end": {
+              "line": 384,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "50"
+        },
+        {
+          "name": "yjs",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 385,
+              "column": 16
+            },
+            "end": {
+              "line": 388,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "null"
+        },
+        {
+          "name": "indicatorVisible",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 389,
+              "column": 16
+            },
+            "end": {
+              "line": 392,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "indicatorTitle",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 393,
+              "column": 16
+            },
+            "end": {
+              "line": 396,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "indicatorText",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 397,
+              "column": 16
+            },
+            "end": {
+              "line": 400,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "updateHistory",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 401,
+              "column": 16
+            },
+            "end": {
+              "line": 404,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "{}"
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 409,
+              "column": 12
+            },
+            "end": {
+              "line": 411,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 413,
+              "column": 12
+            },
+            "end": {
+              "line": 462,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 464,
+              "column": 12
+            },
+            "end": {
+              "line": 466,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "sectionsChanged",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 467,
+              "column": 12
+            },
+            "end": {
+              "line": 469,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "say",
+          "description": "Element Behavior",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 471,
+              "column": 12
+            },
+            "end": {
+              "line": 479,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "text"
+            }
+          ]
+        },
+        {
+          "name": "setUserColor",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 480,
+              "column": 12
+            },
+            "end": {
+              "line": 502,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "hex"
+            }
+          ]
+        },
+        {
+          "name": "handleUserUpdateClick",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 503,
+              "column": 12
+            },
+            "end": {
+              "line": 514,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "handleNewChatMessage",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 515,
+              "column": 12
+            },
+            "end": {
+              "line": 530,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "showindicator",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 531,
+              "column": 12
+            },
+            "end": {
+              "line": 542,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "title"
+            },
+            {
+              "name": "text"
+            }
+          ]
+        },
+        {
+          "name": "handleControlUpdated",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 543,
+              "column": 12
+            },
+            "end": {
+              "line": 562,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "handleTTSToggle",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 563,
+              "column": 12
+            },
+            "end": {
+              "line": 566,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "handleAutoExecuteToggle",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 567,
+              "column": 12
+            },
+            "end": {
+              "line": 570,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "handleRoomConnectedToggle",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 571,
+              "column": 12
+            },
+            "end": {
+              "line": 583,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "handleSwitchRoom",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 584,
+              "column": 12
+            },
+            "end": {
+              "line": 587,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "inputUpdated",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 588,
+              "column": 12
+            },
+            "end": {
+              "line": 603,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "inputUpdate",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 604,
+              "column": 12
+            },
+            "end": {
+              "line": 668,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "maps"
+            },
+            {
+              "name": "value"
+            },
+            {
+              "name": "fromYjs"
+            }
+          ]
+        },
+        {
+          "name": "createSections",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 669,
+              "column": 12
+            },
+            "end": {
+              "line": 775,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "sections"
+            }
+          ]
+        },
+        {
+          "name": "connectedText",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 776,
+              "column": 12
+            },
+            "end": {
+              "line": 778,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "connected"
+            }
+          ]
+        },
+        {
+          "name": "collapse",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 780,
+              "column": 12
+            },
+            "end": {
+              "line": 789,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "collapsed"
+            }
+          ]
+        },
+        {
+          "name": "handleCollapse",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 790,
+              "column": 12
+            },
+            "end": {
+              "line": 793,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "handleShare",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 794,
+              "column": 12
+            },
+            "end": {
+              "line": 796,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "handleExecute",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 797,
+              "column": 12
+            },
+            "end": {
+              "line": 799,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "updateProgress",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 800,
+              "column": 12
+            },
+            "end": {
+              "line": 802,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "progress"
+            }
+          ]
+        },
+        {
+          "name": "resetProgress",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 804,
+              "column": 12
+            },
+            "end": {
+              "line": 806,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "createMapValueListFromInputObject",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 807,
+              "column": 12
+            },
+            "end": {
+              "line": 825,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "currentMap"
+            },
+            {
+              "name": "result"
+            }
+          ]
+        },
+        {
+          "name": "updateControls",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 826,
+              "column": 12
+            },
+            "end": {
+              "line": 836,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "input"
+            }
+          ]
+        },
+        {
+          "name": "init",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 837,
+              "column": 12
+            },
+            "end": {
+              "line": 888,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "yjs"
+            }
+          ]
+        },
+        {
+          "name": "appendInputUpdate",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 889,
+              "column": 12
+            },
+            "end": {
+              "line": 909,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "element"
+            }
+          ]
+        },
+        {
+          "name": "cleanupInputUpdates",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 910,
+              "column": 12
+            },
+            "end": {
+              "line": 915,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 314,
+          "column": 16
+        },
+        "end": {
+          "line": 917,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 318,
+              "column": 16
+            },
+            "end": {
+              "line": 321,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "input",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 322,
+              "column": 16
+            },
+            "end": {
+              "line": 325,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "collapsed",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 327,
+              "column": 16
+            },
+            "end": {
+              "line": 331,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "collapsed-style",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 332,
+              "column": 16
+            },
+            "end": {
+              "line": 335,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "room",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 336,
+              "column": 16
+            },
+            "end": {
+              "line": 339,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "connected",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 340,
+              "column": 16
+            },
+            "end": {
+              "line": 343,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "collaborative",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 344,
+              "column": 16
+            },
+            "end": {
+              "line": 347,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "selected-tab",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 348,
+              "column": 16
+            },
+            "end": {
+              "line": 351,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "presets",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 352,
+              "column": 16
+            },
+            "end": {
+              "line": 355,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Array"
+        },
+        {
+          "name": "username",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 356,
+              "column": 16
+            },
+            "end": {
+              "line": 359,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "usercolor",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 360,
+              "column": 16
+            },
+            "end": {
+              "line": 367,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "text-to-speech",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 368,
+              "column": 16
+            },
+            "end": {
+              "line": 371,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "sections",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 372,
+              "column": 16
+            },
+            "end": {
+              "line": 376,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Array"
+        },
+        {
+          "name": "auto-execute",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 377,
+              "column": 16
+            },
+            "end": {
+              "line": 380,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "progress",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 381,
+              "column": 16
+            },
+            "end": {
+              "line": 384,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "yjs",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 385,
+              "column": 16
+            },
+            "end": {
+              "line": 388,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "indicator-visible",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 389,
+              "column": 16
+            },
+            "end": {
+              "line": 392,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "indicator-title",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 393,
+              "column": 16
+            },
+            "end": {
+              "line": 396,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "indicator-text",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 397,
+              "column": 16
+            },
+            "end": {
+              "line": 400,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "update-history",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 401,
+              "column": 16
+            },
+            "end": {
+              "line": 404,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-container-panel"
+    },
+    {
+      "description": "",
+      "summary": "",
+      "path": "sweva-error-console.html",
+      "properties": [
+        {
+          "name": "collapsed",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 128,
+              "column": 16
+            },
+            "end": {
+              "line": 131,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "true"
+        },
+        {
+          "name": "collapseCounter",
+          "type": "number",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 132,
+              "column": 16
+            },
+            "end": {
+              "line": 135,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "0"
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 141,
+              "column": 12
+            },
+            "end": {
+              "line": 155,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 157,
+              "column": 12
+            },
+            "end": {
+              "line": 159,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 161,
+              "column": 12
+            },
+            "end": {
+              "line": 163,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "add",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 164,
+              "column": 12
+            },
+            "end": {
+              "line": 185,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "title"
+            },
+            {
+              "name": "text"
+            }
+          ]
+        },
+        {
+          "name": "clear",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 186,
+              "column": 12
+            },
+            "end": {
+              "line": 188,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "toggle",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 189,
+              "column": 12
+            },
+            "end": {
+              "line": 194,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "id"
+            }
+          ]
+        },
+        {
+          "name": "toggleContent",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 195,
+              "column": 12
+            },
+            "end": {
+              "line": 197,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "handleCollapseAll",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 198,
+              "column": 12
+            },
+            "end": {
+              "line": 206,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "handleExpandAll",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 207,
+              "column": 12
+            },
+            "end": {
+              "line": 216,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "handleDeleteAll",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 217,
+              "column": 12
+            },
+            "end": {
+              "line": 220,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "deleteAll",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 221,
+              "column": 12
+            },
+            "end": {
+              "line": 228,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "getContentClass",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 229,
+              "column": 12
+            },
+            "end": {
+              "line": 236,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "collapsed"
+            }
+          ]
+        },
+        {
+          "name": "getErrorIconVisible",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 237,
+              "column": 12
+            },
+            "end": {
+              "line": 245,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "items"
+            }
+          ]
+        },
+        {
+          "name": "getErrorText",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 246,
+              "column": 12
+            },
+            "end": {
+              "line": 253,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "items"
+            }
+          ]
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 124,
+          "column": 16
+        },
+        "end": {
+          "line": 255,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "collapsed",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 128,
+              "column": 16
+            },
+            "end": {
+              "line": 131,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "collapse-counter",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 132,
+              "column": 16
+            },
+            "end": {
+              "line": 135,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-error-console"
+    },
+    {
+      "description": "",
+      "summary": "",
+      "path": "sweva-visualization-container.html",
+      "properties": [
+        {
+          "name": "toolUrl",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 85,
+              "column": 16
+            },
+            "end": {
+              "line": 88,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "null"
+        },
+        {
+          "name": "controls",
+          "type": "Array",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 89,
+              "column": 16
+            },
+            "end": {
+              "line": 92,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "[]"
+        },
+        {
+          "name": "input",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 93,
+              "column": 16
+            },
+            "end": {
+              "line": 96,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "null"
+        },
+        {
+          "name": "result",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 97,
+              "column": 16
+            },
+            "end": {
+              "line": 100,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "{}"
+        },
+        {
+          "name": "executionManager",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 101,
+              "column": 16
+            },
+            "end": {
+              "line": 104,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "null"
+        },
+        {
+          "name": "yjsServer",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 105,
+              "column": 16
+            },
+            "end": {
+              "line": 108,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"http://137.226.232.217:1234\""
+        },
+        {
+          "name": "yjs",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 109,
+              "column": 16
+            },
+            "end": {
+              "line": 112,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "null"
+        },
+        {
+          "name": "composition",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 113,
+              "column": 16
+            },
+            "end": {
+              "line": 116,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "{}"
+        },
+        {
+          "name": "oldComposition",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 117,
+              "column": 16
+            },
+            "end": {
+              "line": 120,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"\""
+        },
+        {
+          "name": "room",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 121,
+              "column": 16
+            },
+            "end": {
+              "line": 124,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"defaultSwevaVisRoom1\""
+        },
+        {
+          "name": "visualizationUrlPrefix",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 125,
+              "column": 16
+            },
+            "end": {
+              "line": 128,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\" \""
+        },
+        {
+          "name": "visualizationUrlSuffix",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 129,
+              "column": 16
+            },
+            "end": {
+              "line": 132,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\" \""
+        },
+        {
+          "name": "pollTimer",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 133,
+              "column": 16
+            },
+            "end": {
+              "line": 136,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "null"
+        },
+        {
+          "name": "visualizationAreaSize",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 137,
+              "column": 16
+            },
+            "end": {
+              "line": 143,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "staticInput",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 144,
+              "column": 16
+            },
+            "end": {
+              "line": 147,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "overrideInput",
+          "type": "Object",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 148,
+              "column": 16
+            },
+            "end": {
+              "line": 151,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "null"
+        }
+      ],
+      "methods": [
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 157,
+              "column": 12
+            },
+            "end": {
+              "line": 164,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 166,
+              "column": 12
+            },
+            "end": {
+              "line": 168,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 170,
+              "column": 12
+            },
+            "end": {
+              "line": 172,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "handleRoomChanged",
+          "description": "Element Behavior",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 175,
+              "column": 12
+            },
+            "end": {
+              "line": 182,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "handleExecuted",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 183,
+              "column": 12
+            },
+            "end": {
+              "line": 189,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "handleInputChanged",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 190,
+              "column": 12
+            },
+            "end": {
+              "line": 194,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ]
+        },
+        {
+          "name": "execute",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 195,
+              "column": 12
+            },
+            "end": {
+              "line": 214,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "load",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 215,
+              "column": 12
+            },
+            "end": {
+              "line": 273,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "composition"
+            }
+          ]
+        },
+        {
+          "name": "updateVisualization",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 274,
+              "column": 12
+            },
+            "end": {
+              "line": 283,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "loadVisualizationTool",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 284,
+              "column": 12
+            },
+            "end": {
+              "line": 340,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "url"
+            }
+          ]
+        },
+        {
+          "name": "init",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 341,
+              "column": 12
+            },
+            "end": {
+              "line": 406,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 81,
+          "column": 16
+        },
+        "end": {
+          "line": 408,
+          "column": 9
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "attributes": [
+        {
+          "name": "tool-url",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 85,
+              "column": 16
+            },
+            "end": {
+              "line": 88,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "controls",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 89,
+              "column": 16
+            },
+            "end": {
+              "line": 92,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Array"
+        },
+        {
+          "name": "input",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 93,
+              "column": 16
+            },
+            "end": {
+              "line": 96,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "result",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 97,
+              "column": 16
+            },
+            "end": {
+              "line": 100,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "execution-manager",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 101,
+              "column": 16
+            },
+            "end": {
+              "line": 104,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "yjs-server",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 105,
+              "column": 16
+            },
+            "end": {
+              "line": 108,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "yjs",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 109,
+              "column": 16
+            },
+            "end": {
+              "line": 112,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "composition",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 113,
+              "column": 16
+            },
+            "end": {
+              "line": 116,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "old-composition",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 117,
+              "column": 16
+            },
+            "end": {
+              "line": 120,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "room",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 121,
+              "column": 16
+            },
+            "end": {
+              "line": 124,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "visualization-url-prefix",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 125,
+              "column": 16
+            },
+            "end": {
+              "line": 128,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "visualization-url-suffix",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 129,
+              "column": 16
+            },
+            "end": {
+              "line": 132,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "poll-timer",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 133,
+              "column": 16
+            },
+            "end": {
+              "line": 136,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "visualization-area-size",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 137,
+              "column": 16
+            },
+            "end": {
+              "line": 143,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "static-input",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 144,
+              "column": 16
+            },
+            "end": {
+              "line": 147,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "override-input",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 148,
+              "column": 16
+            },
+            "end": {
+              "line": 151,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "sweva-visualization-container"
+    }
+  ]
+}

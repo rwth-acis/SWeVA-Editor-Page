@@ -1,0 +1,45 @@
+﻿.jsplumb-endpoint {
+    cursor: pointer;
+}
+
+.jsplumb-connector {
+    z-index: 4;
+}
+
+.jsplumb-endpoint, .endpointTargetLabel, .endpointSourceLabel {
+    z-index: 21;
+    cursor: pointer;
+}
+
+.node-label {
+    z-index: 20;
+    padding: 0 5px;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+    background-color: rgba(255,255,255,0.5);
+    pointer-events: none;
+}
+
+.node-data-out-endpoint-label {
+    transform: translateX(0) !important;
+    border: 2px solid #ff9d00;
+}
+
+.node-input-endpoint-label {
+    transform: translateX(0%)rotate(-90deg) !important;
+    border: 2px solid #333;
+    transform-origin: 0% 100%;
+    padding-left: 15px;
+}
+
+.node-data-in-endpoint-label {
+    transform: translateX(-100%) !important;
+    border: 2px solid #0094ff;
+}
+
+.basicContextContainer {
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}

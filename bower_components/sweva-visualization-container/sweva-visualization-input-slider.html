@@ -1,0 +1,113 @@
+﻿<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-slider/paper-slider.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <seed-element></seed-element>
+
+Example:
+
+    <seed-element>
+      <h2>Hello seed-element</h2>
+    </seed-element>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+<dom-module id="sweva-visualization-input-slider">
+    <template>
+        <style>
+            :host {
+            }
+
+            .title {
+                padding: 5px 8px 0 8px;
+                @apply(--paper-font-caption);
+                color: #737373;
+            }
+
+            paper-slider {
+                width: calc(100% - 10px);
+            }
+            paper-tooltip {
+                margin-left: 30px;
+            }
+        </style>
+        <div class="title">{{label}}</div>
+        <paper-slider value="{{value}}"
+                      min="{{min}}"
+                      max="{{max}}"                      
+                      step="{{step}}"
+                      editable
+                      on-change="valueChanged"
+                      >
+        </paper-slider>
+        <paper-tooltip>{{description}}</paper-tooltip>
+    </template>
+    <script>
+      class SwevaVisualizationInputSlider extends Polymer.Element {
+
+        static get is() {
+          return 'sweva-visualization-input-slider';
+        }
+
+        static get properties() {
+          return {
+              /* properties meta data object just like 1.x */
+              label: {
+                type: String,
+                value: 'Title'
+              },
+              min: {
+                type: Number,
+                value: 0
+              },
+              max: {
+                type: Number,
+                value: 100
+              },
+              step: {
+                type: Number,
+                value: 1
+              },
+              description: {
+                type: String,
+                value: 'No description available.'
+              },
+              map: {
+                type: String,
+                value: ''
+              },
+              value: {
+                type: Number,
+                value: 50,
+                notify: true,
+                //observer: 'valueChanged'
+              }
+          }
+        }
+
+        ready() {
+          super.ready();
+        }
+
+        connectedCallback() {
+          super.connectedCallback();
+          Polymer.RenderStatus.beforeNextRender(this, function() {
+            this.valueChanged();
+          });
+        }
+
+        // Element Behavior
+        valueChanged() {
+          this.dispatchEvent(new CustomEvent('controlupdated', { bubbles: true, composed: true , detail: { map: this.map, value: this.value } }));
+        }
+      }
+
+      // Register custom element definition using standard platform API
+      window.customElements.define(SwevaVisualizationInputSlider.is, SwevaVisualizationInputSlider);
+    </script>
+</dom-module>
