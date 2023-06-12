@@ -327,6 +327,7 @@ ExecutionManager.prototype.progressUpdate = function (alias, name, context,resul
 
             broadcastToDiscoveryNetwork(mergedPip); //Offload merged Pipeline to best POT
 
+
     }
 
     //detects an offloaded pipeline :)

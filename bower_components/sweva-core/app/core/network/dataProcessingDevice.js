@@ -91,10 +91,6 @@ function dataProcessingDevice(pipeline) {
                 msg = 'offloadingOutput$ '+msg;
                 console.log(msg);
 
-                //peer.destroy();
-                //todo: visualize the data using module !!
-
-                //TODO: disconnect/destroy peer after receiving pipeline results
             });
 
 

@@ -189,6 +189,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // Intercept console.log() statements
         var originalConsoleLog = console.log;
+        let startTimeOffloading =0;
+        let startMemOffloading = 0;
+        let endTimeOffloading =0;
+        let endMemOffloading = 0;
 
         console.log = function() {
           var args = Array.from(arguments);
@@ -229,6 +233,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             paragraph.innerHTML = logMessageText;
             logContainer.appendChild(paragraph);
             visualizationArea.appendChild(logContainer);
+          }
+
+
+
+          if (args.some(arg => typeof arg === 'string' && arg.includes('broadcasting to discovery network....'))) {
+
+            startMemOffloading = performance.memory.usedJSHeapSize;
+            startTimeOffloading = Date.now();
+          }
+
+          if (args.some(arg => typeof arg === 'string' && arg.includes('Offloaded Result ='))) {
+            endTimeOffloading = Date.now();
+            endMemOffloading= performance.memory.usedJSHeapSize;
+
+            console.log('offloadingOutput$ Offloading time: ',endTimeOffloading-startTimeOffloading, ' ms');
+            console.log('offloadingOutput$ Offloading Memory: ',endMemOffloading-startMemOffloading,' bytes');
           }
 
 
@@ -279,12 +299,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var panel = this.$.panel;
         panel.resetProgress();
 
+
+        let startMemExecute = performance.memory.usedJSHeapSize;
+        let startTimeExecute = Date.now();
         this.executionManager.execute(
           {},
           input
         ).then(function (result) {
+          let endTimeExecute = Date.now();
+          let endMemExecute = performance.memory.usedJSHeapSize;
             self.result = result;
             self.updateVisualization();
+
+          console.log('offloadingOutput$ Execution time: ',endTimeExecute-startTimeExecute, ' ms');
+          console.log('offloadingOutput$ Execution Memory: ',endMemExecute-startMemExecute,' bytes');
           });
         this.executionManager.onMQTTDataRecieved( function (result) {
               self.result = result;
@@ -315,6 +343,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         }
         if (!sameComposition) {
+
           this.executionManager.setup(this.composition);
 
           if (this.composition.controls) {

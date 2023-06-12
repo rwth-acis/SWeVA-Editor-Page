@@ -20,7 +20,7 @@ async function offloadingDecision(odList) {
         memUsage = (performance.memory.usedJSHeapSize / performance.memory.jsHeapSizeLimit) * 100;
         let battery = await navigator.getBattery();
         batteryPercent = battery.level * 100;
-        //console.log('cpu = ',cpuLoad, 'mem = ',memUsage,'battery = ',batteryPercent);
+        //console.log('Measured mem = ',memUsage,'battery = ',batteryPercent);
 
     } else {
 

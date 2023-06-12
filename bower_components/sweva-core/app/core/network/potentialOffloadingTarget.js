@@ -92,8 +92,15 @@ async function processPipeline(receivedPipeline){
     try {
             let manager = new sweva.ExecutionManager();
             manager.setup(pipeline);
+
+            let startMemExecute = performance.memory.usedJSHeapSize;
+            let startTimeExecute = Date.now();
             let offloadedResult = await manager.execute(pipelineInputs, {});
+            let endTimeExecute = Date.now();
+            let endMemExecute = performance.memory.usedJSHeapSize;
             console.log('OUTPUT offloaded msg = ',offloadedResult);
+            console.log('offloadingOutput$ Offloaded task Execution time: ',endTimeExecute-startTimeExecute, ' ms');
+            console.log('offloadingOutput$ Offloaded task Execution Memory: ',endMemExecute-startMemExecute,' bytes');
             return offloadedResult;
             }
         catch (e){

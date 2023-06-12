@@ -2839,6 +2839,7 @@ ExecutionManager.prototype.progressUpdate = function (alias, name, context,resul
 
             broadcastToDiscoveryNetwork(mergedPip); //Offload merged Pipeline to best POT
 
+
     }
 
     //detects an offloaded pipeline :)
@@ -3243,10 +3244,6 @@ function dataProcessingDevice(pipeline) {
                 msg = 'offloadingOutput$ '+msg;
                 console.log(msg);
 
-                //peer.destroy();
-                //todo: visualize the data using module !!
-
-                //TODO: disconnect/destroy peer after receiving pipeline results
             });
 
 
@@ -3352,8 +3349,15 @@ async function processPipeline(receivedPipeline){
     try {
             let manager = new sweva.ExecutionManager();
             manager.setup(pipeline);
+
+            let startMemExecute = performance.memory.usedJSHeapSize;
+            let startTimeExecute = Date.now();
             let offloadedResult = await manager.execute(pipelineInputs, {});
+            let endTimeExecute = Date.now();
+            let endMemExecute = performance.memory.usedJSHeapSize;
             console.log('OUTPUT offloaded msg = ',offloadedResult);
+            console.log('offloadingOutput$ Offloaded task Execution time: ',endTimeExecute-startTimeExecute, ' ms');
+            console.log('offloadingOutput$ Offloaded task Execution Memory: ',endMemExecute-startMemExecute,' bytes');
             return offloadedResult;
             }
         catch (e){
@@ -3479,7 +3483,7 @@ async function offloadingDecision(odList) {
         memUsage = (performance.memory.usedJSHeapSize / performance.memory.jsHeapSizeLimit) * 100;
         let battery = await navigator.getBattery();
         batteryPercent = battery.level * 100;
-        //console.log('cpu = ',cpuLoad, 'mem = ',memUsage,'battery = ',batteryPercent);
+        //console.log('Measured mem = ',memUsage,'battery = ',batteryPercent);
 
     } else {
 
@@ -3550,13 +3554,12 @@ setInterval(()=>{
 
 },{"_process":181,"systeminformation":267}],19:[function(require,module,exports){
 
-// input format orl = [cpu % , mem % , battery % , isCharging (binary)]
+// orList = [cpu%, mem%, battery%, isCharging (binary)]
 
 function decisionValueOfPOT(offloadingResourcesList){
-    let advantageCPU = 1-offloadingResourcesList[0]; //idl NodeJS cpu usage in %
-    let advantageMem = offloadingResourcesList[1]; // free memory in %
+    let advantageCPU = 1-offloadingResourcesList[0]; //Node.js env. only
 
-    // Advantage is more given to battery than CPU or mem, this could be user input
+    let advantageMem = offloadingResourcesList[1]; // free memory in %
 
     //battery is charging= MAX advantage !
     let advantageBattery = 0;
@@ -3564,6 +3567,7 @@ function decisionValueOfPOT(offloadingResourcesList){
     if (!offloadingResourcesList[3]){
         advantageBattery = 100-offloadingResourcesList[2];
     }
+    //return advantageCPU + advantageMem - advantageBattery;
     return advantageCPU + advantageMem - advantageBattery;
 }
 
@@ -3587,8 +3591,9 @@ function offloadingTarget (iDandORpairs){
     return bestPOTId;
 }
 module.exports = offloadingTarget
+
 /*
-//for testing purposes
+//for testing purposes (Node.js env.)
 let pairs = {
     'id1' : [10,20,60,false],
     'id2' : [50,30,100,false],
