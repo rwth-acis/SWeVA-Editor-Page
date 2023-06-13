@@ -2899,8 +2899,8 @@ ExecutionManager.prototype.execute = function (data, input) {
      */
     var executions = [];
     var self = this;
-    //for aborting the execution of JS promise
 
+    /*
     console.log("///////////// Exec Manager inputs //////////////");
     console.log("data");
     console.log(data);
@@ -2911,7 +2911,8 @@ ExecutionManager.prototype.execute = function (data, input) {
     console.log('intermediate Pipeline');
     console.log(intermediatePipeline);
     console.log("///////////////////////////");
-
+    */
+    console.log('begin the execution');
     return new Promise(function (resolve, reject) {
         //closure function
         //composables is the pipeline
