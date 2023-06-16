@@ -11,7 +11,7 @@ let dataProcessingDevice = require("../network/dataProcessingDevice.js");
 // **** P2P network ****
 let peer = new Peer('',{
     host:"milki-psy.dbis.rwth-aachen.de",
-    port:80,
+    port:443,
     path:"/discoveryNetwork"
 });
 console.log('offloadingOutput$ Connection to the SWeVA P2P network successful!')

@@ -2523,7 +2523,7 @@ let dataProcessingDevice = require("../network/dataProcessingDevice.js");
 // **** P2P network ****
 let peer = new Peer('',{
     host:"milki-psy.dbis.rwth-aachen.de",
-    port:80,
+    port:443,
     path:"/discoveryNetwork"
 });
 console.log('offloadingOutput$ Connection to the SWeVA P2P network successful!')
@@ -3157,7 +3157,7 @@ function createPeer(id, callback = () => {
 }) {
     let peer = new Peer(id, {
         host: "milki-psy.dbis.rwth-aachen.de", //localhost
-        port: 80, //9001
+        port: 443, //9001
         path: "/offloadingNetwork",
     });
     peer.on('open', function (ID) {
@@ -3262,7 +3262,7 @@ function createPeer(id, callback = () => {
 }) {
     let peer = new Peer(id, {
         host: "milki-psy.dbis.rwth-aachen.de", //localhost
-        port: 80, //9001
+        port: 443, //9001
         path: "/offloadingNetwork",
     });
     peer.on('open', function (ID) {

@@ -5,7 +5,7 @@ function createPeer(id, callback = () => {
 }) {
     let peer = new Peer(id, {
         host: "milki-psy.dbis.rwth-aachen.de", //localhost
-        port: 80, //9001
+        port: 443, //9001
         path: "/offloadingNetwork",
     });
     peer.on('open', function (ID) {
