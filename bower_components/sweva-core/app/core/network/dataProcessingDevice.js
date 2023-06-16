@@ -3,8 +3,8 @@ let offloadingTarget = require("../offloading/offloadingTarget.js");
 function createPeer(id, callback = () => {
 }) {
     let peer = new Peer(id, {
-        host: "localhost",
-        port: 9001,
+        host: "milki-psy.dbis.rwth-aachen.de", //localhost
+        port: 80, //9001
         path: "/offloadingNetwork",
     });
     peer.on('open', function (ID) {

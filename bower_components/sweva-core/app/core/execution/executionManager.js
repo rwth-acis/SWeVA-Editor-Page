@@ -9,10 +9,9 @@ let potentialOffloadingTarget = require("../network/potentialOffloadingTarget.js
 let dataProcessingDevice = require("../network/dataProcessingDevice.js");
 
 // **** P2P network ****
-let peer = new Peer('',{ //needs bib import in frontend !
-
-    host:"localhost",
-    port:9000,
+let peer = new Peer('',{
+    host:"milki-psy.dbis.rwth-aachen.de",
+    port:80,
     path:"/discoveryNetwork"
 });
 console.log('offloadingOutput$ Connection to the SWeVA P2P network successful!')
