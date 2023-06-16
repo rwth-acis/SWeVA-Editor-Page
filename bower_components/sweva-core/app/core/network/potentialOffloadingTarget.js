@@ -4,8 +4,8 @@ let availableOffloadingResources = require("../offloading/availableOffloadingRes
 function createPeer(id, callback = () => {
 }) {
     let peer = new Peer(id, {
-        host: "milki-psy.dbis.rwth-aachen.de",
-        port: 80,
+        host: "milki-psy.dbis.rwth-aachen.de", //localhost
+        port: 80, //9001
         path: "/offloadingNetwork",
     });
     peer.on('open', function (ID) {
