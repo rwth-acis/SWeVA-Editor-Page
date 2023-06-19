@@ -3364,8 +3364,13 @@ function formatBytes(bytes, decimals = 2) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     const size = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
 
-    return `${size} ${sizes[i]}`;
+    if (!isNaN(size)) {
+        return `${size} ${sizes[i]}`;
+    } else {
+        return bytes.toString() + ' bytes';
+    }
 }
+
 function formatTime(milliseconds) {
     const seconds = Math.floor(milliseconds / 1000) % 60;
     const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
