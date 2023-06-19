@@ -80,6 +80,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
   <script>
+
     class SwevaVisualizationContainer extends Polymer.Element {
 
       static get is() {
@@ -256,15 +257,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             endTimeOffloading = Date.now();
             endMemOffloading= performance.memory.usedJSHeapSize;
 
-            console.log('offloadingOutput$ Offloading time: ',endTimeOffloading-startTimeOffloading, ' ms');
-            console.log('offloadingOutput$ Offloading Memory: ',endMemOffloading-startMemOffloading,' bytes');
-            console.log('offloadingOutput$ Total execution time: ',endTimeOffloading-startTotalTime, ' ms');
-            console.log('offloadingOutput$ Total used Memory: ',endMemOffloading-startTotalMem,' bytes');
+            console.log('offloadingOutput$ Offloading time: ',formatTime(endTimeOffloading-startTimeOffloading));
+            console.log('offloadingOutput$ Offloading Memory: ',formatBytes(endMemOffloading-startMemOffloading));
+            console.log('offloadingOutput$ Total execution time: ',formatTime(endTimeOffloading-startTotalTime));
+            console.log('offloadingOutput$ Total used Memory: ',formatBytes(endMemOffloading-startTotalMem));
           }
 
 
           // Call the original console.log() function
           originalConsoleLog.apply(console, args);
+
+
         };
       }
 
@@ -322,8 +325,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             self.result = result;
             self.updateVisualization();
 
-          console.log('offloadingOutput$ Execution time: ',endTimeExecute-startTimeExecute, ' ms');
-          console.log('offloadingOutput$ Execution Memory: ',endMemExecute-startMemExecute,' bytes');
+          console.log('offloadingOutput$ Execution time: ',formatTime(endTimeExecute-startTimeExecute));
+          console.log('offloadingOutput$ Execution Memory: ',formatBytes(endMemExecute-startMemExecute));
           });
         this.executionManager.onMQTTDataRecieved( function (result) {
               self.result = result;
@@ -512,6 +515,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     }
 
+    function formatBytes(bytes, decimals = 2) {
+      if (bytes === 0) {
+        return '0 Bytes';
+      }
+
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      const size = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+
+      return `${size} ${sizes[i]}`;
+    }
+
+    function formatTime(milliseconds) {
+      const seconds = Math.floor(milliseconds / 1000) % 60;
+      const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
+
+      const formattedTime = [];
+
+      if (minutes > 0) {
+        formattedTime.push(minutes + (minutes === 1 ? ' minute' : ' minutes'));
+      }else{
+        formattedTime.push(seconds + (seconds === 1 ? ' second' : ' seconds'));
+      }
+      return formattedTime.join(', ');
+    }
     // Register custom element definition using standard platform API
     window.customElements.define(SwevaVisualizationContainer.is, SwevaVisualizationContainer);
   </script>

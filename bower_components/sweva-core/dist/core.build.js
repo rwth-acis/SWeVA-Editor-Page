@@ -3243,6 +3243,7 @@ function dataProcessingDevice(pipeline) {
                 let msg = JSON.stringify(data);
                 msg = 'offloadingOutput$ '+msg;
                 console.log(msg);
+                peer.disconnect();
 
             });
 
@@ -3329,6 +3330,34 @@ function potentialOffloadingTarget() {
         });
     });
 }
+function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) {
+        return '0 Bytes';
+    }
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    const size = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+
+    return `${size} ${sizes[i]}`;
+}
+function formatTime(milliseconds) {
+    const seconds = Math.floor(milliseconds / 1000) % 60;
+    const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
+
+    const formattedTime = [];
+
+    if (minutes > 0) {
+        formattedTime.push(minutes + (minutes === 1 ? ' minute' : ' minutes'));
+    }else{
+        formattedTime.push(seconds + (seconds === 1 ? ' second' : ' seconds'));
+    }
+
+    return formattedTime.join(', ');
+}
 
 //TODO: process pipeline in exe
 async function processPipeline(receivedPipeline){
@@ -3356,16 +3385,14 @@ async function processPipeline(receivedPipeline){
             let endTimeExecute = Date.now();
             let endMemExecute = performance.memory.usedJSHeapSize;
             console.log('OUTPUT offloaded msg = ',offloadedResult);
-            console.log('offloadingOutput$ Offloaded task Execution time: ',endTimeExecute-startTimeExecute, ' ms');
-            console.log('offloadingOutput$ Offloaded task Execution Memory: ',endMemExecute-startMemExecute,' bytes');
+            console.log('offloadingOutput$ Offloaded task Execution time: ',formatTime(endTimeExecute-startTimeExecute));
+            console.log('offloadingOutput$ Offloaded task Execution Memory: ',formatBytes(endMemExecute-startMemExecute));
             return offloadedResult;
             }
         catch (e){
-            console.log('Error encountered while executing the offloaded pipeline = ',e,'\nPlease offload to the cloud');
-            return 'Error encountered while executing the offloaded pipeline. Please offload to the cloud';
+            console.log('Error encountered while executing the offloaded pipeline = ',e,'\nPlease try again');
+            return 'Error encountered while executing the offloaded pipeline. Please try again';
     }
-
-
 
 }
 

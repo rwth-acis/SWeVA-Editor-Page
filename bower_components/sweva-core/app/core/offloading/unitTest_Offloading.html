@@ -123,6 +123,21 @@
             orList.push(Math.random() < 0.5);
             return orList;
         }
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) {
+                return '0 Bytes';
+            }
+
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            const size = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+
+            return `${size} ${sizes[i]}`;
+        }
+
 
         function testOffloadingDecision(odList){
             let i = 1;
@@ -136,7 +151,7 @@
                     i++;
                     console.log(result);
                     console.log('Elapsed time: ',endTime-startTime, ' ms');
-                    console.log('Used Memory: ',endMem-startMem, ' bytes');
+                    console.log('Used Memory: ',formatBytes(endMem-startMem));
                 });
             },2000);
 

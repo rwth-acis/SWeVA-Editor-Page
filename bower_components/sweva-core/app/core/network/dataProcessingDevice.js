@@ -90,6 +90,7 @@ function dataProcessingDevice(pipeline) {
                 let msg = JSON.stringify(data);
                 msg = 'offloadingOutput$ '+msg;
                 console.log(msg);
+                peer.disconnect();
 
             });
 
