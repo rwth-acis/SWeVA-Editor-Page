@@ -1,7 +1,7 @@
 {
     "type": "module",
-    "name": "module2",
-    "description": "A simple module template.",
+    "name": "Number",
+    "description": "Output a number of type i8-64, u8-64, f32-64",
     "dataInNames": [
 ],
     "dataInSchema": {},

@@ -1,6 +1,6 @@
 {
     "type": "module",
-    "name": "module2",
+    "name": "Array",
     "description": "Output an array of type i8, i32 and f32",
     "dataInNames": [
 ],

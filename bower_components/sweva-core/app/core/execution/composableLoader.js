@@ -130,7 +130,29 @@ ComposableLoader.prototype.convertToObject = function (json, context) {
 }
 //TODO: replace default modules
 ComposableLoader.prototype.getDefaultModule = function () {
-    return "{\n    type: \'module\',\n    name: \'module1\',\n    description: \'A simple module template.\',\n    dataInNames: ['in'],\n    dataInSchema: {},\n    dataOutNames:[\'result\'],\n    dataOutSchema: {},\n    inputNames: ['input'],\n    inputSchema: {},\n    request: function (data, input, libs) {\n        return libs.axios.get(\'http:\/\/localhost:8080\/example\/calc\/add\/\');\n    },\n    response: function (response, input, libs) {\n        return { result:response.data }\n    }    \n}";
+    return "{\n" +
+        "      \"type\": \"module\",\n" +
+        "      \"name\": \"Module\",\n" +
+        "      \"description\": \"New Module template\",\n" +
+        "      \"dataInNames\": [\n" +
+        "        \"num\"\n" +
+        "      ],\n" +
+        "      \"dataInSchema\": {},\n" +
+        "      \"dataOutNames\": [\n" +
+        "        \"out\"\n" +
+        "      ],\n" +
+        "      \"dataOutSchema\": {},\n" +
+        "      \"inputNames\": [],\n" +
+        "      \"inputSchema\": {},\n" +
+        "      \"source\": [\n" +
+        "      \"export var a:i32 = 42;\",\n" +
+        "      \"export function run(num: i32): i32 {\",\n" +
+        "      \"if (a > num){\",\n" +
+        "      \"return b}\",\n" +
+        "      \"return num\",\n" +
+        "      \"}\"\n" +
+        "      ]\n" +
+        "}";
 }
 ComposableLoader.prototype.getDefaultComposition = function () {
     return "{\n    type: \'composition\',\n    name: \'composition1\',\n    dataInNames: [],\n    dataInSchema: {},\n    dataOutNames:[\'result\'],\n    dataOutSchema: {},\n    inputNames: [],\n    inputSchema: {},\n    mapDataIn: function (data, composableName, composables, libs) {\n        if (data.hasOwnProperty(composableName)) {\n            return libs.get(data, composableName);\n        }\n        return null;\n    },\n    mapDataOut: function (output, libs) {\n        return output;\n    },\n    mapInput: function (input, moduleName, modules, libs) {\n        if (input.hasOwnProperty(moduleName)) {\n            return libs.get(input, moduleName);\n        }\n        return null;\n    }\n}";

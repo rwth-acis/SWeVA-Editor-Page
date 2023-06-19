@@ -94,7 +94,8 @@ function formatTime(milliseconds) {
 
     if (minutes > 0) {
         formattedTime.push(minutes + (minutes === 1 ? ' minute' : ' minutes'));
-    }else{
+    }
+    if (seconds >0){
         formattedTime.push(seconds + (seconds === 1 ? ' second' : ' seconds'));
     }
 
