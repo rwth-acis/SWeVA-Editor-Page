@@ -56,13 +56,12 @@ async function availableOffloadingResources(orList) {
         batteryIsCharging !== orList[2]
     )
     {
-        console.log('offloadingOutput$ Peer not strong enough for the offloaded task')
+        console.log('offloadingOutput$ Peer not chosen for the offloaded task.')
         return [0,0,0,false]
     }
     else{
     //Output metrics in percent %
         listOfMetrics.push(cpuLoad,(100-memUsage),batteryPercent,batteryIsCharging);
-        console.log('offloadingOutput$ Peer is strong enough to process the offloaded task')
         return listOfMetrics;
 
     }

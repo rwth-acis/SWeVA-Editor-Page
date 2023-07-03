@@ -2554,7 +2554,7 @@ console.log('offloadingOutput$ Connection to the SWeVA P2P network successful!')
 peer.on('connection', (connection) => {
     connection.on('data', (data) => {
         if (data === 'peer'){
-            let msg = 'offloadingOutput$ Potential Offloading Target from device = ' + connection.peer;
+            let msg = 'offloadingOutput$ Offloading request from device = ' + connection.peer;
             console.log(msg);
             potentialOffloadingTarget();
         }
@@ -2586,8 +2586,8 @@ function broadcastToDiscoveryNetwork(intermediatePipelineAndResults) {
 // ************* Getters and Setters ****************
 
 //default values
-let odList = [0,0,0];
-let orList = [0,0,false];
+let odList = [50,50,50];
+let orList = [50,50,false];
 let intermediatePipeline = {};
 let intermediatePipelineResults ={};
 ExecutionManager.setODList = function (odListInput) {
@@ -2871,7 +2871,6 @@ ExecutionManager.prototype.progressUpdate = function (alias, name, context,resul
         let moduleResult = result.out;
 
         if (nodeLinks.hasOwnProperty(alias)){
-            console.log('Cheesecake !')
             let linksArray =Object.entries(nodeLinks[alias].out)[0];
             console.log(linksArray);
 
@@ -2883,7 +2882,6 @@ ExecutionManager.prototype.progressUpdate = function (alias, name, context,resul
         }else {
 
             //consider result as node output
-            console.log('croissant !')
             intermediatePipelineResults[alias]={
                 "out":moduleResult
             };
@@ -2898,7 +2896,7 @@ ExecutionManager.prototype.progressUpdate = function (alias, name, context,resul
 
         //make a value 0-100 and cut off decimal places
         this.progressCallback((progress * 100).toFixed(0));
-        //TODO send this to frontend
+
     }}
 }
 
@@ -3244,7 +3242,7 @@ function dataProcessingDevice(pipeline) {
             console.log('entered processMsgs functions');
             let potId = offloadingTarget(idAndDMIpairs); //TODO: change processList to chooseBestPOT
             if (potId === null ){
-                console.log( 'offloadingOutput$ There is no suitable offloading peer available ! Offload to the cloud...');
+                console.log( 'offloadingOutput$ No suitable peer in the SWeVA network found!');
             }else{
             console.log('offloadingOutput$ chosen potID for offloading = ' + potId);
 
@@ -3261,7 +3259,7 @@ function dataProcessingDevice(pipeline) {
                 console.log('Pipeline result: ');
                 console.log(data); //receive pipeline results here
 
-                console.log('offloadingOutput$ Offloaded Result =');
+                console.log('offloadingOutput$ ===== Recieved offloaded Result =====');
                 let msg = JSON.stringify(data);
                 msg = 'offloadingOutput$ '+msg;
                 console.log(msg);
@@ -3366,8 +3364,6 @@ function formatBytes(bytes, decimals = 2) {
 
     if (!isNaN(size)) {
         return `${size} ${sizes[i]}`;
-    } else {
-        return bytes.toString() + ' bytes';
     }
 }
 
@@ -3413,8 +3409,15 @@ async function processPipeline(receivedPipeline){
             let endTimeExecute = Date.now();
             let endMemExecute = performance.memory.usedJSHeapSize;
             console.log('OUTPUT offloaded msg = ',offloadedResult);
-            console.log('offloadingOutput$ Offloaded task Execution time: ',formatTime(endTimeExecute-startTimeExecute));
-            console.log('offloadingOutput$ Offloaded task Execution Memory: ',formatBytes(endMemExecute-startMemExecute));
+
+            if (endMemExecute < startMemExecute) {
+            let temp = endMemExecute;
+            endMemExecute = startMemExecute;
+            startMemExecute = temp;
+            }
+
+            console.log('offloadingOutput$ Offloaded task Execution time: ',formatTime(endTimeExecute-startTimeExecute),' (',endTimeExecute-startTimeExecute,' ms)');
+            console.log('offloadingOutput$ Offloaded task Execution Memory: ',formatBytes(endMemExecute-startMemExecute),' (',endMemExecute-startMemExecute,' bytes)');
             return offloadedResult;
             }
         catch (e){
@@ -3485,13 +3488,12 @@ async function availableOffloadingResources(orList) {
         batteryIsCharging !== orList[2]
     )
     {
-        console.log('offloadingOutput$ Peer not strong enough for the offloaded task')
+        console.log('offloadingOutput$ Peer not chosen for the offloaded task.')
         return [0,0,0,false]
     }
     else{
     //Output metrics in percent %
         listOfMetrics.push(cpuLoad,(100-memUsage),batteryPercent,batteryIsCharging);
-        console.log('offloadingOutput$ Peer is strong enough to process the offloaded task')
         return listOfMetrics;
 
     }
@@ -3526,6 +3528,7 @@ Web and NodeJS environments !
 
 async function offloadingDecision(odList) {
     if (odList[0] === 0 || odList[1] === 0 || odList[2] === 0) {
+        console.log('offloadingOutput$ Offloading Triggered while monitoring the execution!');
         return true;
     }
     let cpuLoad = 0;
@@ -3612,7 +3615,7 @@ setInterval(()=>{
 // orList = [cpu%, mem%, battery%, isCharging (binary)]
 
 function decisionValueOfPOT(offloadingResourcesList){
-    let advantageCPU = 1-offloadingResourcesList[0]; //Node.js env. only
+    let advantageCPU = 100-offloadingResourcesList[0]; //Node.js env. only
 
     let advantageMem = offloadingResourcesList[1]; // free memory in %
 
@@ -3642,7 +3645,6 @@ function offloadingTarget (iDandORpairs){
             bestPOTId=key;
         }
     }
-    console.log('offloadingOutput$ best POT is = ',bestPOTId);
     return bestPOTId;
 }
 module.exports = offloadingTarget
@@ -3809,8 +3811,6 @@ AssemblyScriptRunner.prototype.exec = async function (module, data, input) {
     console.log(preparedParams);
 
     // returnValue returns the result from the binary execution of the WASM module
-    //todo execute this after checking DMI ! if() else ...
-    // TODO Promise.Race here!!!!!!!!
     let returnValue = instance.exports.run(...preparedParams);
     console.log('returnValue = ');
     console.log(returnValue);

@@ -86,8 +86,6 @@ function formatBytes(bytes, decimals = 2) {
 
     if (!isNaN(size)) {
         return `${size} ${sizes[i]}`;
-    } else {
-        return bytes.toString() + ' bytes';
     }
 }
 
@@ -133,8 +131,15 @@ async function processPipeline(receivedPipeline){
             let endTimeExecute = Date.now();
             let endMemExecute = performance.memory.usedJSHeapSize;
             console.log('OUTPUT offloaded msg = ',offloadedResult);
-            console.log('offloadingOutput$ Offloaded task Execution time: ',formatTime(endTimeExecute-startTimeExecute));
-            console.log('offloadingOutput$ Offloaded task Execution Memory: ',formatBytes(endMemExecute-startMemExecute));
+
+            if (endMemExecute < startMemExecute) {
+            let temp = endMemExecute;
+            endMemExecute = startMemExecute;
+            startMemExecute = temp;
+            }
+
+            console.log('offloadingOutput$ Offloaded task Execution time: ',formatTime(endTimeExecute-startTimeExecute),' (',endTimeExecute-startTimeExecute,' ms)');
+            console.log('offloadingOutput$ Offloaded task Execution Memory: ',formatBytes(endMemExecute-startMemExecute),' (',endMemExecute-startMemExecute,' bytes)');
             return offloadedResult;
             }
         catch (e){

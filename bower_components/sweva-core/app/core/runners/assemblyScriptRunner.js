@@ -148,8 +148,6 @@ AssemblyScriptRunner.prototype.exec = async function (module, data, input) {
     console.log(preparedParams);
 
     // returnValue returns the result from the binary execution of the WASM module
-    //todo execute this after checking DMI ! if() else ...
-    // TODO Promise.Race here!!!!!!!!
     let returnValue = instance.exports.run(...preparedParams);
     console.log('returnValue = ');
     console.log(returnValue);

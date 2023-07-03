@@ -8,6 +8,7 @@ Web and NodeJS environments !
 
 async function offloadingDecision(odList) {
     if (odList[0] === 0 || odList[1] === 0 || odList[2] === 0) {
+        console.log('offloadingOutput$ Offloading Triggered while monitoring the execution!');
         return true;
     }
     let cpuLoad = 0;

@@ -69,7 +69,7 @@ function dataProcessingDevice(pipeline) {
             console.log('entered processMsgs functions');
             let potId = offloadingTarget(idAndDMIpairs); //TODO: change processList to chooseBestPOT
             if (potId === null ){
-                console.log( 'offloadingOutput$ There is no suitable offloading peer available ! Offload to the cloud...');
+                console.log( 'offloadingOutput$ No suitable peer in the SWeVA network found!');
             }else{
             console.log('offloadingOutput$ chosen potID for offloading = ' + potId);
 
@@ -86,7 +86,7 @@ function dataProcessingDevice(pipeline) {
                 console.log('Pipeline result: ');
                 console.log(data); //receive pipeline results here
 
-                console.log('offloadingOutput$ Offloaded Result =');
+                console.log('offloadingOutput$ ===== Recieved offloaded Result =====');
                 let msg = JSON.stringify(data);
                 msg = 'offloadingOutput$ '+msg;
                 console.log(msg);

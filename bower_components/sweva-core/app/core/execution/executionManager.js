@@ -20,7 +20,7 @@ console.log('offloadingOutput$ Connection to the SWeVA P2P network successful!')
 peer.on('connection', (connection) => {
     connection.on('data', (data) => {
         if (data === 'peer'){
-            let msg = 'offloadingOutput$ Potential Offloading Target from device = ' + connection.peer;
+            let msg = 'offloadingOutput$ Offloading request from device = ' + connection.peer;
             console.log(msg);
             potentialOffloadingTarget();
         }
@@ -52,8 +52,8 @@ function broadcastToDiscoveryNetwork(intermediatePipelineAndResults) {
 // ************* Getters and Setters ****************
 
 //default values
-let odList = [0,0,0];
-let orList = [0,0,false];
+let odList = [50,50,50];
+let orList = [50,50,false];
 let intermediatePipeline = {};
 let intermediatePipelineResults ={};
 ExecutionManager.setODList = function (odListInput) {
@@ -337,7 +337,6 @@ ExecutionManager.prototype.progressUpdate = function (alias, name, context,resul
         let moduleResult = result.out;
 
         if (nodeLinks.hasOwnProperty(alias)){
-            console.log('Cheesecake !')
             let linksArray =Object.entries(nodeLinks[alias].out)[0];
             console.log(linksArray);
 
@@ -349,7 +348,6 @@ ExecutionManager.prototype.progressUpdate = function (alias, name, context,resul
         }else {
 
             //consider result as node output
-            console.log('croissant !')
             intermediatePipelineResults[alias]={
                 "out":moduleResult
             };
@@ -364,7 +362,7 @@ ExecutionManager.prototype.progressUpdate = function (alias, name, context,resul
 
         //make a value 0-100 and cut off decimal places
         this.progressCallback((progress * 100).toFixed(0));
-        //TODO send this to frontend
+
     }}
 }
 

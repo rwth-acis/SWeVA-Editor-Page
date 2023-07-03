@@ -2,7 +2,7 @@
 // orList = [cpu%, mem%, battery%, isCharging (binary)]
 
 function decisionValueOfPOT(offloadingResourcesList){
-    let advantageCPU = 1-offloadingResourcesList[0]; //Node.js env. only
+    let advantageCPU = 100-offloadingResourcesList[0]; //Node.js env. only
 
     let advantageMem = offloadingResourcesList[1]; // free memory in %
 
@@ -32,7 +32,6 @@ function offloadingTarget (iDandORpairs){
             bestPOTId=key;
         }
     }
-    console.log('offloadingOutput$ best POT is = ',bestPOTId);
     return bestPOTId;
 }
 module.exports = offloadingTarget
