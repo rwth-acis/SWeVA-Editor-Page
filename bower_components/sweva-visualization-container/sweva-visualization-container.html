@@ -196,7 +196,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         let endTimeOffloading =0;
         let endMemOffloading = 0;
-
+        let endTotalMem=0;
         let startTotalTime = 0;
         let startTotalMem = 0;
 
@@ -256,17 +256,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           if (args.some(arg => typeof arg === 'string' && arg.includes('===== Recieved offloaded Result ====='))) {
             endTimeOffloading = Date.now();
             endMemOffloading= performance.memory.usedJSHeapSize;
+            endTotalMem = endMemOffloading;
 
             if (endMemOffloading < startMemOffloading) {
               let temp = endMemOffloading;
               endMemOffloading = startMemOffloading;
               startMemOffloading = temp;
             }
+            if (endTotalMem < startTotalMem) {
+              let temp = endTotalMem;
+              endTotalMem = startMemOffloading;
+              startTotalMem = temp;
+            }
 
             console.log('offloadingOutput$ Offloading time: ',formatTime(endTimeOffloading-startTimeOffloading),' (',endTimeOffloading-startTimeOffloading,' ms)');
             console.log('offloadingOutput$ Offloading Memory: ',formatBytes(endMemOffloading-startMemOffloading),' (',endMemOffloading-startMemOffloading,' bytes)');
             console.log('offloadingOutput$ Total execution time: ',formatTime(endTimeOffloading-startTotalTime),' (',endTimeOffloading-startTotalTime,' ms)');
-            console.log('offloadingOutput$ Total used Memory: ',formatBytes(endMemOffloading-startTotalMem),' (',endMemOffloading-startTotalMem,' bytes)');
+            console.log('offloadingOutput$ Total used Memory: ',formatBytes(endTotalMem-startTotalMem),' (',endTotalMem-startTotalMem,' bytes)');
           }
 
 
