@@ -253,7 +253,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             startTimeOffloading = Date.now();
           }
 
-          if (args.some(arg => typeof arg === 'string' && arg.includes('Offloaded Result ='))) {
+          if (args.some(arg => typeof arg === 'string' && arg.includes('===== Recieved offloaded Result ====='))) {
             endTimeOffloading = Date.now();
             endMemOffloading= performance.memory.usedJSHeapSize;
 
