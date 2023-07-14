@@ -1,0 +1,6 @@
+{
+  "name": "SWeVA-Editor-Page",
+  "short_name": "SWeVA-Editor-Page",
+  "start_url": "/",
+  "display": "standalone"
+}

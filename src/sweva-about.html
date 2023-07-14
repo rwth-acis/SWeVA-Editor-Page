@@ -1,0 +1,227 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/paper-styles/shadow.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
+
+<dom-module id="sweva-about">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: #fafafa;
+        height: 100%;
+      }
+
+      #container {
+        @apply --layout-vertical;
+        @apply --layout-center;
+        padding: 20px;
+      }
+
+      #content {
+        @apply --shadow-elevation-2dp;
+        width: 100%;
+        max-width: 600px;
+
+        border-bottom: 1px solid #e0e0e0;
+        background-color: white;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .title {
+        @apply --paper-font-headline;
+      }
+
+      .body {
+        @apply --paper-font-body1;
+      }
+
+      .logo-and-text {
+        display: flex;
+        align-items: center;
+      }
+      .center-logo {
+        margin-right: 10px;
+      }
+      .button-container {
+        @apply --paper-font-body1;
+        background-color: orange;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .button-container a {
+        text-decoration: none;
+        color: white;
+      }
+
+      .button-container a:hover {
+        text-decoration: underline;
+      }
+      .slider-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
+        margin-top: 20px;
+      }
+      .column {
+        display: grid;
+        grid-gap: 10px;
+      }
+
+
+      .slider-container input[type="range"] {
+        width: 200px;
+        margin-right: 10px;
+      }
+
+      .slider-container .slider-value {
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .center-logo {
+        display: flex;
+        justify-content: center;
+      }
+    </style>
+
+    <div id="container">
+      <div id="content">
+        <div class="title">Social Web Environment for Visual Analytics</div>
+
+        <div class="logo-and-text">
+          <div class="center-logo">
+            <img src="./images/swevalogo.svg" width="200" height="200">
+          </div>
+          <div class="text">
+            <div class="body">
+              SWEVA is a collaborative framework for design and execution of reusable data processing components in the domain of visual analytics.
+              <br><br>
+              Please choose the Offloading Decision Thresholds (OD) and Offloading Resources (OR) for your device.
+              <br><br>
+            </div>
+          </div>
+        </div>
+
+        <div class="slider-container">
+          <div class="column">
+            <div class="slider-title"><b>Execution limits:</b></div>
+            <div class="slider">
+              <div class="slider-text">CPU (%)</div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" index="od_cpu">
+              <div class="slider-value">50</div>
+            </div>
+            <div class="slider">
+              <div class="slider-text">Memory (%)</div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" index="od_mem">
+              <div class="slider-value">50</div>
+            </div>
+            <div class="slider">
+              <div class="slider-text">Battery (%)</div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" index="od_battery">
+              <div class="slider-value">50</div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="slider-title"><b>Offloading limits:</b></div>
+            <div class="slider">
+              <div class="slider-text">Memory (%)</div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" index="or_mem">
+              <div class="slider-value">50</div>
+            </div>
+            <div class="slider">
+              <div class="slider-text">Battery (%)</div>
+              <input type="range" min="0" max="100" value="50" class="slider-input" index="or_battery">
+              <div class="slider-value">50</div>
+            </div>
+            <div class="slider">
+              <div class="slider-text">is Charging (binary)</div>
+              <input type="range" min="0" max="1" value="0" class="slider-input" index="or_isCharging">
+              <div class="slider-value">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="button-container">
+          <a href="/editor/sandbox">Save and Go to Editor</a>
+        </div>
+      </div>
+
+    </div>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class SWEVAAbout extends Polymer.Element {
+
+      static get is() {
+        return 'sweva-about';
+      }
+      connectedCallback() {
+        super.connectedCallback();
+
+        let sliderInputs = this.shadowRoot.querySelectorAll('.slider-input');
+        sliderInputs.forEach(function(sliderInput) {
+          let sliderValue = sliderInput.nextElementSibling;
+          sliderInput.addEventListener('input', function() {
+            sliderValue.textContent = sliderInput.value;
+          });
+        });
+
+        let saveButton = this.shadowRoot.querySelector('.button-container a');
+        saveButton.addEventListener('click', () => {
+          let odCPU = parseInt(this.shadowRoot.querySelector('.slider-input[index="od_cpu"]').value);
+          let odMem = parseInt(this.shadowRoot.querySelector('.slider-input[index="od_mem"]').value);
+          let odBattery = parseInt(this.shadowRoot.querySelector('.slider-input[index="od_battery"]').value);
+
+          let orMem = parseInt(this.shadowRoot.querySelector('.slider-input[index="or_mem"]').value);
+          let orBattery = parseInt(this.shadowRoot.querySelector('.slider-input[index="or_battery"]').value);
+          let orIsCharging = parseInt(this.shadowRoot.querySelector('.slider-input[index="or_isCharging"]').value);
+          if (orIsCharging === 1) {
+            orIsCharging = true;
+          } else {
+            orIsCharging = false;
+          }
+
+          this.odInputs = [odCPU, odMem, odBattery];
+          sweva.ExecutionManager.setODList(this.odInputs);
+          this.orInputs = [orMem, orBattery, orIsCharging];
+          sweva.ExecutionManager.setORList(this.orInputs);
+
+        });
+      }
+
+      static get properties() {
+        return {
+          sliderValues: {
+            type: Array,
+            value: function() {
+              return [50, 50, 50, 50, 50, 50, 50, 0];
+            },
+          },
+            odInputs: {
+              type: Array,
+              value: function() {
+                return [];
+              },
+            },
+            orInputs: {
+              type: Array,
+              value: function() {
+                return [];
+              },
+            },
+        };
+      }
+    }
+    window.customElements.define(SWEVAAbout.is, SWEVAAbout);
+
+  </script>
+
+</dom-module>

@@ -1,25 +1,40 @@
 {
-  "name": "polymer-starter-kit",
-  "private": true,
+  "name": "SWeVA-Editor-Page",
+  "main": "index.html",
   "dependencies": {
-    "iron-elements": "PolymerElements/iron-elements#^1.0.8",
-
-    "neon-elements": "PolymerElements/neon-elements#^1.0.0",
-    "page": "visionmedia/page.js#~1.6.4",
-    "paper-elements": "PolymerElements/paper-elements#^1.0.7",
-    "platinum-elements": "PolymerElements/platinum-elements#^1.1.0",
-    "polymer": "Polymer/polymer#^1.2.0",
-    "paper-menu": "PolymerElements/paper-menu#4fecb43601",
-    "sweva-editor": "rwth-acis/sweva-editor",
-    "sweva-visualization-container": "rwth-acis/sweva-visualization-container",
-    "sweva-module-repos": "rwth-acis/sweva-module-repos"
+    "polymer": "Polymer/polymer#^2.0.0",
+    "sweva-editor": "rwth-acis/sweva-editor#sweva-iot",
+    "sweva-module-repos": "rwth-acis/sweva-module-repos#sweva-update",
+    "sweva-visualization-container": "rwth-acis/sweva-visualization-container#sweva-iot",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.1",
+    "app-layout": "PolymerElements/app-layout#^2.0.5",
+    "app-route": "PolymerElements/app-route#^2.0.3",
+    "iron-pages": "PolymerElements/iron-pages#^2.1.0",
+    "paper-styles": "PolymerElements/paper-styles#^2.1.0",
+    "web-animations-js": "^2.3.2",
+    "peerjs": "^0.3.14",
+    "requirejs": "^2.3.6"
   },
   "devDependencies": {
-    "web-component-tester": "*"
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
   },
-  "ignore": [],
   "resolutions": {
     "paper-menu": "4fecb43601",
-    "graphlib": "2.0.0"
+    "graphlib": "^2.0.0",
+    "paper-styles": "^1.1.5",
+    "web-animations-js": "^2.2.0",
+    "d3": "3.5.12",
+    "lodash": "^4.11.1",
+    "polymer": "^2.0.0",
+    "paper-input": "^2.0.2",
+    "iron-overlay-behavior": "^2.2.0",
+    "paper-button": "^2.0.0",
+    "paper-dropdown-menu": "^2.0.0",
+    "paper-item": "^2.0.0",
+    "paper-progress": "^2.0.1",
+    "iron-icon": "^2.0.1",
+    "neon-animation": "^2.0.2",
+    "webcomponentsjs": "^v1.0.19"
   }
 }
